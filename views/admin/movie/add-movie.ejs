@@ -1,0 +1,353 @@
+<%- include("../partials/header") %>
+<form action="/admin/add-movie" method="post">
+    <div class="container-fluid p-3">
+        <div class="row">
+            <div class="col-sm-12 col-md-3">
+                <div class="border p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4>POSTER</h4>
+                        <i class='bx bxs-trash-alt' style="font-size: 20px;"></i>
+                    </div>
+
+                    <div class="my-2">
+                        <img id="poster" name="poster2" alt="" style="max-height: 500px;width:100%;object-fit:contain;">
+                    </div>
+                    <input type="text" name="posters" id="posterss" hidden>
+                    <div class="">
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-12 col-md-9">
+                <div class="border p-3">
+                    <h4>PUBLISH A MOVIE</h4>
+                    <hr>
+                    <div class="d-md-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="form-outline">
+                                <input type="text" id="tt_code" name="ttcode" value="tt1630029" class="form-control" />
+                                <label class="form-label" for="tt_code">TT Code</label>
+                            </div>
+
+                            <button id="get_movie" class="btn btn-success my-2">Get Movie Info</button>
+                        </div>
+
+                        <div>
+                            <style>
+                                .c_input{
+                                    width: 500px;
+                                    padding: 5px;
+                                }
+                            </style>
+                            <label class="form-label" for="movie_title">Enter Movie Title</label>
+                            <div class="form-outline mb-2">
+                                <input name="title" class="c_input"  type="text" id="movie_title" class="form-control">
+                            </div>
+                            <label class="form-label" for="release_year">Enter Release Year</label>
+                            <div class="form-outline mb-2">
+                                <input name="release_year" class="c_input" type="text" id="release_year" class="form-control" />
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <p>Full Movie information</p>
+                    <ul class="nav nav-tabs nav-justified mb-3" id="ex1" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="ex3-tab-1" data-mdb-toggle="tab" href="#ex3-tabs-1"
+                                role="tab" aria-controls="ex3-tabs-1" aria-selected="true">Information</a>
+                        </li>
+
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="ex3-tab-2" data-mdb-toggle="tab" href="#ex3-tabs-2" role="tab"
+                                aria-controls="ex3-tabs-2" aria-selected="false">Story</a>
+                        </li>
+
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="ex3-tab-3" data-mdb-toggle="tab" href="#ex3-tabs-3" role="tab"
+                                aria-controls="ex3-tabs-3" aria-selected="false">Watch Online</a>
+                        </li>
+
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="ex3-tab-4" data-mdb-toggle="tab" href="#ex3-tabs-4" role="tab"
+                                aria-controls="ex3-tabs-4" aria-selected="false">Youtube Trailer</a>
+                        </li>
+
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="ex3-tab-5" data-mdb-toggle="tab" href="#ex3-tabs-5" role="tab"
+                                aria-controls="ex3-tabs-5" aria-selected="false">Screenshots</a>
+                        </li>
+
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="ex3-tab-6" data-mdb-toggle="tab" href="#ex3-tabs-6" role="tab"
+                                aria-controls="ex3-tabs-6" aria-selected="false">Cast</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="ex3-tab-7" data-mdb-toggle="tab" href="#ex3-tabs-7" role="tab"
+                                aria-controls="ex3-tabs-7" aria-selected="false">Crew</a>
+                        </li>
+
+
+                    </ul>
+                    <!-- Tabs navs -->
+
+                    <!-- Tabs content -->
+                    <div class="tab-content" id="ex2-content">
+                        <div class="tab-pane fade show active" id="ex3-tabs-1" role="tabpanel"
+                            aria-labelledby="ex3-tab-1">
+
+                            <div class="row my-4">
+                                <div class="col">
+                                    <label class="form-label" for="movie_r_date_2">Movie Release Date</label>
+                                    <div class="form-outline">
+                                        <input  type="text"  id="movie_r_date_2"
+                                            class="form-control" />
+                                      
+                                    </div>
+                                </div>
+
+
+                                <div class="col">
+                                    <!-- Name input -->
+                                    <label class="form-label" for="youtube_trailer">Youtube Trailer</label>
+                                    <div class="form-outline">
+                                        <input type="text" name="youtube_trailer" id="youtube_trailer"
+                                            class="form-control" />
+                                       
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <label class="form-label" for="movie_language">Movie Language</label>
+                                    <div class="form-outline">
+                                        <input type="text" name="movie_language" id="movie_language"
+                                            class="form-control" />
+                                       
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col">
+                                    <label class="form-label" for="rating">IMDB Ratings</label>
+                                    <div class="form-outline">
+                                        <input type="text" name="rating" id="rating"
+                                            class="form-control" />
+                                       
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label" for="movie_runtime">Movie Runtime</label>
+                                    <div class="form-outline">
+                                        <input type="text" name="movie_runtime" id="movie_runtime"
+                                            class="form-control" />
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <label class="form-label" for="movie_genre">Movie Genre</label>
+                                    <div class="form-outline">
+                                        <input type="text" name="movie_genre" id="movie_genre"
+                                            class="form-control" />
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <label class="form-label" for="file_size">File Size</label>
+                                    <div class="form-outline">
+                                        <input type="text" name="file_size" id="file_size"
+                                            class="form-control" />
+                                        
+                                    </div>
+                                </div>
+                             
+                              
+
+                                <div class="col">
+                                    <label class="form-label" for="hompage">Movie Homepage(website)</label>
+                                    <div class="form-outline">
+                                        <input type="text" name="hompage" id="hompage"
+                                            class="form-control" />
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row my-4">
+
+                                <div class="col">
+                                    <div class="mb-2">
+                                        <script>
+                                            function update() {
+                                                var d = document.getElementById('country');
+                                                var dText = d.options[d.selectedIndex].text;
+                                                document.getElementById('result').value = dText
+                                            }
+                                        </script>
+                                        <select name="movie_category" multiple id="country" class="py-2 px-4 mb-3" 
+                                            style="width: 100%; outline: black">
+                                            <option class="py-1 px-3">Animation Movies</option>
+                                            <option class="py-1 px-3">Bangla Movies</option>
+                                            <option class="py-1 px-3">Hindi Movies</option>
+                                            <option class="py-1 px-3">English Movies</option>
+                                            <option class="py-1 px-3">Tamil Movies</option>
+                                            <option class="py-1 px-3">Most Popular Bangla Movies</option>
+                                            <option class="py-1 px-3">Most Popular English Movies</option>
+                                            <option class="py-1 px-3">Most Popular Hindi Movies</option>
+                                            <option class="py-1 px-3">Most Popular Tamil Movies</option>
+                                        </select>
+                                        <input id="result"  value="" class="d-none">
+
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="mb-2">
+                                        <script>
+                                            function update() {
+                                                var d = document.getElementById('country');
+                                                var dText = d.options[d.selectedIndex].text;
+                                                document.getElementById('result').value = dText
+                                            }
+                                        </script>
+                                        <select id="country" class="py-2 px-4 mb-3" onchange="update();"
+                                            style="width: 100%; outline: black">
+                                            <option class="py-2 px-5" value="none">Multiple Upload</option>
+
+                                            <option class="py-2 px-5">Single</option>
+                                            <option class="py-2 px-5">Double</option>
+
+                                        </select>
+                                        <input id="result" name="multiple_upload" value="Single" class="d-none">
+
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="mb-2">
+                                        <select name="quality" id="qualityUpdate" class="py-2 px-4 mb-3" onchange="qualityUpdate();"
+                                            style="width: 100%; outline: black">
+                                            <option class="py-2 px-5" value="none">Select Quality</option>
+
+                                            <option class="py-2 px-5">HD</option>
+                                            <option class="py-2 px-5">720p</option>
+                                            <option class="py-2 px-5">1080p</option>
+
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="ex3-tabs-2" role="tabpanel" aria-labelledby="ex3-tab-2">
+                            <div>
+                                <h5>Movie Meta Keywords</h5>
+                                <hr>
+
+
+                                <div class="">
+                                    <h6>Full Story: </h6>
+                                    <div>
+                                        <textarea  name="overview" id="overview" cols="70" rows="10"></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="ex3-tabs-3" role="tabpanel" aria-labelledby="ex3-tab-3">
+
+                            <div class="form-outline mb-3">
+                                <input name="movie_link" type="text" id="form6Example1" class="form-control" />
+                                <label class="form-label" for="form6Example1">Enter Movie Link</label>
+                            </div>
+
+                            <div class="form-outline  mb-3">
+                                <input name="subtitle_link" type="text" id="form6Example2" class="form-control" />
+                                <label class="form-label" for="form6Example2">Enter Subtitle Link</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </div>
+
+                        <div class="tab-pane fade" id="ex3-tabs-4" role="tabpanel" aria-labelledby="ex3-tab-4">
+                            youtube 
+                        </div>
+
+                        <div class="tab-pane fade" id="ex3-tabs-5" role="tabpanel" aria-labelledby="ex3-tab-5">
+                            <div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                        <img src="/uploads/ss.jpg" class="img-fluid" alt="">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="ex3-tabs-6" role="tabpanel" aria-labelledby="ex3-tab-6">
+                            <div class="row" id="cast_row">
+
+                                
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="ex3-tabs-7" role="tabpanel" aria-labelledby="ex3-tab-7">
+                            <div class="row" id="crew_row">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- Tabs content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="/scripts/getMovieData.js"></script>
+    <%- include("../partials/footer") %>

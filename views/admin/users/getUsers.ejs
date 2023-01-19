@@ -1,0 +1,68 @@
+<%- include('../partials/header.ejs') %>
+    <div class="container-fluid py-3">
+        <div>
+            <h4 class="text-center text-dark fw-bold">Users</h4>
+            <hr>
+
+           <div class="table-responsive">
+            <table class="table">
+                <thead class="table-dark">
+                  <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Banned</th>
+                    <th scope="col">Registered At</th>
+                    <th scope="col">Restric</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if(users.length == 0){ %>
+                    <h3>No Users Found</h3>
+                    <a class="text-light" href="/admin/tv/create-channel">Create a tv channel from here</a>
+                  <% }else{ %> 
+                    <% for(let u of users){ %> 
+                      <tr>
+                        <td><%= u.username %> </td>
+                        <td>
+                          <span class="badge badge-<%= u.isBanned == '0' ? 'success' : 'danger' %> "><%= u.isBanned == '0' ? 'allowable' : 'Banned' %></span>
+                        </td>
+                        <td><%= u.createdAt.toDateString() %></td>
+                        <td>
+                          <% if(u.isBanned == 1){ %> 
+                            <a class="btn btn-sm btn-success"  href="/admin/users/banned?id=<%= u.id %>&unban=true ">Allowed</a> 
+                          <% }else{ %>
+                            <a class="btn btn-sm btn-danger"  href="/admin/users/banned?id=<%= u.id %> ">Ban</a> 
+                          <%} %> 
+                         
+                        </td>
+                        <td> <a class="btn btn-sm btn-warning"  href="/admin/update-user?id=<%= u.id %> ">Edit</a>
+                         <a class="btn btn-sm btn-danger"  href="/admin/delete-user?id=<%= u.id %> " onclick="return confirm('Are you sure to delete?')">Delete</a> </td>
+                      </tr>
+                    <% } %> 
+                   
+                  <% } %> 
+                  
+                </tbody>
+              </table>
+              <div class="d-flex justify-content-center py-5">
+                <nav aria-label="...">
+                    <ul class="pagination">
+                      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>"  >
+                        <a  href="/admin/users?page=<%=currentPage-1 %>" class="page-link" >Previous</a>
+                      </li>
+                      <% for(let i=0; i< totalPage; i++) {%> 
+                        <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/admin/users?page=<%=i+1 %> "><%= i+1 %> </a></li>
+                      <% }%> 
+                      <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>"  >
+                        <a class="page-link" href="/admin/users?page=<%=currentPage+1 %>">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+              </div>
+           </div>
+        </div>
+    </div>
+    <%- include('../partials/footer.ejs') %>
+        </body>
+
+        </html>

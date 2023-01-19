@@ -1,0 +1,61 @@
+<%- include('../user_partials/header.ejs') %>
+
+    <div class="container-fluid py-2" style="min-height: 100vh;background: #eee;">
+        <div class="container mt-4">
+            <div class="add-product-form d-md-flex justify-content-center p-2">
+                <div class="bg-light p-4 shadow-sm">
+                    <form action="/user/edit_payment" method="post" class="py-2">
+                        <h4 class="mb-1">Make payment and Enjoy Our Channel!</h4>
+                       
+                        <h5 class="text-center text-success">We accept</h5>
+                        <hr>
+                        <div class="d-flex flex-column flex-md-row mb-3 justify-content-center">
+                            <div class="p-2 my-1 border text-center text-dark mx-1 border  rounded"><img src="/images/bkash.png" height="40"  alt="trc"></div>
+                            <div class="p-2 my-1 border text-center text-dark mx-1 border  rounded"><img src="/images/rocket.png" height="45" alt="payid"></div>
+                          </div>
+                        <hr>
+                        <div class="text-center"> 
+                            <p class="mb-0">Bkash(Merchant): <span class="fst-italic text-primary fw-bold">01866-152682</span></p>
+                            <p>Rocket(Merchant): <span class="fst-italic text-primary fw-bold">01324-4950151</span></p>
+                        </div>
+                        <input class="form-control" name="payment_id" value="<%= pkg[0].id %>" hidden />
+
+                        <div class="mb-2">
+                            <script>
+                                function update() {
+                                    var d = document.getElementById('country');
+                                    var dText = d.options[d.selectedIndex].text;
+                                    document.getElementById('result').value = dText
+                                }
+                            </script>
+                            <select id="country" class="py-2 px-4 mb-3" onchange="update();"
+                                style="width: 100%; outline: black">
+                                <option class="py-2 px-5">Payment Method *</option>
+                                <option class="py-2 px-5" value="Bkash" <%= pkg[0].payment_method == 'Bkash'  ? 'selected' : ''  %> >Bkash</option>
+                                <option class="py-2 px-5" <%= pkg[0].payment_method == 'Rocket'  ? 'selected' : ''  %> value="Rocket">Rocket</option>
+                            </select>
+                            <input id="result" name="payment_method" value="<%= pkg[0].payment_method %> " class="d-none">
+
+                        </div>
+
+                        <div class="form-outline mb-3">
+                            <input type="text" name="phone_no"  required id="total_dollar"
+                                class="form-control" value="<%= pkg[0].phone_no %>"/>
+                            <label class="form-label" for="total_dollar">Phone No *</label>
+                        </div> 
+                        <div class="form-outline mb-3">
+                            <input type="text" name="txid"  required id="total_dollar"
+                                class="form-control" value="<%= pkg[0].transaction_number %>"/>
+                            <label class="form-label" for="total_dollar">Transaction ID *</label>
+                        </div>
+                        <p class="text-danger">Remember you can edit this info for one time only, Be careful **</p>
+                        <!-- Submit button -->
+                        <button type="submit" class="mt-4 btn btn-warning">Update Info</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    <%- include('../user_partials/footer.ejs') %>

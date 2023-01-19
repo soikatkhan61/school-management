@@ -1,0 +1,7 @@
+ 
+DB_NAME= srnetwor_live_tv
+DB_PASS=Ao9T9PM1M}&[
+DB_USER=srnetwor_live_tv_user
+JWT_SECRET_KEY=jdiopjadgkljsdag
+
+DB_HOST=localhost

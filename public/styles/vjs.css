@@ -1,0 +1,25 @@
+video {
+    position: relative;
+  }
+  
+
+#rewind {
+ 
+    transform: translate(-50%, -50%);
+  }
+  
+
+.vjs-skin-city .vjs-control.vjs-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .vjs-skin-city .vjs-control.vjs-button:focus {
+    outline: none;
+  }
+  
+  .vjs-skin-city .vjs-control.vjs-button:hover {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+  

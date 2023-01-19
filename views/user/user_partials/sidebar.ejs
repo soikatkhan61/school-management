@@ -1,0 +1,84 @@
+
+<!-- SIDEBAR -->
+<div class="sidebar" style="background:#10122d;color:#FFF">
+    <div class="sidebar-logo">
+      <h2><a href="/">ISP TV</a></h2>
+        <div class="sidebar-close" id="sidebar-close">
+            <i class='bx bx-left-arrow-alt'></i>
+        </div>
+    </div>
+    <div class="sidebar-user">
+        <div class="sidebar-user-info">
+            <img src="/images/user-image.jpg" alt="User picture" class="profile-image">
+            <div class="sidebar-user-name" style="text-transform:lowercase;">
+                <%= user.username %> 
+            </div>
+        </div>
+        <a  href="/" class="btn_user btn_user-outline" style="border: 2px solid white;">
+            <i class='bx bx-log-out bx-flip-horizontal' style="color: white;"></i>
+        </a>
+    </div>
+    <!-- SIDEBAR MENU -->
+    <ul class="sidebar-menu">
+        <style>
+            .sidebar-menu li a:hover{
+                color:yellow
+            }
+        </style>
+        
+        <li>
+            <a href="/user/dashboard">
+                <i class='bx bx-home'></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li>
+            <a href="/user/my_package">
+                <i class='bx bx-package'></i>
+                <span>My package</span>
+            </a>
+        </li> 
+        <li>
+            <a href="/auth/change-password">
+                <i class='bx bx-pin'></i>
+                <span>change password</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="/auth/logout">
+                <i class='bx bx-log-in'></i>
+                <span>Logout</span>
+            </a>
+        </li>
+      
+        <li class="sidebar-submenu">
+            <a href="#" class="sidebar-menu-dropdown">
+                <i class='bx bx-cog'></i>
+                <span>settings</span>
+                <div class="dropdown-icon"></div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content">
+                <li>
+                    <a href="#" class="darkmode-toggle" id="darkmode-toggle">
+                        darkmode
+                        <span class="darkmode-switch"></span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <!-- END SIDEBAR MENU -->
+</div>
+<!-- END SIDEBAR -->
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        <div class="main-header">
+            <div class="mobile-toggle" id="mobile-toggle">
+                <i class='bx bx-menu-alt-right'></i>
+            </div>
+            <div class="main-title">
+                dashboard
+            </div>
+        </div>

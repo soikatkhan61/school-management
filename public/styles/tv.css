@@ -1,0 +1,114 @@
+.channel-item{
+    margin-bottom: 8px;
+}
+
+.content-item-container {
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-bottom: 16px;
+}
+
+.content-item-container .item {
+    position: relative;
+}
+.channel-item{
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+
+.content-badge {
+    position: absolute;
+    z-index: 1;
+}
+
+.content-badge.live-tv {
+    top: 10px;
+}
+
+.content-badge span {
+    border-radius: 4px 0px;
+    height: 20px;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: bold;
+    padding: 2px 6px;
+    color: #fff;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    outline: none;
+}
+
+.content-badge span.prime {
+    background: linear-gradient(90deg, #eb0284 0%, #e11e4f 100%);
+}
+
+.content-item-container .item .image-wrapper .image-block {
+    background: #fff;
+    border-radius: 16px;
+}
+
+.content-item-container .item .img-livetv {
+    width: 100%;
+    border: 16.5px solid #fff;
+    border-radius: 16px;
+    background: #fff;
+    min-height: 90px;
+    -webkit-box-shadow: 0px 0px 4px rgba(112, 144, 176, 0.25);
+    box-shadow: 0px 0px 4px rgba(112, 144, 176, 0.25);
+}
+
+.img-responsive{
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.content-item-container .item .channel-title-block .content-title {
+    margin-bottom: 0;
+    font-size: 12px;
+    text-align: center;
+}
+
+.row:before, .row:after {
+    content: " ";
+    display: table;
+}
+
+.img-responsive img {
+    vertical-align: middle;
+}
+
+
+@media screen and (max-width: 992px){
+    .content-grid-block {
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-bottom: 15px;
+    }
+    .channel-title .channel-name{
+        font-size: 12px;
+    }
+
+    .content-item-container .item {
+        margin-bottom: 4px;
+    }
+
+    .content-item-container .item .channel-title-block .content-title {
+        margin-top: 8px;
+    }
+
+    .content-badge {
+        top: 10px;
+    }
+
+    .content-badge span {
+        letter-spacing: 0;
+        font-size: 12px;
+        padding: 0 4px;
+        height: 16px;
+    }
+}
+
+
+    

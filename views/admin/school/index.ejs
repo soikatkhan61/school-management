@@ -1,0 +1,76 @@
+<%- include("../partials/header") %>
+    <div class="container-fluid py-5" style="background: #eee;min-height: 90vh;">
+        <div class="d-flex justify-content-between mb-4">
+            <h5>School List</h5>
+            <a href="/super-admin/register-school" class="btn btn-primary"><span><i class='bx bx-plus'></i></span> Add
+                School</a>
+        </div>
+        <div class="bg-light rounded p-4" style="padding-top: 26px;">
+            <% if(data.length==0){ %>
+                <p class="text-center text-dark">No school</p>
+                <% }else{ %>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Info</th>
+                                    <th scope="col">Admin</th>
+                                    <th scope="col">Staus</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let s of data){%>
+                                    <tr>
+                                        <td><%= s.id %> </td>
+                                        <td><%= s.school_name %></td>
+                                        <td><a href="tel:01722726897"><%= s.school_phone %>7</a></td>
+                                        <td><%= s.school_info %></td>
+                                        <td><a href="#" class="text-primary"><%= s.admin_name %></a></td>
+                                        <td><span class="badge badge-<%= s.status == 1 ? 'success' : 'danger' %> rounded-pill d-inline"><%= s.status == 1 ? 'Active' : 'Inactive' %> </span></td>
+                                        <td>
+                                            <div class="dropdown dropstart">
+                                                <button 
+                                                class="btn dropdown-toggle"
+                                                style="background-color: #edf2f6;box-shadow: 0 0 0 0;"
+                                                data-mdb-toggle="dropdown"
+                                                aria-expanded="false"
+                                                id="dropdownMenuButton<%= s.id %>"
+                                                >
+                                                action
+                                            </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= s.id %>">
+                                                  <li><a class="dropdown-item" href="/super-admin/register-school?edit=true&id=<%= s.id %>">Edit</a></li>
+                                                  <li><a class="dropdown-item" href="/super-admin/register-school?del=true&id=<%= s.id %>">Delete</a></li>
+                                                </ul>
+                                              </div>
+                                        </td>
+                                    </tr>
+                                    <% }%>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-2">
+                        <nav aria-label="...">
+                            <ul class="pagination">
+                              <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>"  >
+                                <a  href="/super-admin/school/page=<%=currentPage-1 %>" class="page-link" >Previous</a>
+                              </li>
+                              <% for(let i=0; i< totalPage; i++) {%> 
+                                <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/super-admin/school?page=<%=i+1 %>"><%= i+1 %> </a></li>
+                              <% }%> 
+                              <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>"  >
+                                <a class="page-link" href="/super-admin/school?page=<%=currentPage+1 %>">Next</a>
+                              </li>
+                            </ul>
+                          </nav>
+                      </div>
+                    
+                    <% } %>
+        </div>
+    </div>
+
+    <%- include("../partials/footer") %>

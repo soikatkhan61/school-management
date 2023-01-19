@@ -1,0 +1,26 @@
+<%- include('./user_partials/header.ejs') %>
+
+    <div class="main-content">
+        <div>
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <div class="card border border-dark mb-3 h-100">
+                        <div class="card-header border-dark text-center">User Infromation</div>
+                        <div class="card-body text-dark">
+                          <h5 class="card-title">Username: <%= user.username %> </h5>
+                          <p class="card-text mb-0">Email: <span class="fst-italic"><%= user.email %></span> </p>
+                          <p class="card-text mb-0">Registered: <span class="fst-italic"><%= user.createdAt.toDateString() %></span> </p>
+                          
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+
+    <%- include('./user_partials/footer.ejs') %>
+        </body>
+
+        </html>

@@ -1,0 +1,45 @@
+<%- include('../../partials/header.ejs')  %>
+<div class="container-fluid py-3">      
+    <div>
+        <h3 class="text-center text-primary">Edit Package</h3>
+        <hr>
+            <div class="add-product-form d-md-flex justify-content-center p-2"> 
+                <form action="/admin/packages/edit-package" method="post" class="py-2">
+                    <div class="mb-2">
+                      <script>
+                        function update() {
+                            var d = document.getElementById('country');
+                            var dText = d.options[d.selectedIndex].text;
+                            document.getElementById('result').value = dText
+                        }
+                    </script>
+                        <select id="country" class="py-2 px-4 mb-3" onchange="update();" style="width: 100%; outline: black">
+                          <option class="py-2 px-5" value="none" disabled>Package Name</option>
+
+                          <% for(let p of pkgs){ %>
+                            <option class="py-2 px-5" <%= p.package_name === pkg[0].package_name ? "selected" : "disabled" %>  value="<%= p.package_name %>" ><%= p.package_name %></option>
+                          <% } %> 
+                        </select>
+                        <input id="result" name="package_name"  value="<%=pkg[0].package_name%>"  class="d-none">
+
+                        </div>
+                    <!-- quantity input -->
+                    <div class="form-outline mb-3">
+                      <input type="number" name="price" value="<%= pkg[0].price %>" id="total_dollar" class="form-control" />
+                      <label class="form-label" for="total_dollar">Package Price</label>
+                    </div>
+
+                    <div class="form-outline mb-3">
+                      <input type="number" name="package_comission" value="<%= pkg[0].package_comission %>" id="total_dollar" class="form-control" />
+                      <label class="form-label" for="total_dollar">Validity in Month</label>
+                    </div>
+            
+                    <!-- Submit button -->
+                    <button type="submit" style="background-color: rgb(245, 245, 49);padding:7px 15px; border:none;border-radius:5px" class="mt-4">Update</button>
+                  </form>
+            </div>  
+    </div>
+</div>
+<%- include('../../partials/footer.ejs')  %>
+</body>
+</html>

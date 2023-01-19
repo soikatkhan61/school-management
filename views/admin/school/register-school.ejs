@@ -1,0 +1,76 @@
+<%- include("../partials/header") %>
+    <div class="container-fluid py-5" style="background: #eee;min-height: 90vh;">
+        <div class="bg-light rounded p-4" style="padding-top: 26px;">
+            <form action="/super-admin/register-school<%= data !='' ? '?id=' + data.id + '&save=true' : '?register=true' %>" method="post">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <h6 class="py-3">Infomation of the schools</h6>
+                        <div class="form-outline mb-4">
+                            <input name="school_name" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>
+                            <label class="form-label" for="form7Example13">School Name *</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input name="school_address" value="<%= data.school_address ? data.school_address : '' %>" type="text" id="form7Example2" class="form-control" required/>
+                            <label class="form-label" for="form7Example2">School Address *</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input name="school_email" value="<%= data.school_email ? data.school_email : '' %>" type="email" id="form7Example12" class="form-control" />
+                            <label class="form-label" for="form7Example12">School Email</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input name="school_phone" value="<%= data.school_phone ? data.school_phone : '' %>" type="text" id="form7Example3" class="form-control" required/>
+                            <label class="form-label" for="form7Example3">School Phone *</label>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <textarea name="school_info"  type="text" id="form7Example4" class="form-control" rows="4"><%= data.school_info ? data.school_info : '' %></textarea>
+                            <label class="form-label" for="form7Example4">School info</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <h6 class="py-3">Admin Info</h6>
+                        <div class="form-outline mb-4">
+                            <input name="admin_name" value="<%= data.admin_name ? data.admin_name : '' %>" type="text" id="form7Examplx2" class="form-control" required/>
+                            <label class="form-label" for="form7Examplx2">Admin Name *</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input name="admin_blood_group" value="<%= data.admin_blood_group ? data.admin_blood_group : '' %>" type="text" id="form7Example5" class="form-control" />
+                            <label class="form-label" for="form7Example5">Blood group</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input name="admin_address" value="<%= data.admin_address ? data.admin_address : '' %>" type="text" id="form7Examplex1" class="form-control" />
+                            <label class="form-label" for="form7Examplx1">Admin Address</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input name="admin_phone" value="<%= data.admin_phone ? data.admin_phone : '' %>" type="text" id="form7Example6" class="form-control" required/>
+                            <label class="form-label" for="form7Example6">Admin Phone Number *</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input name="admin_email" value="<%= data.admin_email ? data.admin_email : '' %>" type="email" id="form7Example7" class="form-control" required/>
+                            <label class="form-label" for="form7Example7">Admin Email *</label>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input name="admin_password" value="<%= data.admin_password ? data.admin_password : '' %>" type="password" id="form7Example8" class="form-control" required />
+                            <label class="form-label" for="form7Example8">Admin Password *</label>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="">Photo</label>
+                            <input name="admin_avater" type="file" id="form7Example9" class="form-control" />
+                        </div>
+
+                        <button class="btn btn-<%= data ? 'warning' : 'primary' %>"><%= data ? 'Update' : 'Submit' %></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <%- include("../partials/footer") %>

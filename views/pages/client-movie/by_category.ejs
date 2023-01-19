@@ -1,0 +1,388 @@
+<%- include('../../partials/header/head.ejs') %>
+
+    <style>
+        #side-nav {
+            position: absolute;
+            top: 0;
+            overflow: hidden;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background: rgb(4, 38, 49);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: right 0.5s;
+            z-index: 10;
+        }
+
+        #loading-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            /* bring your own prefixes */
+            transform: translate(-50%, 0%);
+            height: 100%;
+        }
+
+        .side_letter_search{
+            background: rgba(4, 38, 49,.8);
+            position: fixed;
+            right: 0;
+            width: 2.2rem;
+            height: 100vh;
+            z-index: 10;
+            text-align: center;
+            color: #29c093;
+            padding: 10px 0;
+        }
+
+        .side_letter_search .letter{
+            margin: 7px 0;
+        }
+        .side_letter_search .letter:hover{
+            cursor: pointer;
+            background: #29c093;
+            color: white;
+        }
+    </style>
+    <div id="loading-spinner" style="display:none;">
+        <img src="/images/spinner.gif" alt="Loading...">
+    </div>
+
+    <div class="side_letter_search">
+        <p class="letter">A</span>
+        <p class="letter">B</span>
+        <p class="letter">C</span>
+        <p class="letter">D</span>
+        <p class="letter">E</span>
+        <p class="letter">F</span>
+        <p class="letter">G</span>
+        <p class="letter">H</span>
+        <p class="letter">I</span>
+        <p class="letter">J</span>
+        <p class="letter">K</span>
+        <p class="letter">L</span>
+        <p class="letter">M</span>
+        <p class="letter">N</span>
+        <p class="letter">O</span>
+        <p class="letter">P</span>
+        <p class="letter">Q</span>
+        <p class="letter">R</span>
+        <p class="letter">S</span>
+        <p class="letter">T</span>
+        <p class="letter">U</span>
+        <p class="letter">V</span>
+        <p class="letter">W</span>
+        <p class="letter">X</span>
+        <p class="letter">Y</span>
+        <p class="letter">Z</span>
+    </div>
+
+    <form action="">
+        <nav id="side-nav" style="display: none;" class="p-3">
+            <select name="category" id="category1" class="py-2 px-4 mb-3 filter_category select-filter"
+                style="width: 100%; outline: black">
+                <option class="py-1 px-3" value="">Category</option>
+                <option class="py-1 px-3">Bangla Movies</option>
+                <option class="py-1 px-3">Hindi Movies</option>
+                <option class="py-1 px-3">English Movies</option>
+                <option class="py-1 px-3">Tamil Movies</option>
+                <option class="py-1 px-3">Most Popular Bangla Movies</option>
+                <option class="py-1 px-3">Most Popular English Movies</option>
+                <option class="py-1 px-3">Most Popular Hindi Movies</option>
+                <option class="py-1 px-3">Most Popular Tamil Movies</option>
+            </select>
+
+            <select name="genre" id="genre1" class="py-2 px-4 mb-3 filter_category select-filter"
+                style="width: 100%; outline: black">
+                <option class="py-1 px-3" value="">Genre</option>
+                <option class="py-1 px-3">Action</option>
+                <option class="py-1 px-3">Horror</option>
+                <option class="py-1 px-3">Romantic</option>
+                <option class="py-1 px-3">Tamil Movies</option>
+            </select>
+
+            <select name="year" id="year1" class="py-2 px-4 mb-3 filter_category select-filter"
+                style="width: 100%; outline: black">
+                <option class="py-1 px-3" value="">Year</option>
+                <option class="py-1 px-3" value="2023">2023</option>
+                <option class="py-1 px-3" value="2022">2022</option>
+                <option class="py-1 px-3" value="2021">2021</option>
+                <option class="py-1 px-3" value="2020">2020</option>
+                <option class="py-1 px-3" value="2019">2019</option>
+                <option class="py-1 px-3" value="2018">2018</option>
+                <option class="py-1 px-3" value="2017">2017</option>
+                <option class="py-1 px-3" value="2016">2016</option>
+                <option class="py-1 px-3" value="2015">2015</option>
+                <option class="py-1 px-3" value="2014">2014</option>
+                <option class="py-1 px-3" value="2013">2013</option>
+                <option class="py-1 px-3" value="2012">2012</option>
+                <option class="py-1 px-3" value="2011">2011</option>
+                <option class="py-1 px-3" value="2010">2010</option>
+                <option class="py-1 px-3" value="2009">2009</option>
+                <option class="py-1 px-3" value="2008">2008</option>
+                <option class="py-1 px-3" value="2007">2007</option>
+                <option class="py-1 px-3" value="2006">2006</option>
+                <option class="py-1 px-3" value="2005">2005</option>
+                <option class="py-1 px-3" value="2004">2004</option>
+                <option class="py-1 px-3" value="2003">2003</option>
+                <option class="py-1 px-3" value="2002">2002</option>
+                <option class="py-1 px-3" value="2001">2001</option>
+                <option class="py-1 px-3" value="2000">2000</option>
+                <option class="py-1 px-3" value="1999">1999</option>
+                <option class="py-1 px-3" value="1998">1998</option>
+                <option class="py-1 px-3" value="1997">1997</option>
+                <option class="py-1 px-3" value="1996">1996</option>
+                <option class="py-1 px-3" value="1995">1995</option>
+            </select>
+        </nav>
+
+
+        <div class="container-fluid" style="background-color: #031B23;min-height: 100vh;">
+            <div class="container-fluid filter_section">
+                <div class="row py-4 " style="margin-right: 30px;">
+                    <div class="col-md-4">
+                        <select name="category" id="category" class="py-2 px-4 mb-3 filter_category select-filter"
+                            style="width: 100%; outline: black">
+                            <option class="py-1 px-3" value="">Category</option>
+                            <option class="py-1 px-3">Bangla Movies</option>
+                            <option class="py-1 px-3">Hindi Movies</option>
+                            <option class="py-1 px-3">English Movies</option>
+                            <option class="py-1 px-3">Tamil Movies</option>
+                            <option class="py-1 px-3">Most Popular Bangla Movies</option>
+                            <option class="py-1 px-3">Most Popular English Movies</option>
+                            <option class="py-1 px-3">Most Popular Hindi Movies</option>
+                            <option class="py-1 px-3">Most Popular Tamil Movies</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="genre" id="genre" class="py-2 px-4 mb-3 filter_category select-filter"
+                            style="width: 100%; outline: black">
+                            <option class="py-1 px-3" value="">Genre</option>
+                            <option class="py-1 px-3">Action</option>
+                            <option class="py-1 px-3">Horror</option>
+                            <option class="py-1 px-3">Romantic</option>
+                            <option class="py-1 px-3">Tamil Movies</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="year" class="py-2 px-4 mb-3 filter_category select-filter"
+                            style="width: 100%; outline: black">
+                            <option class="py-1 px-3" value="">Year</option>
+                            <option class="py-1 px-3" value="2023">2023</option>
+                            <option class="py-1 px-3" value="2022">2022</option>
+                            <option class="py-1 px-3" value="2021">2021</option>
+                            <option class="py-1 px-3" value="2020">2020</option>
+                            <option class="py-1 px-3" value="2019">2019</option>
+                            <option class="py-1 px-3" value="2018">2018</option>
+                            <option class="py-1 px-3" value="2017">2017</option>
+                            <option class="py-1 px-3" value="2016">2016</option>
+                            <option class="py-1 px-3" value="2015">2015</option>
+                            <option class="py-1 px-3" value="2014">2014</option>
+                            <option class="py-1 px-3" value="2013">2013</option>
+                            <option class="py-1 px-3" value="2012">2012</option>
+                            <option class="py-1 px-3" value="2011">2011</option>
+                            <option class="py-1 px-3" value="2010">2010</option>
+                            <option class="py-1 px-3" value="2009">2009</option>
+                            <option class="py-1 px-3" value="2008">2008</option>
+                            <option class="py-1 px-3" value="2007">2007</option>
+                            <option class="py-1 px-3" value="2006">2006</option>
+                            <option class="py-1 px-3" value="2005">2005</option>
+                            <option class="py-1 px-3" value="2004">2004</option>
+                            <option class="py-1 px-3" value="2003">2003</option>
+                            <option class="py-1 px-3" value="2002">2002</option>
+                            <option class="py-1 px-3" value="2001">2001</option>
+                            <option class="py-1 px-3" value="2000">2000</option>
+                            <option class="py-1 px-3" value="1999">1999</option>
+                            <option class="py-1 px-3" value="1998">1998</option>
+                            <option class="py-1 px-3" value="1997">1997</option>
+                            <option class="py-1 px-3" value="1996">1996</option>
+                            <option class="py-1 px-3" value="1995">1995</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="filter_mobile py-5" id="menu-button">
+                <span class="text-light py-2 px-3 rounded" style="cursor: pointer;background: #29c093;">
+                    <i class="fa-solid fa-filter"></i>
+                    <span class="mx-2">Filter</span>
+                </span>
+            </div>
+    </form>
+
+    <div id="movie_contaier_sec" style="margin-right: 40px;">
+        <div class="row" id="movieSection">
+
+        </div>
+
+    </div>
+
+    <script>
+        // Get references to the select elements
+        const categorySelect = document.getElementById("category");
+        const categorySelect1 = document.getElementById("category1");
+        const yearSelect = document.getElementById("year");
+        const yearSelect1 = document.getElementById("year1");
+        const genreSelect = document.getElementById("genre");
+        const genreSelect1 = document.getElementById("genre1");
+        const movieSection = document.getElementById("movieSection");
+        const loading_spinner = document.getElementById("loading-spinner");
+        const movie_contaier_sec = document.getElementById("movie_contaier_sec");
+        const letterArray = document.querySelectorAll(".letter");
+
+        let searchParams = new URLSearchParams(window.location.search);
+        let categoryParam = searchParams.get('category') || '';
+        let genreParam = searchParams.get('genre') || '';
+        let yearParam = searchParams.get('year') || '';
+        let pageParam = searchParams.get('page') || '';
+        let perPageParam = searchParams.get('perPage') || '';
+
+        let page = 1;
+        let perPage = 12;
+        let totalPages = 0;
+
+        let category = '';
+        let genre = '';
+        let year = '';
+        let letter = '';
+        let previousData = [];
+
+        const menuButton = document.querySelector('#menu-button');
+        const sideNav = document.querySelector('#side-nav');
+
+        menuButton.addEventListener('click', function () {
+            if (sideNav.style.display == 'none') {
+                sideNav.style.display = 'block'
+            } else if (sideNav.style.display == 'block') {
+                sideNav.style.display = 'none' 
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('#side-nav') && !event.target.closest('#menu-button') && sideNav.style.display == 'block') {
+                sideNav.style.display = 'none'
+            }
+        });
+
+
+        categorySelect.addEventListener('change', (event) => {
+            category = event.target.value;
+            previousData = [];
+            offset = 0;
+            fetchMovies();
+        });
+        categorySelect1.addEventListener('change', (event) => {
+            category = event.target.value;
+            previousData = [];
+            offset = 0;
+            fetchMovies();
+        });
+        
+        yearSelect.addEventListener('change', (event) => {
+            year = event.target.value;
+            previousData = [];
+            offset = 0;
+            fetchMovies();
+        });
+        yearSelect1.addEventListener('change', (event) => {
+            year = event.target.value;
+            previousData = [];
+            offset = 0;
+            fetchMovies();
+        }); 
+
+        genreSelect.addEventListener('change', (event) => {
+            genre = event.target.value;
+            previousData = [];
+            offset = 0;
+            fetchMovies();
+        }); 
+        genreSelect1.addEventListener('change', (event) => {
+            genre = event.target.value;
+            previousData = [];
+            offset = 0;
+            fetchMovies();
+        });
+
+        letterArray.forEach(element => {
+            element.addEventListener('click',(e)=>{
+                previousData = [];
+                offset = 0;
+                letter = element.innerText
+                console.log(letter);
+                fetchMovies();
+            })
+        });
+
+       
+
+        function fetchMovies() {
+            let fetchURL = `/movie/filter?category=${category}&genre=${genre}&year=${year}&letter=${letter}&offset=${offset}`
+            let pushURL = `/movie?category=${category}&genre=${genre}&year=${year}&offset=${offset}`
+            fetch(fetchURL)
+                .then(response => response.json())
+                .then(movies => {
+                    console.log(movies.data);
+                    previousData = previousData.concat(movies);
+                    offset += 12;
+                    movieSection.innerHTML = previousData.map(movie => {
+                        return `
+                        
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="my-2 movie_card">
+                            <div class="card card_position_relative ">
+                                <div class="bg-image  hover-overlay ripple" data-mdb-ripple-color="light">
+                                    <img src="${movie.poster}" class="img-fluid card-image" />
+                                    <a href="/movie/movie-info?ttcode=${movie.ttcode}" id="not">
+                                        <div class="mask" style="background-color: rgba(0, 0, 0, 0.3);">
+                                        </div>
+                                    </a>
+                                </div>
+                                <a href="/movie/${movie.ttcode}" class="play-button">
+                                    <i class="fas fa-play-circle"></i>
+                                </a>
+            
+                                <div class="movie_info">
+                                    <p class="left-corner rating"><i class="fas fa-star mx-1"></i>${movie.rating}</p>
+                                    <p class="right-corner"><i class="fas fa-heart text-light"
+                                            style="color:  rgba(4,255,142,1);"></i></p>
+                                </div>
+            
+                            </div>
+            
+                            <p class="text-center mb-0" style="color:#29c093">${movie.title}</p>
+                            <p class="text-center" style="color:#29c093">${movie.movie_year}</p>
+                        </div>  
+                    </div> 
+                        `
+                    }).join('');
+                window.history.pushState({}, '', pushURL);
+                })
+                .catch(error => console.log(error));
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let searchParams = new URLSearchParams(window.location.search);
+            category = searchParams.get('category') || '';
+            genre = searchParams.get('genre') || '';
+            year = searchParams.get('year') || '';
+            offset = 0;
+            fetchMovies();
+        });
+
+
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                fetchMovies();
+            }
+        });
+
+
+
+
+    </script>
+    <%- include('../../partials/footer.ejs') %>
+        </body>
+
+        </html>
