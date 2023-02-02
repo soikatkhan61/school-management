@@ -3,7 +3,7 @@ const Flash = require("../../utils/Flash");
 exports.adminDashboardGetController =async (req,res,next) =>{
 
     try {
-        db.query("select username,email,createdAt,isVerified from users ORDER by id DESC limit 5;select * from packages;select count(id) as totalUser from users;select count(approval_status) as totalPkgSell from pkg_subscriber where approval_status=1;select pkg_subscriber.pkg_id,pkg_subscriber.approval_status,packages.price FROM pkg_subscriber JOIN packages on pkg_subscriber.pkg_id = packages.id ",(e,data)=>{
+        db.query("select username,email,createdAt from users ORDER by id DESC limit 5;select * from packages;select count(id) as totalUser from users;select count(approval_status) as totalPkgSell from pkg_subscriber where approval_status=1;select pkg_subscriber.pkg_id,pkg_subscriber.approval_status,packages.price FROM pkg_subscriber JOIN packages on pkg_subscriber.pkg_id = packages.id ",(e,data)=>{
             if(e){
                 return next(e)
             }else{

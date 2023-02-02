@@ -1,15 +1,10 @@
 CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    userType ENUM('admin','user','moderator') DEFAULT "user",
+    userType ENUM('superadmin','admin','teacher','student','guerdian','librarian','user') DEFAULT "user",
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255) NOT NULL,
-    isVerified int(1) DEFAULT 0,
-    verfication_id int(8) DEFAULT -1,
     profilePics varchar(200) DEFAULT "/uploads/avater.jpg",
-    isBanned ENUM('0','1') DEFAULT "0",
-    device int(2) DEFAULT 1,
-    subscription int(2),
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 
@@ -27,7 +22,7 @@ CREATE TABLE IF NOT EXISTS schools (
     admin_email varchar(100) NOT NULL,
     admin_password varchar(250) NOT NULL,
     admin_avater varchar(250) DEFAULT "/uploades/school/admin_avater.png",
-    staus int(1) DEFAULT 1,
+    status int(1) DEFAULT 1,
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 
@@ -68,22 +63,40 @@ CREATE TABLE IF NOT EXISTS pkg_payment(
     updatedAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 
-
-CREATE TABLE IF NOT EXISTS contact (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name varchar (50) not null,
-    email VARCHAR(255),
-    phone VARCHAR(15) NOT NULL,
-    message varchar(1000),
-    respond ENUM('yes','no'),
-    createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+CREATE TABLE IF NOT EXISTS classes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  class_name varchar(255) not null UNIQUE,
+  class_description VARCHAR(255)
 );
 
-
-
-CREATE TABLE IF NOT EXISTS login_sessions (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id  int(6) not null,
-    session_id varchar(100) NOT NULL ,
-    login_time TIMESTAMP(6)
+CREATE TABLE IF NOT EXISTS subject_list (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id int not null,
+  subject_name VARCHAR(255) NOT NULL,
+  subject_code VARCHAR(10),
+  FOREIGN KEY (class_id) REFERENCES classes(id)
 );
+
+CREATE TABLE IF NOT EXISTS chapter (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id INT,
+  subject_id INT,
+  chapter_name VARCHAR(255) NOT NULL,
+  FOREIGN KEY (subject_id) REFERENCES subject_list(id),
+  FOREIGN KEY (class_id) REFERENCES classes(id)
+);
+
+CREATE TABLE IF NOT EXISTS questions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id INT,
+  subject_id INT,
+  chapter_id INT,
+  school_id INT,
+  question_text text NOT NULL,
+  question_option text NOT NULL,
+  question_answer text NOT NULL,
+  FOREIGN KEY (subject_id) REFERENCES subject_list(id),
+  FOREIGN KEY (class_id) REFERENCES classes(id),
+  FOREIGN KEY (chapter_id) REFERENCES chapter(id)
+);
+

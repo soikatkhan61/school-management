@@ -1,0 +1,112 @@
+<%- include('../../user_partials/header.ejs') %>
+
+<!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label"
+    aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
+    <div class="modal-dialog  ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal2Label">Create a class</h5>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="/user/admin/questions/create-class" method="post">
+        
+                <!-- Text input -->
+                <div class="form-outline mb-4">
+                  <input type="text" id="form6Example3" class="form-control" name="class_name" required/>
+                  <label class="form-label" for="form6Example3">Class Name *</label>
+                </div>
+              
+                <!-- Text input -->
+                <div class="form-outline mb-4">
+                  <input type="text" id="form6Example4" class="form-control" name="desc" required/>
+                  <label class="form-label" for="form6Example4">Description *</label>
+                </div>
+              
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-success">Create</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+
+    <div class="main-content" style="background: #eee;min-height: 90vh;">
+        <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
+            <% if(data.length==0){ %>
+                <p class="text-center text-dark">No Subject Found</p>
+                <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
+                    Create class
+                  </button>
+                <% }else{ %>
+                    <div>
+                        <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
+                            Create class
+                          </button>
+                        <a href="/user/admin/questions/subject" type="button" class="btn btn-primary btn-sm my-1">
+                            Create Subject
+                        </a>
+                        <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
+                          Create Chapter
+                      </a>
+                       
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Class</th>
+                                    <th scope="col">Class Description</th>
+                                    <th scope="col">Subject</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let s of data){%>
+                                    <tr>
+                                        <td><%= s.id %> </td>
+                                        <td><%= s.class_name %></td>
+                                        <td><%= s.class_description %></td>
+                                        <td><a class="btn btn-link" href="/user/admin/questions/get-subject-by-class?class_id=<%= s.id %> ">See subject</a></td>
+                                        <td>
+                                            <div class="dropdown dropstart">
+                                                <button 
+                                                class="btn dropdown-toggle"
+                                                style="background-color: #edf2f6;box-shadow: 0 0 0 0;"
+                                                data-mdb-toggle="dropdown"
+                                                aria-expanded="false"
+                                                id="dropdownMenuButton<%= s.id %>"
+                                                >
+                                                action
+                                            </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= s.id %>">
+                                                  <li><a class="dropdown-item" href="/super-admin/register-school?edit=true&id=<%= s.id %>">Edit</a></li>
+                                                  <li><a class="dropdown-item" href="/super-admin/register-school?del=true&id=<%= s.id %>">Delete</a></li>
+                                                </ul>
+                                              </div>
+                                        </td>
+                                    </tr>
+                                    <% }%>
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                    
+                    <% } %>
+        </div>
+    </div>
+
+
+    <%- include('../../user_partials/footer.ejs') %>
+        </body>
+
+        </html>

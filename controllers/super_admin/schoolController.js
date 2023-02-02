@@ -66,6 +66,7 @@ exports.handleRegistration = async (req, res, next) => {
             admin_email,
             admin_password,
             admin_avater,
+            status,
         } = req.body
 
         if (id && edit) {
@@ -73,7 +74,7 @@ exports.handleRegistration = async (req, res, next) => {
             return res.redirect(`/super-admin/register-school?id=${id}&edit=true`)
         }
         if (id && save) {
-            db.query("update schools set school_name=?,school_address=?,school_email=?,school_phone=?,school_info=?,admin_name=?,admin_blood_group=?,admin_address=?,admin_phone=?,admin_email=?,admin_password=?,admin_avater=? where id =?",
+            db.query("update schools set school_name=?,school_address=?,school_email=?,school_phone=?,school_info=?,admin_name=?,admin_blood_group=?,admin_address=?,admin_phone=?,admin_email=?,admin_password=?,admin_avater=?,status=? where id =?",
                 [
                     school_name,
                     school_address,
@@ -87,6 +88,7 @@ exports.handleRegistration = async (req, res, next) => {
                     admin_email,
                     admin_password,
                     admin_avater,
+                    status,
                     id
                 ], (e, result) => {
                     if (e) {
@@ -118,7 +120,7 @@ exports.handleRegistration = async (req, res, next) => {
                     admin_email,
                     admin_password,
                     admin_avater,
-                    1,
+                    status,
                     null
                 ], (e, result) => {
                     if (e) {

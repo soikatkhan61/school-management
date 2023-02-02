@@ -22,11 +22,11 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-exports.signUpGetController =async (req, res, next) => {
+exports.signUpGetController = async (req, res, next) => {
   console.log(await bcrypt.hash('11111', 11));
   let customError = {
-    username:'',
-    email:''
+    username: '',
+    email: ''
   }
   res.render("pages/auth/register", {
     title: "Create a new account",
@@ -40,8 +40,8 @@ exports.signUpGetController =async (req, res, next) => {
 exports.signUpPostController = async (req, res, next) => {
   let { username, email, password, c_password } = req.body;
   let customError = {
-    username:'',
-    email:''
+    username: '',
+    email: ''
   }
   let errors = validationResult(req).formatWith(errorFormatter);
   console.log(errors);
@@ -63,11 +63,11 @@ exports.signUpPostController = async (req, res, next) => {
 
   try {
     let hashPassword = await bcrypt.hash(password, 11);
-    db.query('select username from users where username = ?',[username],(e,userExists)=>{
-      if(e){
+    db.query('select username from users where username = ?', [username], (e, userExists) => {
+      if (e) {
         return next(e)
-      }else{
-        if(userExists.length>0){
+      } else {
+        if (userExists.length > 0) {
           customError.username = 'Username already used'
           req.flash("fail", "Username already exists");
           return res.render("pages/auth/register", {
@@ -81,12 +81,12 @@ exports.signUpPostController = async (req, res, next) => {
             customError,
             flashMessage: Flash.getMessage(req),
           });
-        }else{
-          db.query("select email from users where email = ?",[email],(e,emailExists)=>{
-            if(e){
+        } else {
+          db.query("select email from users where email = ?", [email], (e, emailExists) => {
+            if (e) {
               return next(e)
-            }else{
-              if(emailExists.length>0){
+            } else {
+              if (emailExists.length > 0) {
                 customError.email = 'Email already used'
                 req.flash("fail", "Email already exists");
                 return res.render("pages/auth/register", {
@@ -100,8 +100,8 @@ exports.signUpPostController = async (req, res, next) => {
                   customError,
                   flashMessage: Flash.getMessage(req),
                 });
-              }else{
-                                db.query(
+              } else {
+                db.query(
                   "insert into users values(?,?,?,?,?,?,?,?,?,?)",
                   [
                     null,
@@ -206,57 +206,35 @@ exports.loginPostController = async (req, res, next) => {
                 flashMessage: Flash.getMessage(req),
               });
             } else {
-              if (data[0].isVerified === 0) {
-                return res.render("pages/auth/verify", {
-                  flashMessage: "",
+              let token = jwt.sign(
+                {
+                  id: data[0].id,
                   username: data[0].username,
-                });
-              }
+                  userType: data[0].userType,
+                },
+                process.env.JWT_SECRET_KEY,
+                { expiresIn: "2h" }
+              );
+              const sessionID = uuid.v4();
+              req.session.isLoggedIn = true;
+              req.session.sessionID = sessionID;
+              req.session.token = token;
+              req.session.user = data[0];
 
-              db.query('SELECT * FROM login_sessions WHERE user_id = ?',[data[0].id],(e,multiLoginCheck)=>{
-                if(e){
-                  return next(e)
-                }else{
-                  if(multiLoginCheck.length >= data[0].device){
-                    let token = jwt.sign(
-                      {
-                        id: data[0].id,
-                        username: data[0].username,
-                        username: data[0].username,
-                      },
-                      process.env.JWT_SECRET_KEY,
-                      { expiresIn: "2h" }
-                    );
-      
-                    const sessionID = uuid.v4();
-                    const loginTime = new Date(); 
-      
-                    db.query("INSERT INTO login_sessions (user_id, session_id, login_time) VALUES (?, ?, ?)",[data[0].id,sessionID,loginTime],(e,loginSessionData)=>{
-                      if(e){
-                        next(e)
-                      }
-                    })
-      
-                    req.session.isLoggedIn = true;
-                    req.session.sessionID = sessionID;
-                    req.session.token = token;
-                    req.session.user = data[0];
-      
-                    req.session.save((err) => {
-                      if (err) {
-                        return next(err);
-                      }
-                      req.flash("success", "Successfully Logged In");
-                      if (data[0].userType == "admin") {
-                        return res.redirect("/admin");
-                      }
-                      res.redirect("/user/dashboard");
-                    });
-                  }else{
-                    return res.send("Device acceed!")
-                  }
+              req.session.save((err) => {
+                if (err) {
+                  return next(err);
                 }
-              })
+                req.flash("success", "Successfully Logged In");
+                if (data[0].userType == "superadmin") {
+                  return res.redirect("/admin");
+                } else if (data[0].userType == "admin") {
+                  return res.redirect("/user/admin"); c
+                } else if (data[0].userType == "teacher") {
+                  return res.redirect("/user/teacher");
+                }
+
+              });
             }
           });
         }
@@ -421,7 +399,7 @@ exports.sendVerifyCode = async (req, res, next) => {
 exports.verifyController = async (req, res, next) => {
   let userEmail = req.body.email;
   let verify_id = req.body.verify_id;
-console.log(userEmail,verify_id)
+  console.log(userEmail, verify_id)
   if (verify_id < 1) {
     return res.sendStatus(500);
   }
@@ -442,9 +420,9 @@ console.log(userEmail,verify_id)
                 if (e) {
                   next(e);
                 } else {
-                  if(req.query.forgot === 'true'){
-                    req.flash('success','Verification succesfull!')
-                    return res.render("pages/auth/new-password",{flashMessage:Flash.getMessage(req),email:userEmail})
+                  if (req.query.forgot === 'true') {
+                    req.flash('success', 'Verification succesfull!')
+                    return res.render("pages/auth/new-password", { flashMessage: Flash.getMessage(req), email: userEmail })
                   }
                   let token = jwt.sign(
                     {
@@ -589,16 +567,16 @@ exports.setNewPassword = async (req, res, next) => {
   try {
     let password = req.body.password
     let email = req.body.email
-    
+
     let hashPassword = await bcrypt.hash(password, 11);
-    db.query("update users set password= ? where email = ?",[hashPassword,email],(e,data)=>{
-      if(e){
+    db.query("update users set password= ? where email = ?", [hashPassword, email], (e, data) => {
+      if (e) {
         return next(e)
-      }else{
-        if(data.changedRows){
-          req.flash('success','New password set successfull')
+      } else {
+        if (data.changedRows) {
+          req.flash('success', 'New password set successfull')
           res.redirect("/auth/login")
-        }else{
+        } else {
           res.status(500).send('Failed to change your password')
         }
       }
@@ -610,18 +588,12 @@ exports.setNewPassword = async (req, res, next) => {
 
 
 exports.logoutController = (req, res, next) => {
-  db.query("DELETE FROM login_sessions WHERE user_id = ? and session_id = ? ",[req.user.id,req.session.sessionID],(e,data)=>{
-    if(e){
-      next(e)
-    }else{
-      req.session.destroy((err) => {
-        if (err) {
-          return next(err);
-        }
-        res.clearCookie("token");
-        res.redirect("/auth/login");
-        res.end();
-      });
+  req.session.destroy((err) => {
+    if (err) {
+      return next(err);
     }
-  })
+    res.clearCookie("token");
+    res.redirect("/auth/login");
+    res.end();
+  });
 };

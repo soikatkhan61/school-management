@@ -1,0 +1,53 @@
+<%- include('../../user_partials/header.ejs') %>
+    <div class="main-content" style="background: #eee;min-height: 90vh;">
+        <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
+            <div class="mb-3">
+                <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
+                    Create Class
+                </a>
+                <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
+                    Create Subject
+                </a>
+                <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
+                    Create Chapter
+                </a>
+            </div>
+            <% if(data.length==0){ %>
+                <p class="text-center text-dark">No Questions Found</p>
+                <a href="/user/admin/questions/create-chapter" class="btn btn-primary">Create Chapter</a>
+                <% }else{ %>
+                    <div class="table-responsive">
+                        <div class="py-2" >
+                            <p>Showing questions of </p>
+                            Class:  <span class="fw-bold text-primary"><%= data[0].class_name %> </span><br>
+                            Subject: <span class="fw-bold text-success"><%= data[0].subject_name %></span> <br>
+                            Chapter: <span class="fw-bold text-danger"><%= data[0].chapter_name %></span> <br>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Question</th>
+                                    <th scope="col">Question</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let s of data){%>
+                                    <tr>
+                                        <td><%= s.question_text %></td>
+                                        <td>edit</td>
+                                        <td><a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>" class="btn btn-sm btn-dark">see question</a></td>
+                                    </tr>
+                                    <% }%>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+
+
+    <%- include('../../user_partials/footer.ejs') %>
+        </body>
+
+        </html>

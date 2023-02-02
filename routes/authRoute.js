@@ -25,6 +25,7 @@ const {
     setNewPassword
 } = require("../controllers/auth")
 
+
 router.get("/sign-up",isUnAuthenticated,signUpGetController)
 router.post("/sign-up",isUnAuthenticated,signupValidator,signUpPostController)
 
@@ -36,7 +37,6 @@ router.get("/send-verification-code/:email",isUnAuthenticated,sendVerifyCode)
 
 router.get("/login",isUnAuthenticated,loginGetController)
 router.post("/login",isUnAuthenticated,loginPostController)
-
 
 router.get("/change-password",isAuthenticated,changePasswordGetController)
 router.post("/change-password",isAuthenticated,changePasswordValidator,changePasswordPostController)

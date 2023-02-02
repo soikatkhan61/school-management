@@ -5,6 +5,16 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <h6 class="py-3">Infomation of the schools</h6>
+                        <div class="mb-2">
+                            <select name="status" class="py-2 px-4 mb-3"
+                                style="width: 100%; outline: black">
+                                <option class="py-2 px-5" value="none">Status</option>
+
+                                <option class="py-2 px-5" value="1" <%= data.status == '1' ? 'selected' : '' %>>Active</option>
+                                <option class="py-2 px-5" value="0" <%= data.status == '0'? 'selected' : '' %>>Inactive</option>
+                            </select>
+
+                        </div>
                         <div class="form-outline mb-4">
                             <input name="school_name" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>
                             <label class="form-label" for="form7Example13">School Name *</label>

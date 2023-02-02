@@ -1,0 +1,86 @@
+
+<%- include('../../user_partials/header.ejs') %>
+<style>
+    #loading-spinner{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 100%;
+        translate: (-50%,-50%);
+    }
+</style>
+<div id="loading-spinner" style="display:none;">
+    <img src="/images/spinner.gif" alt="Loading...">
+</div>
+    <div class="main-content container">
+        <div class="mb-3">
+            <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
+                Create class
+            </a>
+            <a href="/user/admin/questions/subject" type="button" class="btn btn-info btn-sm my-1">
+              Create subject
+          </a>
+           
+        </div>
+        <form action="/user/admin/questions/create-chapter" method="post">
+            <!-- Text input -->
+            <div class="mb-2">
+                <select name="class_name" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+                    <option class="py-2 px-5" value="">Select Class</option>
+
+                    <% for(let s of data[1]){ %>
+                        <option class="py-2 px-5" value="<%= s.id %>">
+                            <%= s.class_name %>
+                        </option>
+                        <% } %>
+
+                </select>
+            </div>
+
+            <!-- Text input -->
+            <div class="mb-2">
+                <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+                    <option class="py-2 px-5" value="">Select Subject</option>
+                </select>
+            </div>
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="form6Example5" class="form-control" name="chapter" required />
+                <label class="form-label" for="form6Example5">Chapter Name</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mb-4">Submit</button>
+        </form>
+    </div>
+
+
+    
+        <script>
+            const class_select = document.getElementById('class_select');
+            const subject_select = document.getElementById('subject_select');
+            const loading_spinner = document.getElementById('loading-spinner');
+
+            class_select.addEventListener('change', async (event) => {
+                loading_spinner.style.display = 'block'
+                var classes = event.target.value;
+                console.log("feting...");
+                let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+                    loading_spinner.style.display = 'none'
+                    return data
+                })
+                subject_select.innerHTML = ''
+                for (let i = 0; i < episod.length; i++) {
+                    console.log(i);
+                    const option = document.createElement('option');
+                    option.value =`${episod[i].id}`;
+                    
+                    option.innerHTML = `${episod[i].subject_name}`;
+                    subject_select.appendChild(option);
+                }
+            });
+        </script>
+        <%- include('../../user_partials/footer.ejs') %>
+        </body>
+
+        </html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> 
+    </title>
+    <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+  
+    <!-- BOXICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
+    <script src="/scripts/summernote-math.js"></script>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="/styles/grid.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <link rel="stylesheet" href="/styles/custom_user.css">
+</head>
+
+<body>
+    
+<%- include('../../user_partials/sidebar.ejs') %> 
+
+    <style>
+        #loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            z-index: 1;
+        }
+        .empty {
+            border-color: red;
+        }
+
+    </style>
+    <div id="loading-spinner" style="display:none;">
+        <img src="/images/spinner.gif" alt="Loading...">
+    </div>
+    <div class="main-content container" >
+        <div class="mb-5">
+            <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
+                Create Class
+            </a>
+            <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
+                Create Subject
+            </a>
+            <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
+                Create Chapter
+            </a>
+        </div>
+        <form action="/user/admin/questions/create-question" method="post">
+            <!-- Text input -->
+            <div class="mb-2">
+                <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required
+                    style="width: 100%; outline: black">
+                    <option class="py-2 px-5" value="">Select Class</option>
+
+                    <% for(let s of data){ %>
+                        <option class="py-2 px-5" value="<%= s.id %>">
+                            <%= s.class_name %>
+                        </option>
+                        <% } %>
+
+                </select>
+            </div>
+
+            <!-- Text input -->
+            <div class="mb-2">
+                <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required
+                    style="width: 100%; outline: black">
+                    <option class="py-2 px-5" value="">Select Subject</option>
+                </select>
+            </div>
+
+            <!-- Email input -->
+            <div class="mb-2">
+                <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required
+                    style="width: 100%; outline: black">
+                    <option class="py-2 px-5" value="">Select Chapter</option>
+                </select>
+            </div>
+
+            <textarea id="summernote" name="question_text"></textarea>
+
+            <div class="my-5">
+                <h3 class="text-center">Option of this question</h3>
+                <hr>
+                <div class="my-3">
+                    <h5>#option 1</h5>
+                    <textarea class="summernote" name="question_option" ></textarea>
+                </div>
+
+                <div class="my-3">
+                    <h5>#option 2</h5>
+                    <textarea class="summernote" name="question_option"></textarea>
+                </div>
+
+                <div class="my-3">
+                    <h5>#option 3</h5>
+                    <textarea class="summernote" name="question_option"></textarea>
+                </div>
+
+                <div class="my-3">
+                    <h5>#option 4</h5>
+                    <textarea class="summernote" name="question_option"></textarea>
+                </div>
+                
+            </div>
+
+            <div class="my-4 py-4 px-3 rounded" style="background-color: #051e3431;">
+                <h6 class="text-center">Corect Answer</h6>
+                <hr>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      #option 1
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
+                    <label class="form-check-label" for="flexRadioDefault2">
+                      #option 2
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
+                    <label class="form-check-label" for="flexRadioDefault3">
+                      #option 3
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
+                    <label class="form-check-label" for="flexRadioDefault4">
+                      #option 4
+                    </label>
+                  </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block my-4">Submit</button>
+</form>
+    </div>
+
+
+
+    <script>
+       $(document).ready(function () {
+       $('#summernote').summernote({
+        toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['insert', ['math']],,
+            ],
+        height: 250
+            });
+        $('.summernote').summernote({
+        toolbar: [
+                ['insert', ['math']],
+            ],
+        height: 60
+            });
+        });
+        $('form').submit(function () {
+            var isEmpty = false;
+            $('.summernote').each(function (index) {
+                if ($(this).summernote('isEmpty')) {
+                    $('.note-frame').eq(index+1).css('border', '2px solid red');
+                    isEmpty = true;
+                }else{
+                    $('.note-frame').eq(index+1).css('border', '1px solid rgba(0,0,0,.2)');
+                }
+            });
+            if (isEmpty) {
+            event.preventDefault();
+            alert("One or more textarea is empty. Please fill them in before submitting the form.");
+            }
+        });
+
+
+
+        const class_select = document.getElementById('class_select');
+        const subject_select = document.getElementById('subject_select');
+        const chapter_select = document.getElementById('chapter_select');
+        const loading_spinner = document.getElementById('loading-spinner');
+        let classes
+        class_select.addEventListener('change', async (event) => {
+            loading_spinner.style.display = 'block'
+            classes = event.target.value;
+            console.log("feting...");
+            let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+                loading_spinner.style.display = 'none'
+                return data
+            })
+            subject_select.innerHTML = ''
+            chapter_select.innerHTML = ''
+
+            const option = document.createElement('option');
+            option.value = ''
+            option.innerHTML = 'Select Subject'
+            subject_select.appendChild(option);
+
+            for (let i = 0; i < episod.length; i++) {
+                console.log(i);
+                const option = document.createElement('option');
+                option.value = `${episod[i].id}`;
+
+                option.innerHTML = `${episod[i].subject_name}`;
+                subject_select.appendChild(option);
+            }
+        });
+        subject_select.addEventListener('change', async (event) => {
+            loading_spinner.style.display = 'block'
+            var chapter = event.target.value;
+            console.log("feting...");
+            let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
+                loading_spinner.style.display = 'none'
+                return data
+            })
+            chapter_select.innerHTML = ''
+            const option = document.createElement('option');
+            option.value = ''
+            option.innerHTML = 'Select Chapter'
+            chapter_select.appendChild(option);
+            for (let i = 0; i < episod.length; i++) {
+                console.log(i);
+                const option = document.createElement('option');
+                option.value = `${episod[i].id}`;
+
+                option.innerHTML = `${episod[i].chapter_name}`;
+                chapter_select.appendChild(option);
+            }
+        });
+
+    </script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </div>
+    <!-- END MAIN CONTENT -->
+    
+    <div class="overlay"></div>
+        <script src="/scripts/dashboard.js"></script>
+        </body>
+
+        </html>
