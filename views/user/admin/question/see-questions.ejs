@@ -34,7 +34,7 @@
                             <tbody>
                                 <% for(let s of data){%>
                                     <tr>
-                                        <td><%= s.question_text %></td>
+                                        <td><%- s.question_text %></td>
                                         <td>edit</td>
                                         <td><a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>" class="btn btn-sm btn-dark">see question</a></td>
                                     </tr>
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <%- include('../../user_partials/footer.ejs') %>
         </body>
 

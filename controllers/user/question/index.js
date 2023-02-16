@@ -2,7 +2,8 @@ const db = require("../../../config/db.config");
 const fs = require("fs");
 const Flash = require("../../../utils/Flash");
 const slugify = require("slugify");
-
+const mjAPI = require("mathjax-node");
+const pdf = require("html-pdf");
 
 exports.renderAllQuestions = (req, res, next) => {
   let id = req.query.id;
@@ -164,6 +165,7 @@ exports.renderCreateQuestion = (req, res, next) => {
 exports.createQuestionPost = (req, res, next) => {
   let {class_id,subject_id,chapter_id,question_text,question_option,question_answer} = req.body
   let options = [];
+  console.log(req.body)
   question_option.forEach(e =>{
     options.push(e);
   })
@@ -189,6 +191,37 @@ exports.renderSeeQuestion = (req, res, next) => {
       }else{
         console.log(data);
         res.render("user/admin/question/see-questions", { data,title: "See Question", flashMessage: Flash.getMessage(req) })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+
+exports.makeQuestionRender = (req, res, next) => {
+  var katex = require('katex');
+  let {class_id,subject_id,chapter_id} = req.query
+  try {
+    db.query("SELECT questions.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM questions JOIN classes ON questions.class_id = classes.id JOIN subject_list ON questions.subject_id = subject_list.id JOIN chapter ON questions.chapter_id = chapter.id WHERE questions.class_id=1 and questions.subject_id=2 and questions.chapter_id=3 and questions.id=14",[class_id,subject_id,chapter_id],(e,data)=>{
+      if(e){
+        next(e)
+      }else{
+        const  equation = '<p><span class="math-tex">\(x = {-b \pm \sqrt{b^2-4ac} \over 2a}\)</span></p>'
+        const tex = katex.renderToString(equation)
+
+        const html = `
+        <html>
+          <body>
+            ${tex}
+          </body>
+        </html>
+      `;
+        pdf.create(html).toFile('./expression.pdf', function (err, res) {
+          console.log(res);
+            });
+      
+      
+        res.render("user/admin/question/make-questions", { data,title: "See Question", flashMessage: Flash.getMessage(req) })
       }
     })
   } catch (error) {
