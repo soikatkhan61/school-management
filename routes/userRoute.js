@@ -32,9 +32,9 @@ router.get("/get-subject",getSubject)
 router.get("/get-chapter",getChapter)
 router.get("/admin",isAuthenticated,adminDashboardRender)
 
-router.get("/create-student",isAuthenticated,requireRole('admin'),renderCreateStudnet)
-router.post("/create-student",isAuthenticated,requireRole('admin'),upload.single('student_avater'),createStudentPost)
-router.get("/registerd-student",isAuthenticated,requireRole('admin'),renderRegisteredStudent)
+router.get("/create-student",isAuthenticated,requireRole('admin,teacher'),renderCreateStudnet)
+router.post("/create-student",isAuthenticated,requireRole('admin,teacher'),upload.single('student_avater'),createStudentPost)
+router.get("/registerd-student",isAuthenticated,requireRole('admin,teacher'),renderRegisteredStudent)
 
 
 

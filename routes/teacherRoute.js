@@ -7,8 +7,8 @@ const {
 } = require('../middleware/authMiddleware')
 
 
-const {renderStudentProfile} = require("../controllers/student/studentController")
+const {renderTeacherDashboard} = require("../controllers/teacher")
 
-router.get("/profile",isAuthenticated,requireRole('admin,teacher'),renderStudentProfile)
+router.get("/",isAuthenticated,requireRole('teacher'),renderTeacherDashboard)
 
 module.exports = router

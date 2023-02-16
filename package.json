@@ -55,6 +55,7 @@
     "sharp": "^0.31.2",
     "slugify": "^1.6.5",
     "uuid": "^9.0.0",
+    "validator": "^13.9.0",
     "webp-converter": "^2.3.3"
   }
 }

@@ -1,0 +1,118 @@
+
+        
+<!-- SIDEBAR -->
+<div class="sidebar" style="color: white;" id="sidebar_container">
+    <h4 class="text-center mt-3 mb-0">School</h2>
+    <hr>
+    <div class="sidebar-user">
+        <div class="sidebar-user-info">
+            <img src="/images/user.png" alt="User picture" class="profile-image">
+            <div class="sidebar-user-name"style="text-transform:lowercase">
+                <%= user.username %> 
+            </div>
+        </div>
+        <button class="btn_user btn_user-outline" id="sidebar-close" style="border: 1px solid white;">
+            <i class='bx bx-chevron-left text-white'></i>
+        </button>
+    </div>
+    <!-- SIDEBAR MENU -->
+    <ul class="sidebar-menu">
+        <li>
+            <a href="/super-admin/school">
+                <i class='bx bx-plus'></i>
+                <span>School</span>
+            </a>
+        </li>
+        
+        <li class="sidebar-submenu">
+            <a href="#" class="sidebar-menu-dropdown">
+                <i class='bx bxs-package'></i>
+                <span>Question</span>
+                <div class="dropdown-icon"></div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content" >
+                <li>
+                    <a href="/user/admin/create-question">
+                        Create Question
+                    </a>
+                </li> 
+                <li>
+                    <a href="/user/admin/questions/make-question">
+                        Make Question
+                    </a>
+                </li>
+                <li>
+                    <a href="/user/admin/questions/class">
+                        Class
+                    </a>
+                </li>
+                <li>
+                    <a href="/user/admin/questions/subject">
+                        Subject
+                    </a>
+                </li>
+                <li>
+                    <a href="/user/admin/questions/create-chapter">
+                        Chapter
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="sidebar-submenu">
+            <a href="#" class="sidebar-menu-dropdown">
+                <i class='bx bxs-package'></i>
+                <span>Student</span>
+                <div class="dropdown-icon"></div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content" >
+                <li>
+                    <a href="/user/create-student">
+                        Register Student
+                    </a>
+                </li> 
+                <li>
+                    <a href="/user/registerd-student">
+                        Student List
+                    </a>
+                </li>
+                <li>
+                    <a href="/user/admin/questions/create-chapter">
+                        Chapter
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="/admin/register-school">
+                <i class='bx bxs-report'></i>
+                <span>Subscription Report</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/register-school">
+                <i class="fas fa-minus-circle"></i>
+                <span>Pending Request</span>
+            </a>
+        </li> 
+        <li>
+            <a href="/auth/logout">
+                <i class="fas fa-minus-circle"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+    <!-- END SIDEBAR MENU -->
+</div>
+<!-- END SIDEBAR -->
+
+
+<!-- MAIN CONTENT -->
+<div class="main">
+    <div class="main-header">
+        <div class="mobile-toggle" id="mobile-toggle">
+            <i class='bx bx-menu-alt-right'></i>
+        </div>
+        <div class="main-title">
+            <p class="mb-0"><%= user.userType %> Dashboard</p>
+        </div>
+    </div>

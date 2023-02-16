@@ -210,6 +210,7 @@ exports.loginPostController = async (req, res, next) => {
                 {
                   id: data[0].id,
                   username: data[0].username,
+                  table: 'users',
                   userType: data[0].userType,
                 },
                 process.env.JWT_SECRET_KEY,

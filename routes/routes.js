@@ -7,6 +7,8 @@ const profileRoute = require("./profileRoute")
 const HomeRoute = require("./HomeRoute")
 const super_admin_route = require("./super_admin_route")
 const studentRoute = require("./studentRoute")
+const dashboardRoute = require("./dashboardRoute")
+const teacherRoute = require("./teacherRoute")
 
 
 
@@ -22,8 +24,12 @@ const routes = [
         handler: adminRoute
     },
     {
-        path: "/user",
-        handler: userRoute
+        path: "/contact",
+        handler: messageRoute
+    }, 
+    {
+        path: "/dashboard",
+        handler: dashboardRoute
     },
     {
         path: "/profile",
@@ -34,16 +40,20 @@ const routes = [
         handler: packageRoute
     },
     {
-        path: "/contact",
-        handler: messageRoute
-    },
-    {
         path: "/student",
         handler: studentRoute
     },
     {
         path: "/super-admin",
         handler: super_admin_route
+    },
+    {
+        path: "/teacher",
+        handler: teacherRoute
+    },
+    {
+        path: "/user",
+        handler: userRoute
     },
     {
         path: "/",

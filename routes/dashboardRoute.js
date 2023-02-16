@@ -9,6 +9,6 @@ const {
 
 const {renderStudentProfile} = require("../controllers/student/studentController")
 
-router.get("/profile",isAuthenticated,requireRole('admin,teacher'),renderStudentProfile)
+router.get("/profile",isAuthenticated,requireRole('admin'),renderStudentProfile)
 
 module.exports = router

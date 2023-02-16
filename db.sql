@@ -118,7 +118,9 @@ CREATE TABLE IF NOT EXISTS students (
 );
 CREATE TABLE IF NOT EXISTS teachers (
   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  userType ENUM('superadmin','admin','teacher','student','guerdian','librarian','user') DEFAULT "user", 
   name VARCHAR(100) NOT NULL,
+  username VARCHAR(30) NOT NULL,
   email VARCHAR(100),
   phone varchar(15) not null,
   password VARCHAR(255) NOT NULL,

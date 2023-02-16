@@ -3,6 +3,8 @@ const router = require("express").Router()
 const signupValidator = require('../validator/auth/signupValidator')
 const changePasswordValidator = require('../validator/auth/changePasswordValidator')
 
+const {renderTeacherLoginController,teacherLoginPost} = require('../controllers/Auth/teacherAuth')
+
 const {
     isUnAuthenticated,
     isAuthenticated
@@ -34,6 +36,9 @@ router.get("/verify",isUnAuthenticated,verifyGetController)
 router.post("/verify",isUnAuthenticated,verifyController)
 
 router.get("/send-verification-code/:email",isUnAuthenticated,sendVerifyCode)
+
+router.get("/login/teacher",isUnAuthenticated,renderTeacherLoginController)
+router.post("/login/teacher",isUnAuthenticated,teacherLoginPost)
 
 router.get("/login",isUnAuthenticated,loginGetController)
 router.post("/login",isUnAuthenticated,loginPostController)

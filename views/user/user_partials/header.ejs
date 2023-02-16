@@ -31,5 +31,8 @@
 
 <body>
 
-<%- include('./sidebar.ejs') %>
- <%- include('../../utils/alert.ejs') %> 
+  <% if(user.userType === 'admin'){ %>
+    <%- include('../../sidebar/admin.ejs') %>
+  <% }else if(user.userType === 'teacher'){ %>
+    <%- include('../../sidebar/teacher.ejs') %>
+  <% } %>

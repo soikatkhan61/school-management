@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const db = require("../config/db.config")
+const validator = require('validator');
 
 
 exports.bindUserWithRequest = () => {
@@ -24,7 +25,11 @@ exports.bindUserWithRequest = () => {
                     });
 
                 } else {
-                    db.query("select * from users where id=?", [decoded.id], (e, data) => {
+                    if (!/^[a-z_]+$/i.test(decoded.table)) {
+                        return res.status(403).send("Forbidden");
+                    }
+                    let sql = `select * from ${decoded.table} where id=${decoded.id}`
+                    db.query(sql, (e, data) => {
                         if (e) {
                             next(e)
                         }
@@ -46,7 +51,6 @@ exports.bindUserWithRequest = () => {
 }
 
 exports.isAuthenticated = (req, res, next) => {
-
     if (!req.session.isLoggedIn) {
         return res.redirect('/auth/login')
     }
@@ -64,7 +68,6 @@ exports.isUnAuthenticated = (req, res, next) => {
     if (req.session.isLoggedIn) {
         return res.redirect('/')
     }
-
     next()
 }
 
@@ -87,23 +90,28 @@ exports.checkAdmin = async (req, res, next) => {
     }
 }
 
-exports.requireRole = (role) => {
-    return async (req, res, next)=>{
-        if (req.user != undefined) {
-            try {
-                db.query("select userType from users where userType=? and id=? LIMIT 1", [role,req.user.id], (e, user) => {
-                   console.log(user); 
-                    if (user.length > 0) {
-                       return next() 
-                    }else {
-                        res.send("Unauthorized Access")
-                    }
-                })
-            } catch (e) {
-                console.log(e)
-                next(e)
-            }
+exports.requireRole = (acceptRole) => {
+    return async (req, res, next) => {
+        const session = req.session;
+        if (!session || !session.user) {
+            return res.status(401).send("Unauthorized access");
         }
+
+        if (typeof acceptRole !== "string" || !/^[a-zA-Z0-9, ]*$/.test(acceptRole)) {
+            return res.status(400).send("Bad request");
+        }
+
+        try {
+            const allowedRoles = acceptRole.split(",");
+            if (!allowedRoles.includes(session.user.userType)) {
+                return res.status(403).send("Forbidden");
+            }
+            next()
+        } catch (e) {
+            console.log(e)
+            next(e)
+        }
+
     }
 }
 
