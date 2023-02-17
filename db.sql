@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS classes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   class_name varchar(255) not null UNIQUE,
   class_description VARCHAR(255)
+  school_id int (11),
+  FOREIGN KEY(school_id) REFERENCES schools(id)
 );
 
 CREATE TABLE IF NOT EXISTS subject_list (
@@ -74,6 +76,8 @@ CREATE TABLE IF NOT EXISTS subject_list (
   class_id int not null,
   subject_name VARCHAR(255) NOT NULL,
   subject_code VARCHAR(10),
+  school_id int (11),
+  FOREIGN KEY(school_id) REFERENCES schools(id),
   FOREIGN KEY (class_id) REFERENCES classes(id)
 );
 
@@ -82,6 +86,8 @@ CREATE TABLE IF NOT EXISTS chapter (
   class_id INT,
   subject_id INT,
   chapter_name VARCHAR(255) NOT NULL,
+  school_id int (11),
+  FOREIGN KEY(school_id) REFERENCES schools(id),
   FOREIGN KEY (subject_id) REFERENCES subject_list(id),
   FOREIGN KEY (class_id) REFERENCES classes(id)
 );

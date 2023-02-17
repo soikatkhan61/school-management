@@ -1,7 +1,9 @@
 const router = require("express").Router()
 
-const {renderHome} = require('../controllers/renderHomePage')
 
-router.get("/",renderHome)
+
+router.get("/",(req,res)=>{
+    res.render('/',{flasMessage:''})
+})
 
 module.exports = router

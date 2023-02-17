@@ -7,8 +7,8 @@ const profileRoute = require("./profileRoute")
 const HomeRoute = require("./HomeRoute")
 const super_admin_route = require("./super_admin_route")
 const studentRoute = require("./studentRoute")
-const dashboardRoute = require("./dashboardRoute")
 const teacherRoute = require("./teacherRoute")
+const examRoute = require("./examRoute")
 
 
 
@@ -28,8 +28,8 @@ const routes = [
         handler: messageRoute
     }, 
     {
-        path: "/dashboard",
-        handler: dashboardRoute
+        path: "/exam",
+        handler: examRoute
     },
     {
         path: "/profile",

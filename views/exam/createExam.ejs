@@ -1,0 +1,299 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+    <style>
+        #loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            translate: (-50%, -50%);
+        }
+    </style>
+    <div id="loading-spinner" style="display:none;">
+        <img src="/images/spinner.gif" alt="Loading...">
+    </div>
+    <div class="main-content container">
+
+        <!-- Modal -->
+        <div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label"
+            aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
+            <div class="modal-dialog modal-xl ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModal2Label">Add Question</h5>
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <form action="/exam/load-question" method="post" id="loadQuestionForm">
+                                <div class="row py-3">
+
+                                    <div class="col-4 col-sm-12">
+                                        <select name="class_id" id="class_select" class="py-2 px-4 mb-3"
+                                            style="width: 100%; outline: black">
+                                            <option class="py-2 px-5" value="" selected>Class</option>
+                                            <% for(let c of classes){ %>
+                                                <option class="py-2 px-5" value="<%= c.id %>">
+                                                    <%= c.class_name %>
+                                                </option>
+                                                <% } %>
+                                        </select>
+                                    </div>
+                                    <div class="col-4 col-sm-12">
+                                        <select name="subject" id="subject_select" class="py-2 px-4 mb-3"
+                                            style="width: 100%; outline: black">
+                                            <option class="py-2 px-5" value="" selected>Subject</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4 col-sm-12">
+                                        <select name="chapter" id="chapter_select" class="py-2 px-4 mb-3"
+                                            style="width: 100%; outline: black">
+                                            <option class="py-2 px-5" value="" selected>Chapter</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" value="1" name="school_id">
+                                    <center>
+                                        <button class="btn my-3 border border-primary" id="load_question">Load
+                                            Question</button>
+                                    </center>
+
+                                </div>
+
+                                <div>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Question Text</th>
+                                                <th scope="col">Option</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="question_list">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="container p-3 col-8 col-sm-12">
+                <form>
+                    <!-- Email input -->
+                    <div class="mb-4 form-outline">
+                        <input type="text" id="form1Example1" class="form-control" />
+                        <label class="form-label" for="form1Example1">Exam Name</label>
+                    </div>
+
+
+                    <!-- 2 column grid layout for inline styling -->
+                    <div class="mb-4 p-4 border rounded">
+                        <button class="btn btn-block" data-mdb-toggle="modal" data-mdb-target="#exampleModal2"> + Add
+                            Question</button>
+                    </div>
+
+
+
+            </div>
+            <div class="container p-4 col-4 col-sm-12 card border border-primary">
+                <div>
+                    <div class=" mb-4">
+                        <span class="mb-0">This exams is creating by</span>
+                        <p class="fw-bold">
+                            <%= user.username %>
+                        </p>
+
+                    </div>
+                    <div class=" mb-4">
+                        <span>Exam Code</span>
+                        <p class="mb-0 fw-bold" id="exam-code" name="exam_code">
+                            <%= exam_code %>
+                        </p>
+                        <span class="text-primary" id="regenerate" style="cursor:pointer">Regenerate</span>
+                        <script>
+                            const regenerateButton = document.getElementById('regenerate');
+                            const examCodeElement = document.getElementById('exam-code');
+
+                            regenerateButton.addEventListener('click', () => {
+                                const randomNumber = Math.floor(Math.random() * 10000);
+                                const examCode = examCodeElement.textContent.trim();
+                                const parts = examCode.split('_');
+                                parts[1] = randomNumber.toString().padStart(4, '0');
+                                const newExamCode = parts.join('_');
+                                examCodeElement.textContent = newExamCode;
+                            });
+
+                        </script>
+                    </div>
+                    <div class="mb-4">
+                        <span>Start Time</span>
+                        <input type="datetime-local" id="start-time" class="form-control" required />
+                    </div>
+                    <div class="mb-4">
+                        <span>End Time</span>
+                        <input type="datetime-local" id="end-time" class="form-control" required />
+                    </div>
+                    <div class="mb-4">
+                        <input type="text" id="duration" class="form-control" disabled placeholder="Duration" />
+                    </div>
+
+                    <script>
+                        const startTimeInput = document.getElementById('start-time');
+                        const endTimeInput = document.getElementById('end-time');
+                        const durationInput = document.getElementById('duration');
+
+                        startTimeInput.addEventListener('change', calculateDuration);
+                        endTimeInput.addEventListener('change', calculateDuration);
+
+                        function calculateDuration() {
+                            const startTime = new Date(startTimeInput.value);
+                            const endTime = new Date(endTimeInput.value);
+
+                            // Calculate the difference in milliseconds between the start and end times
+                            const durationMs = endTime - startTime;
+
+                            // Convert the duration to minutes and round to the nearest minute
+                            const durationMinutes = Math.round(durationMs / (1000 * 60));
+
+                            // Set the value of the duration input
+                            durationInput.value = durationMinutes + ' minutes';
+                        }
+
+                    </script>
+                    <button type="submit">sumit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const class_select = document.getElementById('class_select');
+            const subject_select = document.getElementById('subject_select');
+            const chapter_select = document.getElementById('chapter_select');
+            const loading_spinner = document.getElementById('loading-spinner');
+            var classes
+            class_select.addEventListener('change', async (event) => {
+                loading_spinner.style.display = 'block'
+                classes = event.target.value;
+                console.log("feting...");
+                let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+                    loading_spinner.style.display = 'none'
+                    return data
+                })
+                console.log(episod);
+                subject_select.innerHTML = ''
+                for (let i = 0; i < episod.length; i++) {
+                    console.log(i);
+                    const option = document.createElement('option');
+                    option.value = `${episod[i].id}`;
+
+                    option.innerHTML = `${episod[i].subject_name}`;
+                    subject_select.appendChild(option);
+                }
+            });
+            subject_select.addEventListener('change', async (event) => {
+                loading_spinner.style.display = 'block'
+                var subject_id = event.target.value;
+                console.log("feting...");
+                let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${subject_id}`).then(res => res.json()).then(data => {
+                    loading_spinner.style.display = 'none'
+                    return data
+                })
+                console.log(episod);
+                chapter_select.innerHTML = ''
+                for (let i = 0; i < episod.length; i++) {
+                    console.log(i);
+                    const option = document.createElement('option');
+                    option.value = `${episod[i].id}`;
+                    option.innerHTML = `${episod[i].chapter_name}`;
+                    chapter_select.appendChild(option);
+                }
+            });
+
+
+
+            const load_question = document.getElementById('load_question')
+            const questionList = document.getElementById('question_list');
+            load_question.addEventListener('click', (e) => {
+                e.preventDefault()
+                const form = document.getElementById('loadQuestionForm');
+                const formData = new FormData(form);
+
+                const data = {
+                    class_id: formData.get('class_id'),
+                    subject: formData.get('subject'),
+                    chapter: formData.get('chapter'),
+                    school_id: formData.get('school_id')
+                };
+
+
+                fetch('/exam/load-question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(questions => {
+                        questionList.innerHTML = '';
+                        questions.forEach((question, index) => {
+                            const row = document.createElement('tr');
+                            const questionNumber = index + 1;
+
+                            // Add the question number to the first column of the row
+                            const questionNumberCell = document.createElement('td');
+                            questionNumberCell.textContent = questionNumber;
+                            row.appendChild(questionNumberCell);
+
+                            // Add the question text to the second column of the row
+                            const questionTextCell = document.createElement('td');
+                            questionTextCell.innerHTML = question.question_text;
+                            row.appendChild(questionTextCell);
+
+                            // Add a cell for the options
+                            // Add a cell for the options
+                            const optionsCell = document.createElement('td');
+                            // Assuming the options are returned as an array of objects with `id` and `text` properties
+                            const optionsArray = JSON.parse(question.question_option);
+                            const options = optionsArray.map(option => `<span style="display:inline-block">${option}</span>`).join(', ');
+                            optionsCell.innerHTML = options;
+                            row.appendChild(optionsCell);
+
+
+
+                            // Add a cell for the action buttons
+                            const actionCell = document.createElement('td');
+                            const addbtn = document.createElement('button');
+                            addbtn.textContent = 'Add';
+                            addbtn.classList.add('btn');
+                            addbtn.classList.add('btn-success');
+                            addbtn.classList.add('btn-sm');
+                            actionCell.appendChild(addbtn);
+                            row.appendChild(actionCell);
+
+                            // Add the row to the table
+                            questionList.appendChild(row);
+                        });
+                    })
+                    .catch(error => console.error(error));
+            })
+
+
+        </script>
+
+    </div>
+    <%- include('../partials/footer.ejs') %>
+        </body>
+
+        </html>
