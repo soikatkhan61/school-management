@@ -7,11 +7,12 @@ exports.renderCreateExam = (req, res, next) => {
             if (e) {
                 next(e)
             } else {
-                console.log(data);
+                let data1 = data[0]
+
                 res.render("exam/createExam", {
                     title: "Create Exam",
                     flashMessage: Flash.getMessage(req),
-                    exam_code: data[0].exam_code + "_" + (Math.floor(Math.random() * 9000) + 1000),
+                    exam_code: data1[0].exam_code + "_" + (Math.floor(Math.random() * 9000) + 1000),
                     classes: data[1]
                 });
             }

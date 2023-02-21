@@ -1,6 +1,5 @@
 const authRoute = require("./authRoute")
 const userRoute = require("./userRoute")
-const adminRoute = require("./adminRoute")
 const messageRoute = require("./messageRoute")
 const packageRoute = require("./packageRoute")
 const profileRoute = require("./profileRoute")
@@ -18,10 +17,6 @@ const routes = [
     {
         path: "/auth",
         handler: authRoute
-    },
-    {
-        path: "/admin",
-        handler: adminRoute
     },
     {
         path: "/contact",

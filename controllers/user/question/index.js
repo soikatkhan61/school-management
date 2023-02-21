@@ -68,7 +68,7 @@ exports.getSubjectByClass = (req, res, next) => {
 
 exports.createSubjectPost = (req, res, next) => {
   let { class_name, subject_name, subject_code } = req.body;
-  db.query("insert into subject_list values(?,?,?,?)", [null, class_name, subject_name, subject_code], (e, data) => {
+  db.query("insert into subject_list values(?,?,?,?,?)", [null, class_name, subject_name, subject_code,null], (e, data) => {
     if (e) {
       next(e)
     } else {
