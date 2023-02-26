@@ -90,10 +90,7 @@
             <div class="container p-3 col-9 col-sm-12">
                 <form>
                     <!-- Email input -->
-                    <div class="mb-4 form-outline">
-                        <input type="text" id="form1Example1" class="form-control" />
-                        <label class="form-label" for="form1Example1">Exam Name</label>
-                    </div>
+                   
                     <!-- 2 column grid layout for inline styling -->
                     <div class="mb-4 p-4 border rounded">
                         <button class="btn btn-block" data-mdb-toggle="modal" data-mdb-target="#exampleModal2"> + Add
@@ -116,17 +113,19 @@
             </div>
             <div class="container col-3 col-sm-12 ">
                 <div class="border border-gray card  p-4">
-                    <div class=" mb-4">
+                    <div class=" mb-2">
                         <span class="mb-0">This exams is creating by</span>
-                        <p class="fw-bold">
+                        <p class="fw-bold mb-0">
                             <%= user.username %>
                         </p>
                     </div>
-                    <div class=" mb-4">
-                        <span>Exam Code</span>
-                        <p class="mb-0 fw-bold" id="exam-code" name="exam_code">
-                            SHS0222_2515
-                        </p>
+                    <div class="mb-2">
+                        <div class="d-flex ">
+                            <span>Exam Code: </span>
+                            <p class="mb-0 mx-2 fw-bold" id="exam-code" name="exam_code">
+                                SHS0222_2515
+                            </p>
+                        </div>
                         <span class="text-primary" id="regenerate" style="cursor:pointer">Regenerate</span>
                         <script>
                             const regenerateButton = document.getElementById('regenerate');
@@ -142,6 +141,27 @@
                             });
 
                         </script>
+                    </div>
+                    <div class="mb-4 form-outline">
+                        <input type="text" id="form1Example1" class="form-control" required/>
+                        <label class="form-label" for="form1Example1">Exam Name</label>
+                    </div>
+                    <div class="">
+                        <select name="class_id" id="sidebar_class_select" class="py-2 px-4 mb-3"
+                            style="width: 100%; outline: black" required>
+                            <option class="py-2 px-5" value="" selected>Class</option>
+                            <% for(let c of classes){ %>
+                                <option class="py-2 px-5" value="<%= c.id %>">
+                                    <%= c.class_name %>
+                                </option>
+                                <% } %>
+                        </select>
+                    </div>
+                    <div class="">
+                        <select name="subject" id="sidebar_subject_select" class="py-2 px-4 mb-3"
+                            style="width: 100%; outline: black" required>
+                            <option class="py-2 px-5" value="" selected>Subject</option>
+                        </select>
                     </div>
                     <div class="mb-4">
                         <span>Start Time</span>
@@ -182,46 +202,69 @@
     <script>
         const class_select = document.getElementById('class_select');
         const subject_select = document.getElementById('subject_select');
+        const sidebar_class_select = document.getElementById('sidebar_class_select');
+        const sidebar_subject_select = document.getElementById('sidebar_subject_select');
         const chapter_select = document.getElementById('chapter_select');
         const loading_spinner = document.getElementById('loading-spinner');
         var classes
+
+        sidebar_class_select.addEventListener('change', async (event) => {
+            loading_spinner.style.display = 'block'
+            classes = event.target.value;
+            console.log("feting...");
+            let data = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+                loading_spinner.style.display = 'none'
+                return data
+            })
+            sidebar_subject_select.innerHTML = ''
+            generateOptions(data,sidebar_subject_select)
+        });
+
         class_select.addEventListener('change', async (event) => {
             loading_spinner.style.display = 'block'
             classes = event.target.value;
             console.log("feting...");
-            let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+            let data = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
                 loading_spinner.style.display = 'none'
                 return data
             })
-            console.log(episod);
             subject_select.innerHTML = ''
-            for (let i = 0; i < episod.length; i++) {
-                console.log(i);
-                const option = document.createElement('option');
-                option.value = `${episod[i].id}`;
-
-                option.innerHTML = `${episod[i].subject_name}`;
-                subject_select.appendChild(option);
-            }
+            generateOptions(data,subject_select)
         });
         subject_select.addEventListener('change', async (event) => {
             loading_spinner.style.display = 'block'
             var subject_id = event.target.value;
             console.log("feting...");
-            let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${subject_id}`).then(res => res.json()).then(data => {
+            let data = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${subject_id}`).then(res => res.json()).then(data => {
                 loading_spinner.style.display = 'none'
                 return data
             })
-            console.log(episod);
             chapter_select.innerHTML = ''
-            for (let i = 0; i < episod.length; i++) {
-                console.log(i);
+            const option = document.createElement('option');
+            option.innerHTML = `Select Chapter`;
+            option.value = `none`;
+            chapter_select.appendChild(option);
+            for (let i = 0; i < data.length; i++) {
                 const option = document.createElement('option');
-                option.value = `${episod[i].id}`;
-                option.innerHTML = `${episod[i].chapter_name}`;
+                option.value = `${data[i].id}`;
+                option.innerHTML = `${data[i].chapter_name}`;
                 chapter_select.appendChild(option);
             }
         });
+
+        function generateOptions(data,getSelectDiv){
+            const option = document.createElement('option');
+            option.innerHTML = `Select Subject`;
+            option.value = `none`;
+            getSelectDiv.appendChild(option);
+            for (let i = 0; i < data.length; i++) {
+                const option = document.createElement('option');
+                option.value = `${data[i].id}`;
+                option.innerHTML = `${data[i].subject_name}`;
+                getSelectDiv.appendChild(option);
+            }
+        }
+
 
 
 

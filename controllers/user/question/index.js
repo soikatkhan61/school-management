@@ -202,7 +202,7 @@ exports.makeQuestionRender = (req, res, next) => {
   var katex = require('katex');
   let {class_id,subject_id,chapter_id} = req.query
   try {
-    db.query("SELECT questions.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM questions JOIN classes ON questions.class_id = classes.id JOIN subject_list ON questions.subject_id = subject_list.id JOIN chapter ON questions.chapter_id = chapter.id WHERE questions.class_id=1 and questions.subject_id=2 and questions.chapter_id=3 and questions.id=14",[class_id,subject_id,chapter_id],(e,data)=>{
+    db.query("SELECT questions.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM questions JOIN classes ON questions.class_id = classes.id JOIN subject_list ON questions.subject_id = subject_list.id JOIN chapter ON questions.chapter_id = chapter.id WHERE questions.class_id=1 and questions.subject_id=1 and questions.chapter_id=2 and questions.id=11",[class_id,subject_id,chapter_id],(e,data)=>{
       if(e){
         next(e)
       }else{

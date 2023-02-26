@@ -21,6 +21,27 @@ exports.renderCreateExam = (req, res, next) => {
         next(error)
     }
 };
+exports.createExamPost = (req, res, next) => {
+    let {} = req.body
+    try {
+        db.query("SELECT CONCAT(SUBSTR(REPLACE(schools.school_name, ' ', ''), -3), DATE_FORMAT(CURDATE(), '%m%d') ) AS exam_code FROM schools WHERE schools.id = 1;select id,class_name from classes WHERE school_id=1 ", (e, data) => {
+            if (e) {
+                next(e)
+            } else {
+                let data1 = data[0]
+
+                res.render("exam/createExam", {
+                    title: "Create Exam",
+                    flashMessage: Flash.getMessage(req),
+                    exam_code: data1[0].exam_code + "_" + (Math.floor(Math.random() * 9000) + 1000),
+                    classes: data[1]
+                });
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+};
 
 exports.loadQuestion = (req, res, next) => {
     try {

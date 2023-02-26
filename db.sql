@@ -140,6 +140,8 @@ CREATE TABLE IF NOT EXISTS exams (
   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   code VARCHAR(20) NOT NULL,
+  class varchar(50) not null, 
+  subject varchar(50) not null, 
   start_time DATETIME NOT NULL,
   end_time DATETIME NOT NULL,
   duration INT(11) NOT NULL,

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- BOXICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+    <script src="https://cdn.ckeditor.com/4.20.1/full-all/ckeditor.js"></script>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="/styles/grid.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <link rel="stylesheet" href="/styles/custom_user.css">
+</head>
+
+<% if(user.userType==='admin' ){ %>
+    <%- include('../sidebar/admin.ejs') %>
+        <% }else if(user.userType==='teacher' ){ %>
+            <%- include('../sidebar/teacher.ejs') %>
+                <% } %>
+                    <style>
+                        #loading-spinner {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            height: 100%;
+                            translate: (-50%, -50%);
+                        }
+                    </style>
+                    <div id="loading-spinner" style="display:none;">
+                        <img src="/images/spinner.gif" alt="Loading...">
+                    </div>
+                    <div class="main-content py-2">
+
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="quesitonModal" tabindex="-1" aria-labelledby="quesitonModal2"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="quesitonModal2">Modal title</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <form action="/exam/load-question" method="post" id="loadQuestionForm">
+                                                <div class="row py-3">
+
+                                                    <div class="col-4 col-sm-12">
+                                                        <select name="class_id" id="class_select" class="py-2 px-4 mb-3"
+                                                            style="width: 100%; outline: black">
+                                                            <option class="py-2 px-5" value="" selected>Class</option>
+                                                            <% for(let c of classes){ %>
+                                                                <option class="py-2 px-5" value="<%= c.id %>">
+                                                                    <%= c.class_name %>
+                                                                </option>
+                                                                <% } %>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-4 col-sm-12">
+                                                        <select name="subject" id="subject_select"
+                                                            class="py-2 px-4 mb-3" style="width: 100%; outline: black">
+                                                            <option class="py-2 px-5" value="" selected>Subject</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-4 col-sm-12">
+                                                        <select name="chapter" id="chapter_select"
+                                                            class="py-2 px-4 mb-3" style="width: 100%; outline: black">
+                                                            <option class="py-2 px-5" value="" selected>Chapter</option>
+                                                        </select>
+                                                    </div>
+                                                    <input type="hidden" value="1" name="school_id">
+                                                    <center>
+                                                        <button class="btn my-3 border border-primary"
+                                                            id="load_question">Load
+                                                            Question</button>
+                                                    </center>
+
+                                                </div>
+
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">Question Text</th>
+                                                                <th scope="col">Option</th>
+                                                                <th scope="col">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="question_list">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Your Question</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea id="content" name="question_text"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-danger" id="viewBtn">View</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="container-fluid p-3">
+                            <!-- Email input -->
+                            <!-- 2 column grid layout for inline styling -->
+                            <div class="mb-4 p-4 border rounded">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#quesitonModal"> + Add
+
+                                    Question</button>
+
+                                <button type="button" id="generate" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    Generate Question
+                                </button>
+
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered " id="question_table">
+                                    <thead>
+                                        <tr class="table-dark">
+                                            <th scope="col">#</th>
+                                            <th scope="col">Question Text</th>
+                                            <th scope="col">Option</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="question_list">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="text">
+                                helo
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        const class_select = document.getElementById('class_select');
+                        const subject_select = document.getElementById('subject_select');
+                        const chapter_select = document.getElementById('chapter_select');
+                        const loading_spinner = document.getElementById('loading-spinner');
+                        var classes
+
+                        class_select.addEventListener('change', async (event) => {
+                            loading_spinner.style.display = 'block'
+                            classes = event.target.value;
+                            console.log("feting...");
+                            let data = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+                                loading_spinner.style.display = 'none'
+                                return data
+                            })
+                            subject_select.innerHTML = ''
+                            generateOptions(data, subject_select)
+                        });
+                        subject_select.addEventListener('change', async (event) => {
+                            loading_spinner.style.display = 'block'
+                            var subject_id = event.target.value;
+                            console.log("feting...");
+                            let data = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${subject_id}`).then(res => res.json()).then(data => {
+                                loading_spinner.style.display = 'none'
+                                return data
+                            })
+                            chapter_select.innerHTML = ''
+                            const option = document.createElement('option');
+                            option.innerHTML = `Select Chapter`;
+                            option.value = `none`;
+                            chapter_select.appendChild(option);
+                            for (let i = 0; i < data.length; i++) {
+                                const option = document.createElement('option');
+                                option.value = `${data[i].id}`;
+                                option.innerHTML = `${data[i].chapter_name}`;
+                                chapter_select.appendChild(option);
+                            }
+                        });
+
+                        function generateOptions(data, getSelectDiv) {
+                            const option = document.createElement('option');
+                            option.innerHTML = `Select Subject`;
+                            option.value = `none`;
+                            getSelectDiv.appendChild(option);
+                            for (let i = 0; i < data.length; i++) {
+                                const option = document.createElement('option');
+                                option.value = `${data[i].id}`;
+                                option.innerHTML = `${data[i].subject_name}`;
+                                getSelectDiv.appendChild(option);
+                            }
+                        }
+
+
+                        //table to ckeditor 
+                        const generateCk = document.getElementById('generate')
+                        generateCk.addEventListener('click', () => {
+                            questionDateToCK()
+                        })
+                        var editor = CKEDITOR.instances['content']; // Replace 'editor-id' with the ID of your CKEditor instance
+                        let questionStr = ''
+                        function questionDateToCK() {
+                            var questions = localStorage.getItem('question_genator');
+                            // Parse the string to an array of objects
+                            var questionsArray = JSON.parse(questions);
+
+                            // Loop through the array and extract the desired values
+                            for (var i = 0; i < questionsArray.length; i++) {
+                                var question = questionsArray[i];
+                                var id = i + 1
+                                var text = question.question_text;
+                                var options = question.question_options;
+
+                                // Concatenate the extracted values to form the question string
+                                questionStr += id + ". " + text + " " + options + "<br><br>";
+                            }
+
+                            CKEDITOR.instances.content.setData(questionStr);
+                           
+                        }
+                        document.getElementById('viewBtn').addEventListener('click',()=>{
+                            let data = CKEDITOR.instances.content.getData();
+                            localStorage.setItem('question_view', JSON.stringify(data))
+                            window.open('/exam/view-question');
+                        })
+
+                        const load_question = document.getElementById('load_question')
+
+                        const question_table = document.getElementById('question_table');
+                        let questions_in_localStorage = []
+                        let question_from_stroage = JSON.parse(localStorage.getItem('question_genator')) || []
+                        const questionList = document.getElementById('question_list');
+
+                        function generateRows(question_data) {
+                            console.log(question_data);
+                            let row = question_table.insertRow();
+
+                            let idCell = row.insertCell()
+                            let questionTextCell = row.insertCell()
+                            let questionOptionCell = row.insertCell()
+                            let actionCell = row.insertCell()
+
+                            idCell.innerHTML = question_data.id
+                            questionTextCell.innerHTML = question_data.question_text
+                            questionOptionCell.innerHTML = question_data.question_options
+
+                            let deleteButton = document.createElement('button')
+                            deleteButton.textContent = 'Delete'
+                            deleteButton.type = 'button'
+                            actionCell.appendChild(deleteButton)
+
+                            deleteButton.addEventListener('click', (e) => {
+                                let index = question_from_stroage.findIndex(q => q.id == question_data.id)
+                                question_from_stroage.splice(index, 1)
+                                console.log(index);
+
+                                localStorage.setItem('question_genator', JSON.stringify(question_from_stroage))
+                                row.remove()
+                            })
+                        }
+
+                        question_from_stroage.forEach(questions => generateRows(questions))
+
+                        load_question.addEventListener('click', (e) => {
+                            e.preventDefault()
+                            const form = document.getElementById('loadQuestionForm');
+                            const formData = new FormData(form);
+
+                            const data = {
+                                class_id: formData.get('class_id'),
+                                subject: formData.get('subject'),
+                                chapter: formData.get('chapter'),
+                                school_id: formData.get('school_id')
+                            };
+
+
+                            fetch('/exam/load-question', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            })
+                                .then(response => response.json())
+                                .then(questions => {
+                                    questionList.innerHTML = '';
+                                    questions.forEach((question, index) => {
+                                        const row = document.createElement('tr');
+                                        // Add the question number to the first column of the row
+                                        const questionNumberCell = document.createElement('td');
+                                        questionNumberCell.classList.add('question_id');
+                                        questionNumberCell.textContent = question.id;
+                                        row.appendChild(questionNumberCell);
+
+                                        // Add the question text to the second column of the row
+                                        const questionTextCell = document.createElement('td');
+                                        questionTextCell.classList.add('question_text');
+                                        questionTextCell.innerHTML = question.question_text;
+                                        row.appendChild(questionTextCell);
+
+                                        // Add a cell for the options
+                                        // Add a cell for the options
+                                        const optionsCell = document.createElement('td');
+                                        optionsCell.classList.add('question_options');
+                                        // Assuming the options are returned as an array of objects with `id` and `text` properties
+                                        const optionsArray = JSON.parse(question.question_option);
+                                        const options = optionsArray.map(option => `<span style="display:inline-block">${option}</span>`).join(', ');
+                                        optionsCell.innerHTML = options;
+                                        row.appendChild(optionsCell);
+
+
+
+                                        // Add a cell for the action buttons
+                                        const actionCell = document.createElement('td');
+                                        const addbtn = document.createElement('button');
+                                        addbtn.textContent = 'Add';
+                                        addbtn.type = 'button';
+                                        addbtn.classList.add('btn');
+                                        addbtn.classList.add('btn-secondary');
+                                        addbtn.classList.add('btn-sm');
+                                        addbtn.classList.add('add_to_question_list');
+                                        actionCell.appendChild(addbtn);
+                                        row.appendChild(actionCell);
+
+                                        // Add the row to the table
+                                        questionList.appendChild(row);
+                                    });
+
+                                    let add_to_question_list = document.querySelectorAll('.add_to_question_list')
+                                    let question_id = document.querySelectorAll('.question_id')
+                                    let question_options = document.querySelectorAll('.question_options')
+                                    let question_text = document.querySelectorAll('.question_text')
+
+                                    for (let i = 0; i < add_to_question_list.length; i++) {
+                                        add_to_question_list[i].addEventListener('click', (e) => {
+                                            const itemSet = (localStorage.getItem('question_genator') !== null);
+                                            if (!itemSet) {
+                                                console.log("New Data peyechi, set korbo ekhn");
+                                                let obj = {
+                                                    id: question_id[i].innerHTML,
+                                                    question_text: question_text[i].innerHTML,
+                                                    question_options: question_options[i].innerHTML
+                                                }
+
+                                                question_from_stroage.push(obj)
+                                                localStorage.setItem('question_genator', JSON.stringify(question_from_stroage))
+                                                generateRows(obj)
+                                                add_to_question_list[i].innerText = 'Added'
+                                                add_to_question_list[i].classList.add('btn-success')
+                                            } else {
+                                                let obj = {
+                                                    id: question_id[i].innerHTML,
+                                                    question_text: question_text[i].innerHTML,
+                                                    question_options: question_options[i].innerHTML
+                                                }
+                                                console.log(obj);
+                                                let idExistence = question_from_stroage.some(question => question.id === obj.id)
+                                                if (!idExistence) {
+                                                    question_from_stroage.push(obj)
+                                                    localStorage.setItem('question_genator', JSON.stringify(question_from_stroage))
+                                                    generateRows(obj)
+                                                    add_to_question_list[i].innerText = 'Added'
+                                                    add_to_question_list[i].classList.add('btn-success')
+                                                } else {
+                                                    console.log("Already added");
+                                                    add_to_question_list[i].disabled = true;
+                                                    add_to_question_list[i].innerText = "Already added";
+                                                }
+
+                                            }
+                                        })
+
+                                    }
+
+                                })
+                                .catch(error => console.error(error));
+                        })
+
+
+                    </script>
+                    
+                    <script>
+                        CKEDITOR.replace('content', {
+                            extraPlugins: 'mathjax',
+                            mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+                            height: 600,
+                            removeButtons: 'PasteFromWord',
+                        });
+
+                        if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
+                            document.getElementById('ie8-warning').className = 'tip alert';
+                        }
+                    </script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+                        crossorigin="anonymous"></script>
+                    </div>
+                   
+                    <!-- END MAIN CONTENT -->
+                    <script type="text/javascript"
+                    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"></script>
+                    <div class="overlay"></div>
+                    <script src="/scripts/dashboard.js"></script>
+                    </body>
+
+</html>

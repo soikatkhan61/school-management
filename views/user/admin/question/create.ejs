@@ -26,7 +26,12 @@
 </head>
 
 <body>
-
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js", "TeX/AMSmath.js"],
+            jax: ["input/TeX", "output/SVG"],
+        });
+    </script>
     <% if(user.userType === 'admin'){ %>
         <%- include('../../../sidebar/admin.ejs') %>
       <% }else if(user.userType === 'teacher'){ %>
@@ -50,6 +55,7 @@
         <div id="loading-spinner" style="display:none;">
             <img src="/images/spinner.gif" alt="Loading...">
         </div>
+
         <div class="main-content container">
             <div class="mb-5">
                 <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
@@ -77,7 +83,6 @@
 
                     </select>
                 </div>
-
                 <!-- Text input -->
                 <div class="mb-2">
                     <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required
@@ -161,49 +166,28 @@
         </div>
 
 
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"></script>
 
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-  tex2jax: { inlineMath: [['\\(','\\)']] },
-  CommonHTML: { scale: 100 },
-  "HTML-CSS": { scale: 100 },
-  SVG: { scale: 100 },
-  menuSettings: { inTabOrder: false },
-  showMathMenu: false,
-  messageStyle: "none",
-  "HTML-CSS": { matchFontHeight: false },
-  tex: { tags: "ams" },
-  extensions: ["tex2jax.js", "toMathML.js", "MathMenu.js", "MathZoom.js", "AssistiveMML.js"],
-  "AssistiveMML": { disabled: true }
-});
-        </script>
-
-        <script type="text/javascript">
-            window.onbeforeprint = function() {
-                console.log("proint call");
-              MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            };
-          </script>
-
+       
         <script>
 
-
+            CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
 
             CKEDITOR.replace('content', {
-                extraPlugins: 'mathjax,print',
-                mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+                extraPlugins: 'print,mathjax',
+                toolbar: 'ckeditor_wiris_formulaEditor',
+                mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
                 height: 320,
                 removeButtons: 'PasteFromWord',
-                
+               mathJaxClass : 'equation'
             });
 
             if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
                 document.getElementById('ie8-warning').className = 'tip alert';
             }
+            
 
-
-
+            //CKEDITOR.config.toolbar_Full.push({ name: 'wiris', items : [ 'ckeditor_wiris_formulaEditor','ckeditor_wiris_formulaEditorChemistry']});
 
 
             const class_select = document.getElementById('class_select');
@@ -260,6 +244,7 @@
             });
 
         </script>
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>

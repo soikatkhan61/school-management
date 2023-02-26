@@ -16,6 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@wiris/mathtype-ckeditor4": "^8.1.1",
+    "@wiris/mathtype-ckeditor5": "^8.1.1",
     "bcrypt": "^5.0.1",
     "cheerio": "^1.0.0-rc.12",
     "child_process": "^1.0.2",
