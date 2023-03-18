@@ -2,257 +2,288 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
-    <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
-    <!-- GOOGLE FONT -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %>
+  </title>
+  <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
+  <!-- GOOGLE FONT -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <meta name="robots" content="noindex, nofollow">
 
-    <!-- BOXICONS -->
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <script src="https://cdn.ckeditor.com/4.20.1/full-all/ckeditor.js"></script>
-    <!-- APP CSS -->
-    <link rel="stylesheet" href="/styles/grid.css">
-    <link rel="stylesheet" href="/styles/dashboard.css">
-    <link rel="stylesheet" href="/styles/custom_user.css">
+  <!-- BOXICONS -->
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" rel="stylesheet" />
+  <script src="https://cdn.ckeditor.com/4.20.1/full-all/ckeditor.js"></script>
+  <!-- APP CSS -->
+  <link rel="stylesheet" href="/styles/grid.css">
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link rel="stylesheet" href="/styles/alert.css">
+  <link rel="stylesheet" href="/styles/custom_user.css">
+  <link rel="stylesheet" href="/styles/style.css">
 </head>
 
 <body>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
             extensions: ["tex2jax.js", "TeX/AMSmath.js"],
             jax: ["input/TeX", "output/SVG"],
         });
     </script>
-    <% if(user.userType === 'admin'){ %>
-        <%- include('../../../sidebar/admin.ejs') %>
-      <% }else if(user.userType === 'teacher'){ %>
-        <%- include('../../../sidebar/teacher.ejs') %>
-      <% } %>
-    
 
-        <style>
-            #loading-spinner {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                height: 100%;
-                z-index: 1;
-            }
+  <% if(user.userType==='admin' ){ %>
+  <%- include('../../../sidebar/admin.ejs') %>
+  <% }else if(user.userType==='teacher' ){ %>
+  <%- include('../../../sidebar/teacher.ejs') %>
+  <% } %>
 
-            .empty {
-                border-color: red;
-            }
-        </style>
-        <div id="loading-spinner" style="display:none;">
-            <img src="/images/spinner.gif" alt="Loading...">
+  <%- include('../../../utils/alert.ejs') %>
+  <style>
+    #loading-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .empty {
+      border-color: red;
+    }
+  </style>
+  <div id="loading-spinner" style="display:none;">
+    <img src="/images/spinner.gif" alt="Loading...">
+  </div>
+  <form id="question_form" action="/user/admin/questions/create-question" method="post">
+    <div class="main-content container">
+      <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-between" style="background-color: antiquewhite;">
+        <div>
+          <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
+            Create Class
+          </a>
+          <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
+            Create Subject
+          </a>
+          <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
+            Create Chapter
+          </a>
+        </div>
+        <button type="submit" class="btn btn-success btn-sm my-1">Submit</button>
+      </div>
+
+      <!-- Text input -->
+      <div class="mb-2">
+        <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+          <option class="py-2 px-5" value="">Select Class</option>
+
+          <% for(let s of data){ %>
+          <option class="py-2 px-5" value="<%= s.id %>">
+            <%= s.class_name %>
+          </option>
+          <% } %>
+
+        </select>
+      </div>
+      <!-- Text input -->
+      <div class="mb-2">
+        <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+          <option class="py-2 px-5" value="">Select Subject</option>
+        </select>
+      </div>
+
+      <!-- Email input -->
+      <div class="mb-2">
+        <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+          <option class="py-2 px-5" value="">Select Chapter</option>
+        </select>
+      </div>
+
+      <div class="ck_editor_div">
+        <textarea id="content" class="ck_editor" name="question_text"></textarea>
+      </div>
+
+
+      <div class="my-5">
+        <h3 class="text-center">Option of this question</h3>
+        <hr>
+        <div class="my-3 ck_editor_div">
+          <h5>#option 1</h5>
+          <textarea id="opt1" class="ck_editor" name="question_option"></textarea>
         </div>
 
-        <div class="main-content container">
-            <div class="mb-5">
-                <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
-                    Create Class
-                </a>
-                <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
-                    Create Subject
-                </a>
-                <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
-                    Create Chapter
-                </a>
-            </div>
-            <form action="/user/admin/questions/create-question" method="post">
-                <!-- Text input -->
-                <div class="mb-2">
-                    <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required
-                        style="width: 100%; outline: black">
-                        <option class="py-2 px-5" value="">Select Class</option>
-
-                        <% for(let s of data){ %>
-                            <option class="py-2 px-5" value="<%= s.id %>">
-                                <%= s.class_name %>
-                            </option>
-                            <% } %>
-
-                    </select>
-                </div>
-                <!-- Text input -->
-                <div class="mb-2">
-                    <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required
-                        style="width: 100%; outline: black">
-                        <option class="py-2 px-5" value="">Select Subject</option>
-                    </select>
-                </div>
-
-                <!-- Email input -->
-                <div class="mb-2">
-                    <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required
-                        style="width: 100%; outline: black">
-                        <option class="py-2 px-5" value="">Select Chapter</option>
-                    </select>
-                </div>
-
-
-                <textarea id="content" name="question_text"></textarea>
-                <p><span class="math-tex">\(x = {-b \pm \sqrt{b^2-4ac} \over 2a}\)</span></p>
-
-                <div class="my-5">
-                    <h3 class="text-center">Option of this question</h3>
-                    <hr>
-                    <div class="my-3">
-                        <h5>#option 1</h5>
-                        <textarea class="summernote" name="question_option"></textarea>
-                    </div>
-
-                    <div class="my-3">
-                        <h5>#option 2</h5>
-                        <textarea class="summernote" name="question_option"></textarea>
-                    </div>
-
-                    <div class="my-3">
-                        <h5>#option 3</h5>
-                        <textarea class="summernote" name="question_option"></textarea>
-                    </div>
-
-                    <div class="my-3">
-                        <h5>#option 4</h5>
-                        <textarea class="summernote" name="question_option"></textarea>
-                    </div>
-
-                </div>
-
-                <div class="my-4 py-4 px-3 rounded" style="background-color: #051e3431;">
-                    <h6 class="text-center">Corect Answer</h6>
-                    <hr>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="question_answer" value="1"
-                            id="flexRadioDefault1" required>
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            #option 1
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="question_answer" value="2"
-                            id="flexRadioDefault2" required>
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            #option 2
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="question_answer" value="3"
-                            id="flexRadioDefault3" required>
-                        <label class="form-check-label" for="flexRadioDefault3">
-                            #option 3
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="question_answer" value="4"
-                            id="flexRadioDefault4" required>
-                        <label class="form-check-label" for="flexRadioDefault4">
-                            #option 4
-                        </label>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block my-4">Submit</button>
-            </form>
+        <div class="my-3 ck_editor_div">
+          <h5>#option 2</h5>
+          <textarea id="opt2" class="ck_editor" name="question_option"></textarea>
         </div>
 
-
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"></script>
-
-       
-        <script>
-
-            CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
-
-            CKEDITOR.replace('content', {
-                extraPlugins: 'print,mathjax',
-                toolbar: 'ckeditor_wiris_formulaEditor',
-                mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
-                height: 320,
-                removeButtons: 'PasteFromWord',
-               mathJaxClass : 'equation'
-            });
-
-            if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
-                document.getElementById('ie8-warning').className = 'tip alert';
-            }
-            
-
-            //CKEDITOR.config.toolbar_Full.push({ name: 'wiris', items : [ 'ckeditor_wiris_formulaEditor','ckeditor_wiris_formulaEditorChemistry']});
-
-
-            const class_select = document.getElementById('class_select');
-            const subject_select = document.getElementById('subject_select');
-            const chapter_select = document.getElementById('chapter_select');
-            const loading_spinner = document.getElementById('loading-spinner');
-            let classes
-            class_select.addEventListener('change', async (event) => {
-                loading_spinner.style.display = 'block'
-                classes = event.target.value;
-                console.log("feting...");
-                let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
-                    loading_spinner.style.display = 'none'
-                    return data
-                })
-                subject_select.innerHTML = ''
-                chapter_select.innerHTML = ''
-
-                const option = document.createElement('option');
-                option.value = ''
-                option.innerHTML = 'Select Subject'
-                subject_select.appendChild(option);
-
-                for (let i = 0; i < episod.length; i++) {
-                    console.log(i);
-                    const option = document.createElement('option');
-                    option.value = `${episod[i].id}`;
-
-                    option.innerHTML = `${episod[i].subject_name}`;
-                    subject_select.appendChild(option);
-                }
-            });
-            subject_select.addEventListener('change', async (event) => {
-                loading_spinner.style.display = 'block'
-                var chapter = event.target.value;
-                console.log("feting...");
-                let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
-                    loading_spinner.style.display = 'none'
-                    return data
-                })
-                chapter_select.innerHTML = ''
-                const option = document.createElement('option');
-                option.value = ''
-                option.innerHTML = 'Select Chapter'
-                chapter_select.appendChild(option);
-                for (let i = 0; i < episod.length; i++) {
-                    console.log(i);
-                    const option = document.createElement('option');
-                    option.value = `${episod[i].id}`;
-
-                    option.innerHTML = `${episod[i].chapter_name}`;
-                    chapter_select.appendChild(option);
-                }
-            });
-
-        </script>
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
+        <div class="my-3 ck_editor_div">
+          <h5>#option 3</h5>
+          <textarea id="opt3" class="ck_editor" name="question_option"></textarea>
         </div>
-        <!-- END MAIN CONTENT -->
 
-        <div class="overlay"></div>
-        <script src="/scripts/dashboard.js"></script>
+        <div class="my-3 ck_editor_div">
+          <h5>#option 4</h5>
+          <textarea id="opt4" class="ck_editor" name="question_option"></textarea>
+        </div>
+
+      </div>
+
+      <div class="my-4 py-4 px-3 rounded" style="background-color: #aaaaaa31;">
+        <h6 class="text-center">Corect Answer</h6>
+        <hr>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
+          <label class="form-check-label" for="flexRadioDefault1">
+            #option 1
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
+          <label class="form-check-label" for="flexRadioDefault2">
+            #option 2
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
+          <label class="form-check-label" for="flexRadioDefault3">
+            #option 3
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
+          <label class="form-check-label" for="flexRadioDefault4">
+            #option 4
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block my-4">Submit</button>
+
+    </div>
+  </form>
+
+  <style>
+    .error {
+      border: 1px solid red;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"></script>
+  <script type="text/javascript">
+    CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
+
+    CKEDITOR.replace('content', {
+      extraPlugins: 'print,mathjax',
+      toolbar: 'ckeditor_wiris_formulaEditor',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+      height: 320,
+      removeButtons: 'PasteFromWord',
+    });
+
+    if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
+      document.getElementById('ie8-warning').className = 'tip alert';
+    }
+    CKEDITOR.replace('opt1', {
+      height: 80,
+      toolbar: [
+          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+          { name: 'math', items: [ 'Mathjax' ] }
+        ],
+        extraPlugins: 'mathjax',
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+    });
+    CKEDITOR.replace('opt2', {
+      height: 80,
+      toolbar: [
+          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+          { name: 'math', items: [ 'Mathjax' ] }
+        ],
+        extraPlugins: 'mathjax',
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+    });
+    CKEDITOR.replace('opt3', {
+      height: 80,
+      toolbar: [
+          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+          { name: 'math', items: [ 'Mathjax' ] }
+        ],
+        extraPlugins: 'mathjax',
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+    });
+    CKEDITOR.replace('opt4', {
+      height: 80,
+      toolbar: [
+          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
+          { name: 'math', items: [ 'Mathjax' ] }
+        ],
+        extraPlugins: 'mathjax',
+        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+    });
+
+
+    const class_select = document.getElementById('class_select');
+    const subject_select = document.getElementById('subject_select');
+    const chapter_select = document.getElementById('chapter_select');
+    const loading_spinner = document.getElementById('loading-spinner');
+    let classes
+    class_select.addEventListener('change', async (event) => {
+      loading_spinner.style.display = 'block'
+      classes = event.target.value;
+      console.log("feting...");
+      let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+        loading_spinner.style.display = 'none'
+        return data
+      })
+      subject_select.innerHTML = ''
+      chapter_select.innerHTML = ''
+
+      const option = document.createElement('option');
+      option.value = ''
+      option.innerHTML = 'Select Subject'
+      subject_select.appendChild(option);
+
+      for (let i = 0; i < episod.length; i++) {
+        console.log(i);
+        const option = document.createElement('option');
+        option.value = `${episod[i].id}`;
+
+        option.innerHTML = `${episod[i].subject_name}`;
+        subject_select.appendChild(option);
+      }
+    });
+    subject_select.addEventListener('change', async (event) => {
+      loading_spinner.style.display = 'block'
+      var chapter = event.target.value;
+      console.log("feting...");
+      let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
+        loading_spinner.style.display = 'none'
+        return data
+      })
+      chapter_select.innerHTML = ''
+      const option = document.createElement('option');
+      option.value = ''
+      option.innerHTML = 'Select Chapter'
+      chapter_select.appendChild(option);
+      for (let i = 0; i < episod.length; i++) {
+        console.log(i);
+        const option = document.createElement('option');
+        option.value = `${episod[i].id}`;
+
+        option.innerHTML = `${episod[i].chapter_name}`;
+        chapter_select.appendChild(option);
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </div>
+  <!-- END MAIN CONTENT -->
+
+  <div class="overlay"></div>
+  <script src="/scripts/dashboard.js"></script>
 </body>
 
 </html>

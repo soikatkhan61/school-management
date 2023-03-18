@@ -8,7 +8,7 @@ const {
 
 
 const {dashboardGetController,adminDashboardRender} = require("../controllers/user/dashboardController")
-const {renderAllQuestions,renderCreateQuestion,renderAllClass,createClassPost,renderAllSubject,getSubjectByClass,getSubject,createSubjectPost,renderCreateChapter,createChaptePost,getChapterBySubjectAndClass,getChapter,createQuestionPost,renderSeeQuestion,makeQuestionRender} = require("../controllers/user/question")
+const {renderAllQuestions,renderCreateQuestion,renderAllClass,createClassPost,renderAllSubject,getSubjectByClass,getSubject,createSubjectPost,renderCreateChapter,createChaptePost,getChapterBySubjectAndClass,getChapter,createQuestionPost,renderSeeQuestion,makeQuestionRender,renderCreative,creativePost} = require("../controllers/user/question")
 
 const {renderCreateStudnet,createStudentPost,renderRegisteredStudent} = require("../controllers/student/studentController")
 
@@ -26,6 +26,8 @@ router.get("/admin/questions/get-chapter-by-subject-and-class",isAuthenticated,r
 router.get("/admin/questions/see-question",isAuthenticated,requireRole('admin,teacher'),renderSeeQuestion)
 
 router.get("/admin/questions/make-question",isAuthenticated,makeQuestionRender)
+router.get("/admin/questions/creative",requireRole('admin,teacher'),isAuthenticated,renderCreative)
+router.post("/admin/questions/creative",isAuthenticated,requireRole('admin,teacher'),creativePost)
 
 router.get("/admin/create-question",isAuthenticated,requireRole('admin,teacher'),renderCreateQuestion)
 router.post("/admin/questions/create-question",isAuthenticated,requireRole('admin,teacher'),createQuestionPost)

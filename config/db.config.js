@@ -5,7 +5,8 @@ const connection = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    multipleStatements:true
+    multipleStatements:true,
+    connectTimeout: 20000
 });
 
 connection.getConnection((err) => {
@@ -15,6 +16,7 @@ connection.getConnection((err) => {
     console.log("database connected")
    }
 });
-console.log(process.env.DB_NAME)
+console.log(process.env.DB_NAME);
 
 module.exports = connection;
+

@@ -30,7 +30,7 @@
 </head>
 
 <body>
-
+  <%- include('../utils/alert.ejs') %>
   <% if(user.userType === 'admin'){ %>
     <%- include('../../sidebar/admin.ejs') %>
   <% }else if(user.userType === 'teacher'){ %>

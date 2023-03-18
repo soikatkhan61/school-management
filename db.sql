@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS schools (
     status int(1) DEFAULT 1,
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
+INSERT INTO `schools`(`id`, `school_name`, `school_address`, `school_email`, `school_phone`, `school_info`, `admin_name`, `admin_blood_group`, `admin_address`,`admin_phone`, `admin_email`,`admin_password`, `admin_avater`,`status`,`createdAt`) VALUES (null,'SHS','Demo Adress','shs@gmail.com','01733333','info demo','school_admin','b+','admin_adress','01822222','admin@gmail.com','$2b$11$GXOU60o9gOTiEe0pkjAR9.vKrcRzvagio0ZmYz1tPDHpt4CwiaM4G',null,1,null);
 
 CREATE TABLE IF NOT EXISTS packages (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -55,7 +56,7 @@ CREATE TABLE IF NOT EXISTS pkg_payment(
     user_id int ,FOREIGN KEY(user_id) REFERENCES users(id),
     pkg_sub_id  int, FOREIGN KEY(pkg_sub_id) REFERENCES pkg_subscriber(id),
     pkg_id  int, FOREIGN KEY(pkg_id) REFERENCES packages(id),
-	payment_method ENUM('Bkash','Rocket'),
+	  payment_method ENUM('Bkash','Rocket'),
     phone_no varchar(15) not null,
     transaction_number varchar(50) not null,
     message varchar(1000) DEFAULT null,
@@ -67,8 +68,6 @@ CREATE TABLE IF NOT EXISTS classes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   class_name varchar(255) not null UNIQUE,
   class_description VARCHAR(255)
-  school_id int (11),
-  FOREIGN KEY(school_id) REFERENCES schools(id)
 );
 
 CREATE TABLE IF NOT EXISTS subject_list (
@@ -76,8 +75,6 @@ CREATE TABLE IF NOT EXISTS subject_list (
   class_id int not null,
   subject_name VARCHAR(255) NOT NULL,
   subject_code VARCHAR(10),
-  school_id int (11),
-  FOREIGN KEY(school_id) REFERENCES schools(id),
   FOREIGN KEY (class_id) REFERENCES classes(id)
 );
 
@@ -86,8 +83,6 @@ CREATE TABLE IF NOT EXISTS chapter (
   class_id INT,
   subject_id INT,
   chapter_name VARCHAR(255) NOT NULL,
-  school_id int (11),
-  FOREIGN KEY(school_id) REFERENCES schools(id),
   FOREIGN KEY (subject_id) REFERENCES subject_list(id),
   FOREIGN KEY (class_id) REFERENCES classes(id)
 );
@@ -97,7 +92,6 @@ CREATE TABLE IF NOT EXISTS questions (
   class_id INT,
   subject_id INT,
   chapter_id INT,
-  school_id INT,
   question_text text NOT NULL,
   question_option text NOT NULL,
   question_answer text NOT NULL,
@@ -106,6 +100,17 @@ CREATE TABLE IF NOT EXISTS questions (
   FOREIGN KEY (chapter_id) REFERENCES chapter(id)
 );
 
+CREATE TABLE IF NOT EXISTS creative (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id INT,
+  subject_id INT,
+  chapter_id INT,
+  question_text text NOT NULL,
+  question_option text NOT NULL,
+  FOREIGN KEY (subject_id) REFERENCES subject_list(id),
+  FOREIGN KEY (class_id) REFERENCES classes(id),
+  FOREIGN KEY (chapter_id) REFERENCES chapter(id)
+);
 
 CREATE TABLE IF NOT EXISTS students (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -151,4 +156,20 @@ CREATE TABLE IF NOT EXISTS exams (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (school_id) REFERENCES schools(id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS q_set (
+  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name varchar(150) not null, 
+  class_id int(11) not null, 
+  subject varchar(50) not null,
+  formate varchar(50) not null,
+  total_mark int(11) not null, 
+  total_qus int(4) not null,
+  questions varchar(300),
+  school_id int(11) not null,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (school_id) REFERENCES schools(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

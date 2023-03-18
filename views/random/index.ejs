@@ -1,0 +1,95 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+    <style>
+        #loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            translate: (-50%, -50%);
+        }
+    </style>
+    <div id="loading-spinner" style="display:none;">
+        <img src="/images/spinner.gif" alt="Loading...">
+    </div>
+    <div class="main-content px-4 container py-4">
+        <div style="max-width: max-content;">
+            <form action="/random-questions/view" method="get">
+                <div class="form-outline mb-4">
+                    <input name="name" type="text" id="form2Example2" class="form-control" required />
+                    <label class="form-label" for="form2Example2">Question Name</label>
+                </div>
+
+                <select name="class_id" id="class_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black"
+                    required>
+                    <option class="py-2 px-5" value="" selected>Class</option>
+                    <% for(let c of classes){ %>
+                        <option class="py-2 px-5" value="<%= c.id %>">
+                            <%= c.class_name %>
+                        </option>
+                        <% } %>
+                </select>
+                <select name="subject" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black"
+                    required>
+                    <option class="py-2 px-5" value="" selected>Subject</option>
+                    <option class="py-2 px-5" value="0">All</option>
+                </select>
+                <select name="q_formate" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black"
+                    required>
+                    <option class="py-2 px-5" value="" selected>Question Formate</option>
+                    <option class="py-2 px-5" value="mcq">MCQ</option>
+                    <option class="py-2 px-5" value="creative">Creative</option>
+                </select>
+                <div class="form-outline mb-4">
+                    <input name="total_mark" type="number" id="form2Example1" class="form-control" required />
+                    <label class="form-label" for="form2Example1">Total Mark</label>
+                </div>
+
+                <div class="form-outline mb-4">
+                    <input name="total_qus" type="number" id="form2Example1" class="form-control" required />
+                    <label class="form-label" for="form2Example1">Total Question</label>
+                </div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block">View Question</button>
+            </form>
+        </div>
+
+    </div>
+    <script>
+        const class_select = document.getElementById('class_select');
+        const subject_select = document.getElementById('subject_select');
+        const loading_spinner = document.getElementById('loading-spinner');
+        var classes
+        class_select.addEventListener('change', async (event) => {
+            loading_spinner.style.display = 'block'
+            classes = event.target.value;
+            console.log("feting...");
+            let data = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
+                loading_spinner.style.display = 'none'
+                return data
+            })
+            subject_select.innerHTML = ''
+            generateOptions(data, subject_select)
+        });
+
+        function generateOptions(data, getSelectDiv) {
+            const option = document.createElement('option');
+            option.innerHTML = `Select Subject`;
+            option.value = `none`;
+            const optionAll = document.createElement('option');
+            optionAll.innerHTML = `All`;
+            optionAll.value = `0`;
+            getSelectDiv.appendChild(option);
+            getSelectDiv.appendChild(optionAll);
+            for (let i = 0; i < data.length; i++) {
+                const option = document.createElement('option');
+                option.value = `${data[i].id}`;
+                option.innerHTML = `${data[i].subject_name}`;
+                getSelectDiv.appendChild(option);
+            }
+        }
+    </script>
+    <%- include('../partials/footer.ejs') %>
+
+        </body>
+
+        </html>

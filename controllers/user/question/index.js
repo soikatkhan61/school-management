@@ -1,8 +1,6 @@
 const db = require("../../../config/db.config");
 const fs = require("fs");
 const Flash = require("../../../utils/Flash");
-const slugify = require("slugify");
-const mjAPI = require("mathjax-node");
 const pdf = require("html-pdf");
 
 exports.renderAllQuestions = (req, res, next) => {
@@ -54,7 +52,6 @@ exports.renderAllSubject = (req, res, next) => {
     }
   });
 };
-
 exports.getSubjectByClass = (req, res, next) => {
   let class_id = req.query.class_id
   db.query("select classes.class_name,subject_list.* from subject_list join classes on  subject_list.class_id=classes.id where class_id=?", [class_id], (e, data) => {
@@ -65,10 +62,9 @@ exports.getSubjectByClass = (req, res, next) => {
     }
   });
 };
-
 exports.createSubjectPost = (req, res, next) => {
   let { class_name, subject_name, subject_code } = req.body;
-  db.query("insert into subject_list values(?,?,?,?,?)", [null, class_name, subject_name, subject_code,null], (e, data) => {
+  db.query("insert into subject_list values(?,?,?,?)", [null, class_name, subject_name, subject_code], (e, data) => {
     if (e) {
       next(e)
     } else {
@@ -97,7 +93,6 @@ exports.getChapter = (req, res, next) => {
     }
   });
 };
-
 exports.renderCreateChapter = (req, res, next) => {
   try {
     db.query("select subject_name,id from subject_list;select * from classes", (e, data) => {
@@ -113,7 +108,6 @@ exports.renderCreateChapter = (req, res, next) => {
     next(error)
   }
 };
-
 exports.createChaptePost = (req, res, next) => {
   try {
     let { class_name, subject_id, chapter } = req.body;
@@ -129,7 +123,6 @@ exports.createChaptePost = (req, res, next) => {
     next(error)
   }
 };
-
 exports.getChapterBySubjectAndClass = (req, res, next) => {
   try {
     let class_id = req.query.class_id
@@ -148,13 +141,13 @@ exports.getChapterBySubjectAndClass = (req, res, next) => {
     next(error)
   }
 };
-
 exports.renderCreateQuestion = (req, res, next) => {
   try {
     db.query("select * from classes",(e,data)=>{
       if(e){
         next(e)
       }else{
+        req.flash("success", "Success!");
         res.render("user/admin/question/create", { data,title: "Create Question", flashMessage: Flash.getMessage(req) })
       }
     })
@@ -171,10 +164,16 @@ exports.createQuestionPost = (req, res, next) => {
   })
 
   try {
-    db.query("insert into questions values(?,?,?,?,?,?,?,?)",[null,class_id,subject_id,chapter_id,null,question_text,JSON.stringify(options),question_answer],(e,data)=>{
+    db.query("insert into questions values(?,?,?,?,?,?,?)",[null,class_id,subject_id,chapter_id,question_text,JSON.stringify(options),question_answer],(e,data)=>{
       if(e){
         next(e)
       }else{
+        console.log(data);
+        if(data.affectedRows >= 1){
+          req.flash("success", "Success!");
+        }else{
+          req.flash("fail", "Error!");
+        }
         res.redirect('/user/admin/create-question')
       }
     })
@@ -197,7 +196,6 @@ exports.renderSeeQuestion = (req, res, next) => {
     next(error)
   }
 };
-
 exports.makeQuestionRender = (req, res, next) => {
   var katex = require('katex');
   let {class_id,subject_id,chapter_id} = req.query
@@ -222,6 +220,44 @@ exports.makeQuestionRender = (req, res, next) => {
       
       
         res.render("user/admin/question/make-questions", { data,title: "See Question", flashMessage: Flash.getMessage(req) })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+exports.renderCreative = (req, res, next) => {
+  try {
+    db.query("select * from classes",(e,data)=>{
+      if(e){
+        next(e)
+      }else{
+        res.render("user/admin/question/creative", { data,title: "Creative Question", flashMessage: Flash.getMessage(req) })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+exports.creativePost = (req, res, next) => {
+  let {class_id,subject_id,chapter_id,question_text,question_option,question_answer} = req.body
+  let options = [];
+  console.log(req.body)
+  question_option.forEach(e =>{
+    options.push(e);
+  })
+
+  try {
+    db.query("insert into creative values(?,?,?,?,?,?)",[null,class_id,subject_id,chapter_id,question_text,JSON.stringify(options)],(e,data)=>{
+      if(e){
+        next(e)
+      }else{
+        if(data.affectedRows >= 1){
+          req.flash("success", "Success!");
+        }else{
+          req.flash("fail", "Error!");
+        }
+        res.redirect('/user/admin/questions/creative')
       }
     })
   } catch (error) {

@@ -21,9 +21,8 @@
                     </div>
                     <div class="table-responsive">
                         <table class="table">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
-                                    <th scope="col">Class</th> 
                                     <th scope="col">Subject</th>
                                     <th scope="col">Action</th>
                                     <th scope="col">Chapter</th>
@@ -32,7 +31,6 @@
                             <tbody>
                                 <% for(let s of data){%>
                                     <tr>
-                                        <td><%= s.class_name %></td>
                                         <td><%= s.subject_name %></td>
                                         <td>Edit</td>
                                         <td><a href="/user/admin/questions/get-chapter-by-subject-and-class?subject_id=<%= s.id %>&class_id=<%= class_id %> " class="btn btn-success btn-sm">see chapters</a></td>

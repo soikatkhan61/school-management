@@ -24,10 +24,8 @@
                     </div>
                     <div class="table-responsive">
                         <table class="table">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
-                                    <th scope="col">Class</th>
-                                    <th scope="col">Subject</th>
                                     <th scope="col">Chapter</th>
                                     <th scope="col">Action</th>
                                     <th scope="col">Question</th>
@@ -36,8 +34,6 @@
                             <tbody>
                                 <% for(let s of data){%>
                                     <tr>
-                                        <td><%= s.class_name %></td>
-                                        <td><%= s.subject_name %></td>
                                         <td><%= s.chapter_name %></td>
                                         <td>edit</td>
                                         <td><a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.id %>" class="btn btn-sm btn-dark">see question</a></td>

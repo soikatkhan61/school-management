@@ -1,0 +1,18 @@
+p{
+	margin: 0;
+	padding: 0;
+	display: inline;
+}
+
+
+.angry-grid {
+   display: grid; 
+
+   grid-template-rows: 1fr 1fr;
+   grid-template-columns: 1fr 1fr;
+   
+   gap: 0px;
+   height: 100%;
+
+}
+  

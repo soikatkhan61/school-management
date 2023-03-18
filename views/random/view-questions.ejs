@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <meta name="robots" content="noindex, nofollow">
+
+    <script src="/ckeditor/ckeditor.js"></script>
+
+</head>
+
+<body>
+    <div style="padding: 0px 100px;">
+        <textarea id="content" name="question_text">
+           <% if(data.length==0){ %>
+            No data
+           <% }else{ %>
+            <% for(let i=0; i<data.length; i++){ %>
+                <% let opt = JSON.parse(data[i].question_option) %>
+                  <div style="display: flex!important;align-items: center;font-weight: bold;font-size: 15px;">
+                    <%= i+1 %>. <%- data[i].question_text %>
+                  </div>
+                  <div style="display: grid; 
+                  grid-template-rows: 1fr 1fr;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 0px;">
+                        
+                        <div>  <%- opt[0] %></div> 
+                        <div>  <%- opt[0] %></div> 
+                        <div>  <%- opt[0] %></div> 
+                        <div>  <%- opt[0] %></div> 
+                        
+                  </div>
+                  
+                <% } %>
+           <% } %>
+        </textarea>
+       
+       
+    </div>
+    
+   
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+    <script>
+        CKEDITOR.replace('content', {
+            height: 700,
+            removeButtons: 'PasteFromWord',
+        });
+
+        if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
+            document.getElementById('ie8-warning').className = 'tip alert';
+        }
+    
+    </script>
+
+</body>
+
+</html>

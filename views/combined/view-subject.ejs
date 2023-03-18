@@ -1,0 +1,34 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="my-2 text-light">
+  <a class="text-light btn btn-success" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>">View Question Preview</a>
+</div>
+<div class="main-content py-2 container py-4">
+  <% if(subject.length == 0){ %>
+  <p>No data</p>
+  <% }else{ %>
+  <p>Subject List</p>
+  <ul class="list-group list-group-light">
+    <%for(let s of subject){%>
+    <a href="/combined-question/view-chapter?class_id=<%= filter.class_id %>&subject=<%= s.id %>&chapter=<%=filter.chapter%>&q_set=<%= filter.q_set %>&q_formate=<%= filter.q_formate %>" class="list-group-item text-primary border px-2"><%= s.subject_name  %></a>
+    <%}%>
+            </ul>
+       <% } %>
+</div>
+
+<%- include('../partials/footer.ejs') %>
+
+</body>
+
+</html>

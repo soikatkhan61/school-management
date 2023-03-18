@@ -1,0 +1,46 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2 container-fluid py-4">
+  <% if(q_set.length == 0){ %>
+  <p>no question</p>
+  <% }else{ %>
+  <div class="table-responsive table-nowrap">
+
+  </div>
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">SL</th>
+        <th scope="col">Question Name</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(let i=0; i<q_set.length; i++){ %>
+      <tr>
+        <th><%= i+1 %></th>
+        <td><a href="/combined-question/view-subject?class_id=1&subject=0&q_set=2&q_formate=mcq"><%= q_set[i].name %></a></td>
+        <td>View</td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <% } %>
+
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>

@@ -21,9 +21,9 @@ app.use((req, res, next) => {
     );
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     next();
-  });
+});
 
-app.use(cors())
+app.use(cors());
 
 //setup view engine
 app.set('view engine' ,'ejs')

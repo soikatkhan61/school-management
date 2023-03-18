@@ -14,7 +14,6 @@
             </div>
             <% if(data.length==0){ %>
                 <p class="text-center text-dark">No Questions Found</p>
-                <a href="/user/admin/questions/create-chapter" class="btn btn-primary">Create Chapter</a>
                 <% }else{ %>
                     <div class="table-responsive">
                         <div class="py-2" >
@@ -24,7 +23,7 @@
                             Chapter: <span class="fw-bold text-danger"><%= data[0].chapter_name %></span> <br>
                         </div>
                         <table class="table">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
                                     <th scope="col">Action</th>
                                     <th scope="col">Question</th>
