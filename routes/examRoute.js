@@ -7,13 +7,12 @@ const {
 } = require('../middleware/authMiddleware')
 
 
-const {renderCreateExam,loadQuestion} = require("../controllers/exam/createExamController")
-const {renderQuestionGenerator,viewGeneratedQuestion} = require("../controllers/exam/questionGeneratorController")
+const {renderCreateExam,createExamPost,renderExamResults} = require("../controllers/exam/createExamController")
+const {viewGeneratedQuestion} = require("../controllers/exam/questionGeneratorController")
 
 router.get("/create",isAuthenticated,requireRole('admin,teacher'),renderCreateExam)
-router.get("/load-question",isAuthenticated,requireRole('admin,teacher'),loadQuestion)
-router.post("/load-question",isAuthenticated,requireRole('admin,teacher'),loadQuestion)
-router.get("/question-generator",isAuthenticated,requireRole('admin,teacher'),renderQuestionGenerator)
+router.post("/create",isAuthenticated,requireRole('admin,teacher'),createExamPost)
+router.get("/results",isAuthenticated,requireRole('admin,teacher'),renderExamResults)
 router.get("/view-question",isAuthenticated,requireRole('admin,teacher'),viewGeneratedQuestion)
 
 module.exports = router

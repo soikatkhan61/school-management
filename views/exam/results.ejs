@@ -1,0 +1,106 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+    <style>
+        #loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            translate: (-50%, -50%);
+        }
+    </style>
+    <div id="loading-spinner" style="display:none;">
+        <img src="/images/spinner.gif" alt="Loading...">
+    </div>
+    <div class="main-content py-2">
+       
+        <div class="row" style="color: white;">
+            <div class="col-3 col-md-6 col-sm-12">
+                <div class="box box-hover" style="background-color: #051e34!important;" >
+                    <!-- COUNTER -->
+                    <div class="counter">
+                        <div class="counter-title">
+                            Total Participants
+                        </div>
+                        <div class="counter-info">
+                            <div class="counter-count">
+                                54
+                            </div>
+                            <i class='bx bx-user'></i>
+                        </div>
+                    </div>
+                    <!-- END COUNTER -->
+                </div>
+            </div>
+            <div class="col-3 col-md-6 col-sm-12">
+                <div class="box box-hover" style="background-color: #dc3545!important;">
+                    <!-- COUNTER -->
+                    <div class="counter">
+                        <div class="counter-title">
+                            Higest, Lowest
+                        </div>
+                        <div class="counter-info">
+                            <div class="counter-count">
+                                56,12
+                            </div>
+                            <i class='bx bx-arrow-to-top'></i>
+                        </div>
+                    </div>
+                    <!-- END COUNTER -->
+                </div>
+            </div>
+            <div class="col-3 col-md-6 col-sm-12">
+                <div class="box box-hover" style="background-color: #28a745!important;">
+                    <!-- COUNTER -->
+                    <div class="counter">
+                        <div class="counter-title">
+                            Average
+                        </div>
+                        <div class="counter-info">
+                            <div class="counter-count">
+                                34
+                            </div>
+                            <i class='bx bx-line-chart'></i>
+                        </div>
+                    </div>
+                    <!-- END COUNTER -->
+                </div>
+            </div>
+            <div class="col-3 col-md-6 col-sm-12">
+                <div class="box box-hover" style="background-color: #17a2b8!important;">
+                    <!-- COUNTER -->
+                    <div class="counter">
+                        <div class="counter-title">
+                            Avobe 80%
+                        </div>
+                        <div class="counter-info">
+                            <div class="counter-count">
+                                3
+                            </div>
+                            <i class='bx bx-user'></i>
+                        </div>
+                    </div>
+                    <!-- END COUNTER -->
+                </div>
+            </div>
+        </div>
+
+        <div class="my-2 border p-3 rounded shadow-sm">
+            <div class="my-2 d-flex justify-content-between">
+                <p class="pb-0 mb-0">Status: <span class="fw-bold text-success">Running</span></p>
+                <p class="pb-0 mb-0">Remaining Time: <span class="fw-bold">14 minite left</span></p>
+                <button class="btn btn-danger">Stop</button>
+            </div>
+            <p class="pb-0 mb-0">Exam:Test</p>
+            <p class="pb-0 mb-0">Exam Code: SHS0222_2515</p>
+            <p class="pb-0 mb-0">Class: One</p>
+            <p class="pb-0 mb-0">Starting At: Tuesday, March 21, 2023</p>
+            <p class="pb-0 mb-0">Ending At: Tuesday, March 21, 2023</p>
+            <p class="pb-0 mb-0">Exam Link: <a href="https://chat.openai.com/chat">http://localhost:3000/exam/1/SHS0222_2515</a></p>
+        </div>
+        <div>
+        </div>
+    </div>
+    <%- include('../partials/footer.ejs') %>
+        </body>
+
+        </html>

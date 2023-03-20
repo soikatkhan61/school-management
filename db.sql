@@ -141,30 +141,13 @@ CREATE TABLE IF NOT EXISTS teachers (
 );
 
 
-CREATE TABLE IF NOT EXISTS exams (
-  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  code VARCHAR(20) NOT NULL,
-  class varchar(50) not null, 
-  subject varchar(50) not null, 
-  start_time DATETIME NOT NULL,
-  end_time DATETIME NOT NULL,
-  duration INT(11) NOT NULL,
-  school_id INT(11),
-  teacher_id INT(11),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (school_id) REFERENCES schools(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS q_set (
   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name varchar(150) not null, 
   class_id int(11) not null, 
   subject varchar(50) not null,
   formate varchar(50) not null,
-  total_mark int(11) not null, 
+  total_mark int(4) not null, 
   total_qus int(4) not null,
   questions varchar(300),
   school_id int(11) not null,
@@ -172,4 +155,22 @@ CREATE TABLE IF NOT EXISTS q_set (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (school_id) REFERENCES schools(id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS exams (
+  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  code VARCHAR(20) NOT NULL,
+  q_set_id INT(11) NOT NULL,
+  class varchar(50) not null, 
+  subject varchar(50) not null, 
+  start_time DATETIME NOT NULL,
+  end_time DATETIME NOT NULL,
+  school_id INT(11),
+  teacher_id INT(11),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (school_id) REFERENCES schools(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (q_set_id) REFERENCES q_set(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

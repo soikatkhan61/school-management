@@ -18,29 +18,61 @@
 </head>
 
 <body>
-    <div style="padding: 0px 100px;">
+    <div style="padding: 0px 200px;">
         <textarea id="content" name="question_text">
            <% if(data.length==0){ %>
             No data
            <% }else{ %>
-            <% for(let i=0; i<data.length; i++){ %>
-                <% let opt = JSON.parse(data[i].question_option) %>
-                  <div style="display: flex!important;align-items: center;font-weight: bold;font-size: 15px;">
-                    <%= i+1 %>. <%- data[i].question_text %>
-                  </div>
-                  <div style="display: grid; 
-                  grid-template-rows: 1fr 1fr;
-                  grid-template-columns: 1fr 1fr;
-                  gap: 0px;">
-                        
-                        <div>  <%- opt[0] %></div> 
-                        <div>  <%- opt[0] %></div> 
-                        <div>  <%- opt[0] %></div> 
-                        <div>  <%- opt[0] %></div> 
-                        
-                  </div>
-                  
-                <% } %>
+
+            <div style="margin: 10px 0;text-align: center;">
+               <h2><%= obj.school_name %></h2>
+               <h3><%=  obj.name %></h3>
+                <div style="display: flex;justify-content: space-between;">
+                    <p>Marks: <%= obj.total_mark %></p>
+                    <p>Time: <%= obj.total_qus %> Minutes</p>
+               </div>
+               <hr>
+            </div>
+  
+            <% if(obj.q_formate == 'mcq'){ %>
+                <% for(let i=0; i<data.length; i++){ %>
+                    <% let opt = JSON.parse(data[i].question_option) %>
+                      <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
+                        <%= i+1 < 10 ? "0"+(i+1) : i+1  %>. <p style="margin-left: 20px;"><%- data[i].question_text %></p>
+                      </div>
+                      <div style="margin-left:40px;">
+                        <div style="display: grid; 
+                        grid-template-rows: 1fr 1fr;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 0px;
+                        ">
+                              
+                              <div> (a).  <%- opt[0] %></div> 
+                              <div> (b). <%- opt[1] %></div> 
+                              <div> (c). <%- opt[2] %></div> 
+                              <div> (d).  <%- opt[3] %></div> 
+                              
+                        </div>
+                      </div>              
+                    <% } %>
+            <% }else{%>
+                <% for(let i=0; i<data.length; i++){ %>
+                    <% let opt = JSON.parse(data[i].question_option) %>
+                      <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
+                        <%= i+1 < 10 ? "0"+(i+1) : i+1  %>. <p style="margin-left: 20px;"><%- data[i].question_text %></p>
+                      </div>
+                      <div style="margin-left:40px;">
+                        <div>
+                              <div> (a).  <%- opt[0] %></div> 
+                              <div> (b). <%- opt[1] %></div> 
+                              <div> (c). <%- opt[2] %></div> 
+                              <div> (d).  <%- opt[3] %></div> 
+                        </div>
+                      </div>              
+                    <% } %>
+            <% } %>
+
+            
            <% } %>
         </textarea>
        
@@ -53,6 +85,7 @@
         CKEDITOR.replace('content', {
             height: 700,
             removeButtons: 'PasteFromWord',
+            
         });
 
         if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {

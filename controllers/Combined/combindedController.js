@@ -24,7 +24,7 @@ exports.renderCombined = (req, res, next) => {
 exports.viewSubject = (req, res, next) => {
     let {name, class_id, subject, q_formate, total_mark, total_qus } = req.body
     try {
-        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?)", [null,name, class_id, subject, q_formate, total_mark, total_qus, null, 1, null, null], (e, data) => {
+        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?)", [null,name, class_id, subject, q_formate, total_mark, total_qus, null, req.user.school_id, null, null], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -140,16 +140,17 @@ exports.addQuestion = (req, res, next) => {
 exports.renderSavedQuesSet = (req, res, next) => {
     try {
         db.query(
-            "select * from q_set where school_id=1",
+            "select q_set.*,exams.created_at as examCreateDate,exams.name as examName,exams.q_set_id,exams.class,exams.subject as exam_subject,exams.code from q_set left join exams on exams.q_set_id=q_set.id and exams.class = q_set.class_id and exams.subject = q_set.subject where q_set.school_id=?",[req.user.school_id],
             (e, data) => {
                 if (e) {
                     next(e);
                 } else {
+                    console.log(data);
                     res.render(`combined/saved`, {
                         title: "Saved Question",
                         flashMessage: Flash.getMessage(req),
                         q_set: data,
-                    });
+                    }); 
                 }
             }
         );
@@ -161,7 +162,7 @@ exports.renderSavedQuesSet = (req, res, next) => {
 exports.renderviewSet = (req, res, next) => {
     let qset_id = req.query.q_set_id
     try {
-        db.query('select * from q_set where id = ? limit 1',[qset_id],(e,data)=>{
+        db.query('select q_set.*,schools.school_name from q_set join schools on q_set.school_id = schools.id WHERE q_set.id = ? limit 1',[qset_id],(e,data)=>{
             if(e){
                 next(e)
             }else{
@@ -172,16 +173,18 @@ exports.renderviewSet = (req, res, next) => {
                     if (error) {
                       console.error(error);
                     } else {
-                      const questions = results.map(row => ({
-                        id: row.id,
-                        content: row.question_text,
-                        // add more properties here as needed
-                      }));
-                      console.log(questions);
+                        console.log(results);
+                      let obj = {
+                        total_qus:data[0].total_qus,
+                        total_mark:data[0].total_mark,
+                        school_name:data[0].school_name,
+                        name:data[0].name,
+                        q_formate:data[0].q_formate}
                       res.render(`combined/view_qset`, {
                         title: "Preview Question",
                         flashMessage: Flash.getMessage(req),
-                        q_set:  questions,
+                        data:  results,
+                        obj
                     });
                     }
                   });

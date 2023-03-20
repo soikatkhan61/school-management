@@ -13,46 +13,87 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <meta name="robots" content="noindex, nofollow">
 
-    <!-- BOXICONS -->
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="/ckeditor/ckeditor.js"></script>
 
-    <script src="https://cdn.ckeditor.com/4.20.1/full-all/ckeditor.js"></script>
-    <!-- APP CSS -->
-    <link rel="stylesheet" href="/styles/grid.css">
-    <link rel="stylesheet" href="/styles/dashboard.css">
-    <link rel="stylesheet" href="/styles/custom_user.css">
 </head>
 
 <body>
-    <textarea id="content" name="question_text">
-        <% for(let i=0;i<q_set.length;i++ ){ %>
-            <%= i+1 + ". " %>
-            <%= q_set[i].content %>
-        <% } %>
-    </textarea>
+    <div style="padding: 0px 200px;">
+        <textarea id="content" name="question_text">
+           <% if(data.length==0){ %>
+            No data
+           <% }else{ %>
 
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+            <div style="margin: 10px 0;text-align: center;">
+               <h2><%= obj.school_name %></h2>
+               <h3><%=  obj.name %></h3>
+                <div style="display: flex;justify-content: space-between;">
+                    <p>Marks: <%= obj.total_mark %></p>
+                    <p>Time: <%= obj.total_qus %> Minutes</p>
+               </div>
+               <hr>
+            </div>
+  
+            <% if(obj.q_formate == 'mcq'){ %>
+                <% for(let i=0; i<data.length; i++){ %>
+                    <% let opt = JSON.parse(data[i].question_option) %>
+                      <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
+                        <%= i+1 < 10 ? "0"+(i+1) : i+1  %>. <p style="margin-left: 20px;"><%- data[i].question_text %></p>
+                      </div>
+                      <div style="margin-left:40px;">
+                        <div style="display: grid; 
+                        grid-template-rows: 1fr 1fr;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 0px;
+                        ">
+                              
+                              <div> (a).  <%- opt[0] %></div> 
+                              <div> (b). <%- opt[1] %></div> 
+                              <div> (c). <%- opt[2] %></div> 
+                              <div> (d).  <%- opt[3] %></div> 
+                              
+                        </div>
+                      </div>              
+                    <% } %>
+            <% }else{%>
+                <% for(let i=0; i<data.length; i++){ %>
+                    <% let opt = JSON.parse(data[i].question_option) %>
+                      <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
+                        <%= i+1 < 10 ? "0"+(i+1) : i+1  %>. <p style="margin-left: 20px;"><%- data[i].question_text %></p>
+                      </div>
+                      <div style="margin-left:40px;">
+                        <div>
+                              <div> (a).  <%- opt[0] %></div> 
+                              <div> (b). <%- opt[1] %></div> 
+                              <div> (c). <%- opt[2] %></div> 
+                              <div> (d).  <%- opt[3] %></div> 
+                        </div>
+                      </div>              
+                    <% } %>
+            <% } %>
+
+            
+           <% } %>
+        </textarea>
+       
+       
+    </div>
+    
+   
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
     <script>
         CKEDITOR.replace('content', {
-            extraPlugins: 'mathjax',
-            mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
-            height: 600,
+            height: 700,
             removeButtons: 'PasteFromWord',
+            
         });
 
         if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
             document.getElementById('ie8-warning').className = 'tip alert';
         }
+    
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-    </div>
 
-    <div class="overlay"></div>
-    <script src="/scripts/dashboard.js"></script>
 </body>
 
 </html>
