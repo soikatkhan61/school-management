@@ -7,6 +7,7 @@ const HomeRoute = require("./HomeRoute")
 const super_admin_route = require("./super_admin_route")
 const studentRoute = require("./studentRoute")
 const teacherRoute = require("./teacherRoute")
+const moderatorRoute = require("./moderatorRoute")
 const combinedQuestionRoute = require("./combinedQuestionRoute")
 const randomrRoute = require("./randomrRoute")
 const examRoute = require("./examRoute")
@@ -51,6 +52,10 @@ const routes = [
     {
         path: "/teacher",
         handler: teacherRoute
+    },
+    {
+        path: "/moderator",
+        handler: moderatorRoute
     },
     {
         path: "/random-questions",

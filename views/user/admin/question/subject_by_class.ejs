@@ -1,50 +1,110 @@
 <%- include('../../user_partials/header.ejs') %>
-    <div class="main-content" style="background: #eee;min-height: 90vh;">
-        <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
-            <div class="mb-3">
-                <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
-                    Create Class
-                </a>
-                <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
-                    Create Subject
-                </a>
-                <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
-                    Create Chapter
-                </a>
-            </div>
-            <% if(data.length==0){ %>
-                <p class="text-center text-dark">No Subject Found</p>
-                <a href="/user/admin/questions/subject" class="btn btn-primary">Create Subject</a>
-                <% }else{ %>
-                    <div class="py-2" >
-                        <p>Showing <span class="fw-bold text-primary">Class <%= data[0].class_name %></span>  subject list</p>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">Subject</th>
-                                    <th scope="col">Action</th>
-                                    <th scope="col">Chapter</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for(let s of data){%>
-                                    <tr>
-                                        <td><%= s.subject_name %></td>
-                                        <td>Edit</td>
-                                        <td><a href="/user/admin/questions/get-chapter-by-subject-and-class?subject_id=<%= s.id %>&class_id=<%= class_id %> " class="btn btn-success btn-sm">see chapters</a></td>
-                                    </tr>
-                                    <% }%>
-                            </tbody>
-                        </table>
-                    </div>
-                    <% } %>
-        </div>
+<div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
+  <div class="modal-dialog  ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModal2Label">Create a subject</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/user/admin/questions/create-subject" method="post">
+
+          <!-- Text input -->
+          <div class="mb-2">
+            <select name="class_id" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+              <option class="py-2 px-5" value="<%= data[0].class_id %>" selected ><%= data[0].class_name %> </option>
+            </select>
+          </div>
+
+          <!-- Text input -->
+          <div class="form-outline mb-4">
+            <input  type="text" id="subjectNameM" class="form-control" name="subject_name" required />
+            <label class="form-label" for="subjectNameM">Subject Name *</label>
+          </div>
+
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="subjectCodeM" class="form-control" name="subject_code" required />
+            <label class="form-label" for="subjectCodeM">Subject Code</label>
+          </div>
+          <input type="text" value="" id="subject_id" name="subject_id" hidden>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" class="btn btn-success" id="actionModalButton">Create</button>
+      </div>
+      </form>
     </div>
+  </div>
+</div>
 
+<div class="main-content" style="background: #eee;min-height: 90vh;">
+  <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
+    <div class="mb-3">
+      <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
+        Create Subject
+      </button>
+    </div>
+    <% if(data.length > 0 && subject_listing){ %>
+      <div class="py-2">
+        <p>Showing <span class="fw-bold text-primary">Class <%= data[0].class_name %></span> subject list</p>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Subject</th>
+              <th scope="col">Code</th>
+              <th scope="col">Action</th>
+              <th scope="col">Chapter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let s of data){%>
+            <tr>
+              <td class="subjectName"><%= s.subject_name %></td>
+              <input type="text" value="<%= s.id %>" class="subject_ids" hidden>
+              <td> <span  class="subjectCode"><%= s.subject_code %></span></td>
+              <td><button class="btn border editSubject" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">edit</button></td>
+              <td><a href="/user/admin/questions/get-chapter-by-subject-and-class?subject_id=<%= s.id %>&class_id=<%= class_id %> " class="btn btn-success btn-sm">see chapters</a></td>
+            </tr>
+            <% }%>
+          </tbody>
+        </table>
+      </div>
+    <% }else{ %>
+    <p class="text-center text-dark">No Subject Found</p>
+    <% } %>
+  </div>
+</div>
+<script>
+    let editSubject = document.getElementsByClassName('editSubject')
+    let subjectName = document.getElementsByClassName('subjectName')
+    let subjectNameM = document.getElementById('subjectNameM')
+    let subjectCode = document.getElementsByClassName('subjectCode')
+    let subjectCodeM = document.getElementById('subjectCodeM')
 
-    <%- include('../../user_partials/footer.ejs') %>
-        </body>
+    let subject_id = document.getElementById('subject_id')
+    let subject_ids = document.getElementsByClassName('subject_ids')
+    let actionModalButton = document.getElementById('actionModalButton')
+    let editIds = document.getElementsByClassName('editIds')
+  
+    for (let i = 0; i < editSubject.length; i++) {
+      editSubject[i].addEventListener('click', (e) => {
+        console.log(subjectCode[i].innerText.trim());
+        subjectNameM.value = subjectName[i].textContent.trim()
+        subjectCodeM.value = subjectCode[i].innerText.trim()
+        subject_id.value = subject_ids[i].value
+        actionModalButton.innerText = 'Update'
+        actionModalButton.classList.add('btn-warning')
+      })
+    }
+  </script>
 
-        </html>
+<%- include('../../user_partials/footer.ejs') %>
+</body>
+
+</html>

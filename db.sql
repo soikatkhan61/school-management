@@ -139,6 +139,16 @@ CREATE TABLE IF NOT EXISTS teachers (
   avater VARCHAR(300),
   FOREIGN KEY (school_id) REFERENCES schools(id)
 );
+CREATE TABLE IF NOT EXISTS moderator (
+  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  userType ENUM('moderator'), 
+  name VARCHAR(100) NOT NULL,
+  username VARCHAR(30) NOT NULL,
+  email VARCHAR(100),
+  phone varchar(15) not null,
+  password VARCHAR(255) NOT NULL,
+  avater VARCHAR(300)
+);
 
 
 CREATE TABLE IF NOT EXISTS q_set (

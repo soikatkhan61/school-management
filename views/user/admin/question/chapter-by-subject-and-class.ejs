@@ -1,53 +1,112 @@
 <%- include('../../user_partials/header.ejs') %>
-    <div class="main-content" style="background: #eee;min-height: 90vh;">
-       
-        <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
-            <div class="mb-3">
-                <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
-                    Create Class
-                </a>
-                <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
-                    Create Subject
-                </a>
-                <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
-                    Create Chapter
-                </a>
-            </div>
-            <% if(data.length==0){ %>
-                <p class="text-center text-dark">No Chapter Found</p>
-                <a href="/user/admin/questions/create-chapter" class="btn btn-primary">Create Chapter</a>
-                <% }else{ %>
-                    <div class="py-2" >
-                        <p>Showing Chapter of </p>
-                        Class:  <span class="fw-bold text-primary"><%= data[0].class_name %> </span><br>
-                        Subject: <span class="fw-bold text-success"><%= data[0].subject_name %></span> <br>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">Chapter</th>
-                                    <th scope="col">Action</th>
-                                    <th scope="col">Question</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for(let s of data){%>
-                                    <tr>
-                                        <td><%= s.chapter_name %></td>
-                                        <td>edit</td>
-                                        <td><a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.id %>" class="btn btn-sm btn-dark">see question</a></td>
-                                    </tr>
-                                    <% }%>
-                            </tbody>
-                        </table>
-                    </div>
-                    <% } %>
-        </div>
+<div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
+  <div class="modal-dialog  ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModal2Label">Chapter</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/user/admin/questions/create-chapter" method="post">
+
+          <!-- Text input -->
+          <div class="mb-2">
+            <select name="class_id" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+              <option class="py-2 px-5" value="<%= data[0].class_id %>" selected><%= data[0].class_name %></option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <select name="subject_id" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+              <option class="py-2 px-5" value="<%= data[0].subject_id %>" selected><%= data[0].subject_name %></option>
+            </select>
+          </div>
+
+          <!-- Text input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="chapterNameM" class="form-control" name="chapter_name" required />
+            <label class="form-label" for="chapterNameM">Chapter Name *</label>
+          </div>
+          <input type="text" id="chapter_id" name="chapter_id" hidden>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" class="btn btn-success" id="actionModalButton">Create</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="main-content" style="background: #eee;min-height: 90vh;">
+
+  <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
+    <% if(data.length > 0 && chapter_listing ){ %>
+    <div class="py-2">
+      <p>Showing Chapter of </p>
+      Class: <span class="fw-bold text-primary"><%= data[0].class_name %> </span><br>
+      Subject: <span class="fw-bold text-success"><%= data[0].subject_name %></span> <br>
+      <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
+        Create Chapter
+      </button>
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Chapter</th>
+            <th scope="col">Action</th>
+            <th scope="col">Question</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let s of data){%>
+          <tr>
+            <input type="text" value="<%= s.id %>" class="chapter_ids" hidden>
+            <td class="chapterName"><%= s.chapter_name %></td>
+            <td><button class="btn border editBtn btn-sm" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">edit</button></td>
+            <td class="d-flex">
+              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.id %>&q_type=creative" class="btn btn-sm btn-dark mx-2">Creative</a>
+              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.id %>&q_type=questions" class="btn btn-sm border">MCQ</a>
+            </td>
+            
+          </tr>
+          <% }%>
+        </tbody>
+      </table>
     </div>
 
+    <% }else{ %>
+    <p class="text-center text-dark">No Chapter Found</p>
+    <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
+      Create Chapter
+    </button>
+    <% } %>
+  </div>
+</div>
 
-    <%- include('../../user_partials/footer.ejs') %>
-        </body>
+<script>
+    let editBtn = document.getElementsByClassName('editBtn')
+    let chapterName = document.getElementsByClassName('chapterName')
+    let chapterNameM = document.getElementById('chapterNameM')
 
-        </html>
+    let chapter_id = document.getElementById('chapter_id')
+    let chapter_ids = document.getElementsByClassName('chapter_ids')
+    let actionModalButton = document.getElementById('actionModalButton')
+  
+    for (let i = 0; i < editBtn.length; i++) {
+        editBtn[i].addEventListener('click', (e) => {
+        chapterNameM.value = chapterName[i].textContent.trim()
+        chapter_id.value = chapter_ids[i].value
+        actionModalButton.innerText = 'Update'
+        actionModalButton.classList.add('btn-warning')
+      })
+    }
+  </script>
+
+<%- include('../../user_partials/footer.ejs') %>
+</body>
+
+</html>

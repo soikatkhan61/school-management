@@ -39,6 +39,8 @@
   <%- include('../../../sidebar/admin.ejs') %>
   <% }else if(user.userType==='teacher' ){ %>
   <%- include('../../../sidebar/teacher.ejs') %>
+  <% }else if(user.userType==='moderator' ){ %>
+  <%- include('../../../sidebar/moderator.ejs') %>
   <% } %>
 
   <%- include('../../../utils/alert.ejs') %>
@@ -58,76 +60,96 @@
   <div id="loading-spinner" style="display:none;">
     <img src="/images/spinner.gif" alt="Loading...">
   </div>
-  <form id="question_form" action="/user/admin/questions/create-question" method="post">
+  <form id="question_form" action="/user/admin/questions/create-question<%= qus ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
     <div class="main-content container">
-      <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-between" style="background-color: antiquewhite;">
-        <div>
-          <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
-            Create Class
-          </a>
-          <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
-            Create Subject
-          </a>
-          <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
-            Create Chapter
-          </a>
-        </div>
+      <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-end" style="background-color: antiquewhite;">
         <button type="submit" class="btn btn-success btn-sm my-1">Submit</button>
       </div>
 
       <!-- Text input -->
-      <div class="mb-2">
-        <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-          <option class="py-2 px-5" value="">Select Class</option>
+      <div class="my-2 shadow p-4">
+        <div class="mb-2">
+          <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+            <% if(obj.class_id){ %>
+            <option class="py-2 px-5" value="<%= obj.class_id %>" selected ><%= obj.class_id %></option>
+            <% }else{ %>
+              <option class="py-2 px-5" value="">Select Class</option>
+            <% for(let s of data){ %>
+            <option class="py-2 px-5" value="<%= s.id %>">
+              <%= s.class_name %>
+            </option>
+            <% } %>
+            <% }%>
+          </select>
+        </div>
+        <!-- Text input -->
+        <div class="mb-2">
+          <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
 
-          <% for(let s of data){ %>
-          <option class="py-2 px-5" value="<%= s.id %>">
-            <%= s.class_name %>
-          </option>
-          <% } %>
+            <% if(obj.subject_id){ %>
+            <option class="py-2 px-5" value="<%= obj.subject_id %>" selected ><%= obj.subject_id %></option>
+            <% }else{ %>
+            <option class="py-2 px-5" value="">Select Subject</option>
+            <% }%>
+          </select>
+        </div>
 
-        </select>
-      </div>
-      <!-- Text input -->
-      <div class="mb-2">
-        <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-          <option class="py-2 px-5" value="">Select Subject</option>
-        </select>
-      </div>
+        <!-- Email input -->
+        <div class="mb-2">
+          <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+            <% if(obj.chapter_id){ %>
+              <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected ><%= obj.chapter_id %></option>
+              <% }else{ %>
+              <option class="py-2 px-5" value="">Select Chapter</option>
+              <% }%>
+          </select>
+        </div>
+        <% if(obj.class_id){ %>
+        <a href="/user/admin/create-question" class="btn btn-danger my-1">Reset</a>
+        <p class="fst-italic text-sm text-danger">Please do not edit this when your are edit question</p>
+        <% } %>
 
-      <!-- Email input -->
-      <div class="mb-2">
-        <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-          <option class="py-2 px-5" value="">Select Chapter</option>
-        </select>
       </div>
 
       <div class="ck_editor_div">
-        <textarea id="content" class="ck_editor" name="question_text"></textarea>
+        <textarea id="content" class="ck_editor" name="question_text">
+          <%- qus && qus[0].question_text ? qus[0].question_text : '' %>
+        </textarea>
       </div>
-
-
+        <% let opt %>
+        <% if(qus && qus[0].question_option){ %>
+          <%  opt = JSON.parse(qus[0].question_option) %>
+        <% } %>
+        
       <div class="my-5">
         <h3 class="text-center">Option of this question</h3>
         <hr>
         <div class="my-3 ck_editor_div">
           <h5>#option 1</h5>
-          <textarea id="opt1" class="ck_editor" name="question_option"></textarea>
+          <textarea id="opt1" class="ck_editor" name="question_option">
+            <%- qus && opt[0] ? opt[0] : '' %>
+          </textarea>
         </div>
 
         <div class="my-3 ck_editor_div">
           <h5>#option 2</h5>
-          <textarea id="opt2" class="ck_editor" name="question_option"></textarea>
+          <textarea id="opt2" class="ck_editor" name="question_option">
+            <%-qus && opt[1] ? opt[1] : '' %>
+          </textarea>
         </div>
 
         <div class="my-3 ck_editor_div">
           <h5>#option 3</h5>
-          <textarea id="opt3" class="ck_editor" name="question_option"></textarea>
+          <textarea id="opt3" class="ck_editor" name="question_option">
+            <%- qus && opt[2] ? opt[2] : '' %>
+          </textarea>
         </div>
 
         <div class="my-3 ck_editor_div">
           <h5>#option 4</h5>
-          <textarea id="opt4" class="ck_editor" name="question_option"></textarea>
+          <textarea id="opt4" class="ck_editor" name="question_option">
+            <%- qus && opt[3] ? opt[3] : '' %>
+          </textarea>
         </div>
 
       </div>
@@ -136,32 +158,32 @@
         <h6 class="text-center">Corect Answer</h6>
         <hr>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
+          <input <%= qus && qus[0].question_answer == 1 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
           <label class="form-check-label" for="flexRadioDefault1">
             #option 1
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
+          <input <%= qus && qus[0].question_answer == 2 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
           <label class="form-check-label" for="flexRadioDefault2">
             #option 2
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
+          <input <%= qus && qus[0].question_answer == 3 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
           <label class="form-check-label" for="flexRadioDefault3">
             #option 3
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
+          <input <%= qus && qus[0].question_answer == 4 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
           <label class="form-check-label" for="flexRadioDefault4">
             #option 4
           </label>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block my-4">Submit</button>
+      <button type="submit" class="btn btn-<%= qus ? 'warning' : 'primary' %> btn-block my-4"><%= qus ? 'Update' : 'Create' %></button>
 
     </div>
   </form>
@@ -188,39 +210,59 @@
     }
     CKEDITOR.replace('opt1', {
       height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+      toolbar: [{
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+      ],
+      extraPlugins: 'mathjax',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
     });
     CKEDITOR.replace('opt2', {
       height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+      toolbar: [{
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+      ],
+      extraPlugins: 'mathjax',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
     });
     CKEDITOR.replace('opt3', {
       height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+      toolbar: [{
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+      ],
+      extraPlugins: 'mathjax',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
     });
     CKEDITOR.replace('opt4', {
       height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+      toolbar: [{
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+      ],
+      extraPlugins: 'mathjax',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
     });
 
 

@@ -14,7 +14,6 @@ exports.renderAllQuestions = (req, res, next) => {
     }
   });
 };
-
 exports.renderAllClass = (req, res, next) => {
   try {
     db.query("select * from classes limit 30", (e, data) => {
@@ -30,15 +29,36 @@ exports.renderAllClass = (req, res, next) => {
 };
 exports.createClassPost = (req, res, next) => {
   try {
-    let { class_name, desc } = req.body;
+    let { class_name, desc, editId } = req.body;
+    console.log(req.body);
+    if (editId) {
+      db.query("update classes set class_name=? , class_description = ? where id =?", [class_name, desc, editId], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows > 0) {
+            req.flash("success", "Update success")
+          } else {
+            req.flash("fail", "Update failed")
+          }
+          res.redirect("/user/admin/questions/class")
+        }
+      });
+    } else {
+      db.query("insert into classes values(?,?,?)", [null, class_name, desc], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows > 0) {
+            req.flash("success", "create success")
+          } else {
+            req.flash("fail", "create failed")
+          }
+          res.redirect("/user/admin/questions/class")
+        }
+      });
+    }
 
-    db.query("insert into classes values(?,?,?)", [null, class_name, desc], (e, data) => {
-      if (e) {
-        next(e)
-      } else {
-        res.redirect("/user/admin/questions/class")
-      }
-    });
   } catch (error) {
     next(error)
   }
@@ -54,23 +74,54 @@ exports.renderAllSubject = (req, res, next) => {
 };
 exports.getSubjectByClass = (req, res, next) => {
   let class_id = req.query.class_id
-  db.query("select classes.class_name,subject_list.* from subject_list join classes on  subject_list.class_id=classes.id where class_id=?", [class_id], (e, data) => {
+  db.query("select classes.class_name,classes.id as class_id,subject_list.* from subject_list join classes on  subject_list.class_id=classes.id where class_id=?", [class_id], (e, data) => {
     if (e) {
       next(e)
     } else {
-      res.render("user/admin/question/subject_by_class", { data, class_id, title: "Subjects", flashMessage: Flash.getMessage(req) })
+      if (data.length == 0) {
+        db.query(`select id as class_id,class_name from classes where id=${class_id}`, (e, data) => {
+          if (e) {
+            next(e)
+          } else {
+            res.render("user/admin/question/subject_by_class", { data, subject_listing: false, class_id, title: "Subjects", flashMessage: Flash.getMessage(req) })
+          }
+        })
+      } else {
+        res.render("user/admin/question/subject_by_class", { data, class_id, subject_listing: true, title: "Subjects", flashMessage: Flash.getMessage(req) })
+      }
     }
   });
 };
 exports.createSubjectPost = (req, res, next) => {
-  let { class_name, subject_name, subject_code } = req.body;
-  db.query("insert into subject_list values(?,?,?,?)", [null, class_name, subject_name, subject_code], (e, data) => {
-    if (e) {
-      next(e)
-    } else {
-      res.redirect("/user/admin/questions/subject")
-    }
-  });
+  let { class_id, subject_name, subject_code, subject_id } = req.body;
+  console.log(req.body);
+  if (subject_id) {
+    db.query("update subject_list set subject_name=? , subject_code = ? where id =?", [subject_name, subject_code, subject_id], (e, data) => {
+      if (e) {
+        next(e)
+      } else {
+        if (data.affectedRows > 0) {
+          req.flash("success", "Update success")
+        } else {
+          req.flash("fail", "Update failed")
+        }
+        res.redirect(`/user/admin/questions/get-subject-by-class?class_id=${class_id}`)
+      }
+    });
+  } else {
+    db.query("insert into subject_list values(?,?,?,?)", [null, class_id, subject_name, subject_code], (e, data) => {
+      if (e) {
+        next(e)
+      } else {
+        if (data.affectedRows > 0) {
+          req.flash("success", "Create success")
+        } else {
+          req.flash("fail", "Create failed")
+        }
+        res.redirect(`/user/admin/questions/get-subject-by-class?class_id=${class_id}`)
+      }
+    });
+  }
 };
 exports.getSubject = (req, res, next) => {
   let class_id = req.query.class_id;
@@ -85,7 +136,7 @@ exports.getSubject = (req, res, next) => {
 exports.getChapter = (req, res, next) => {
   let class_id = req.query.class_id;
   let subject_id = req.query.subject_id;
-  db.query("select * from chapter where class_id = ? and subject_id =?", [class_id,subject_id], (e, data) => {
+  db.query("select * from chapter where class_id = ? and subject_id =?", [class_id, subject_id], (e, data) => {
     if (e) {
       next(e)
     } else {
@@ -93,31 +144,36 @@ exports.getChapter = (req, res, next) => {
     }
   });
 };
-exports.renderCreateChapter = (req, res, next) => {
-  try {
-    db.query("select subject_name,id from subject_list;select * from classes", (e, data) => {
-      if (e) {
-        next(e)
-      } else {
-        console.log(data);
-        res.render("user/admin/question/chapter", { data, title: "Chapter", flashMessage: Flash.getMessage(req) })
-      }
-    })
-
-  } catch (error) {
-    next(error)
-  }
-};
 exports.createChaptePost = (req, res, next) => {
+  let { class_id, subject_id, chapter_name, chapter_id } = req.body
   try {
-    let { class_name, subject_id, chapter } = req.body;
-    db.query("insert into chapter values(?,?,?,?)", [null, class_name, subject_id, chapter], (e, data) => {
-      if (e) {
-        next(e)
-      } else {
-        res.redirect("/user/admin/questions/create-chapter")
-      }
-    });
+    if (chapter_id) {
+      db.query("update chapter set chapter_name=? where id =?", [chapter_name, chapter_id], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows > 0) {
+            req.flash("success", "Update success")
+          } else {
+            req.flash("fail", "Update failed")
+          }
+          res.redirect(`/user/admin/questions/get-chapter-by-subject-and-class?subject_id=${subject_id}&class_id=${class_id}`)
+        }
+      })
+    } else {
+      db.query("insert into chapter values(?,?,?,?)", [null, class_id, subject_id, chapter_name], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows > 0) {
+            req.flash("success", "create success")
+          } else {
+            req.flash("fail", "create failed")
+          }
+          res.redirect(`/user/admin/questions/get-chapter-by-subject-and-class?subject_id=${subject_id}&class_id=${class_id}`)
+        }
+      });
+    }
 
   } catch (error) {
     next(error)
@@ -125,15 +181,22 @@ exports.createChaptePost = (req, res, next) => {
 };
 exports.getChapterBySubjectAndClass = (req, res, next) => {
   try {
-    let class_id = req.query.class_id
-    let subject_id = req.query.subject_id
-    db.query("select chapter.*, classes.class_name,classes.id as class_id,subject_list.subject_name, subject_list.id as subject_id from chapter join classes on classes.id= chapter.class_id join subject_list on chapter.subject_id = subject_list.id WHERE chapter.subject_id = ? and chapter.class_id = ?",[subject_id,class_id], (e, data) => {
+    let { class_id, subject_id } = req.query;
+    db.query("select chapter.*, classes.class_name,classes.id as class_id,subject_list.subject_name, subject_list.id as subject_id from chapter join classes on classes.id= chapter.class_id join subject_list on chapter.subject_id = subject_list.id WHERE chapter.subject_id = ? and chapter.class_id = ?", [subject_id, class_id], (e, data) => {
       if (e) {
         next(e)
       } else {
-        console.log(data);
-
-        res.render("user/admin/question/chapter-by-subject-and-class", { data, title: "Chapter", flashMessage: Flash.getMessage(req) })
+        if (data.length == 0) {
+          db.query("select classes.id as class_id,classes.class_name,subject_list.id as subject_id,subject_list.subject_name from classes,subject_list where classes.id=? and subject_list.id = ?", [class_id, subject_id], (e, data) => {
+            if (e) {
+              next(e)
+            } else {
+              res.render("user/admin/question/chapter-by-subject-and-class", { data, chapter_listing: false, title: "Chapter", flashMessage: Flash.getMessage(req) })
+            }
+          })
+        } else {
+          res.render("user/admin/question/chapter-by-subject-and-class", { data, title: "Chapter", chapter_listing: true, flashMessage: Flash.getMessage(req) })
+        }
       }
     })
 
@@ -141,55 +204,102 @@ exports.getChapterBySubjectAndClass = (req, res, next) => {
     next(error)
   }
 };
+
+
 exports.renderCreateQuestion = (req, res, next) => {
+  let { class_id, subject_id, chapter_id, question_id, q_type } = req.query
+  console.log(req.query);
+  let qus
   try {
-    db.query("select * from classes",(e,data)=>{
-      if(e){
-        next(e)
-      }else{
-        req.flash("success", "Success!");
-        res.render("user/admin/question/create", { data,title: "Create Question", flashMessage: Flash.getMessage(req) })
+    let obj
+    if (class_id && subject_id && chapter_id) {
+      obj = {
+        class_id,
+        subject_id,
+        chapter_id
+      }
+      db.query(`select * from ${q_type} where class_id=${class_id} and subject_id=${subject_id} and chapter_id=${chapter_id} and id=${question_id} limit 1`, (e, data) => {
+        if (e) {
+          return next(e)
+        } else {
+          if (data.length > 0) {
+            qus = data
+            console.log(qus);
+          }
+        }
+      })
+    } else {
+      obj = {
+        class_id: '',
+        subject_id: '',
+        chapter_id: ''
+      }
+    }
+    db.query("select * from classes", (e, data) => {
+      if (e) {
+        return next(e)
+      } else {
+        res.render("user/admin/question/create", { data, title: "Create Question", flashMessage: Flash.getMessage(req), obj, qus })
       }
     })
+
   } catch (error) {
     next(error)
   }
 };
 exports.createQuestionPost = (req, res, next) => {
-  let {class_id,subject_id,chapter_id,question_text,question_option,question_answer} = req.body
+  let { class_id, subject_id, chapter_id, question_text, question_option, question_answer } = req.body
+
+  let { edit,q_id } = req.query
   let options = [];
-  console.log(req.body)
-  question_option.forEach(e =>{
+  question_option.forEach(e => {
     options.push(e);
   })
-
   try {
-    db.query("insert into questions values(?,?,?,?,?,?,?)",[null,class_id,subject_id,chapter_id,question_text,JSON.stringify(options),question_answer],(e,data)=>{
-      if(e){
-        next(e)
-      }else{
-        console.log(data);
-        if(data.affectedRows >= 1){
-          req.flash("success", "Success!");
-        }else{
-          req.flash("fail", "Error!");
+    if (edit) {
+      db.query("update questions set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options), question_answer,q_id], (e, data) => {
+        if (e) {
+          return next(e)
+        } else {
+          if (data.affectedRows >= 1) {
+            req.flash("success", "Update success!");
+          } else {
+            req.flash("fail", "Error!");
+          }
+          return res.redirect(`/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${q_id}&q_type=questions`)
         }
-        res.redirect('/user/admin/create-question')
-      }
-    })
+      })
+    } else {
+      db.query("insert into questions values(?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows >= 1) {
+            req.flash("success", "Success!");
+          } else {
+            req.flash("fail", "Error!");
+          }
+          res.redirect(`/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&q_type=questions`)
+        }
+      })
+    }
   } catch (error) {
     next(error)
   }
 };
 exports.renderSeeQuestion = (req, res, next) => {
-  let {class_id,subject_id,chapter_id} = req.query
+  let { class_id, subject_id, chapter_id, q_type } = req.query
+  let currentPage = parseInt(req.query.page) || 1
+  let itemPerPage = 25
+  console.log(currentPage);
   try {
-    db.query("SELECT questions.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM questions JOIN classes ON questions.class_id = classes.id JOIN subject_list ON questions.subject_id = subject_list.id JOIN chapter ON questions.chapter_id = chapter.id WHERE questions.class_id=? and questions.subject_id=? and questions.chapter_id=?",[class_id,subject_id,chapter_id],(e,data)=>{
-      if(e){
+    db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;SELECT ${q_type}.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM ${q_type} JOIN classes ON ${q_type}.class_id = classes.id JOIN subject_list ON ${q_type}.subject_id = subject_list.id JOIN chapter ON ${q_type}.chapter_id = chapter.id WHERE ${q_type}.class_id=? and ${q_type}.subject_id=? and ${q_type}.chapter_id=? limit ?,?`, [class_id, subject_id, chapter_id, class_id, subject_id, chapter_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
+      if (e) {
         next(e)
-      }else{
-        console.log(data);
-        res.render("user/admin/question/see-questions", { data,title: "See Question", flashMessage: Flash.getMessage(req) })
+      } else {
+        let totalMessage = data[0]
+        let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
+        res.render("user/admin/question/see-questions", { data: data[1], title: "See Question", flashMessage: Flash.getMessage(req), currentPage, itemPerPage, totalPage, q_type })
       }
     })
   } catch (error) {
@@ -198,13 +308,13 @@ exports.renderSeeQuestion = (req, res, next) => {
 };
 exports.makeQuestionRender = (req, res, next) => {
   var katex = require('katex');
-  let {class_id,subject_id,chapter_id} = req.query
+  let { class_id, subject_id, chapter_id } = req.query
   try {
-    db.query("SELECT questions.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM questions JOIN classes ON questions.class_id = classes.id JOIN subject_list ON questions.subject_id = subject_list.id JOIN chapter ON questions.chapter_id = chapter.id WHERE questions.class_id=1 and questions.subject_id=1 and questions.chapter_id=2 and questions.id=11",[class_id,subject_id,chapter_id],(e,data)=>{
-      if(e){
+    db.query("SELECT questions.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM questions JOIN classes ON questions.class_id = classes.id JOIN subject_list ON questions.subject_id = subject_list.id JOIN chapter ON questions.chapter_id = chapter.id WHERE questions.class_id=1 and questions.subject_id=1 and questions.chapter_id=2 and questions.id=11", [class_id, subject_id, chapter_id], (e, data) => {
+      if (e) {
         next(e)
-      }else{
-        const  equation = '<p><span class="math-tex">\(x = {-b \pm \sqrt{b^2-4ac} \over 2a}\)</span></p>'
+      } else {
+        const equation = '<p><span class="math-tex">\(x = {-b \pm \sqrt{b^2-4ac} \over 2a}\)</span></p>'
         const tex = katex.renderToString(equation)
 
         const html = `
@@ -216,10 +326,10 @@ exports.makeQuestionRender = (req, res, next) => {
       `;
         pdf.create(html).toFile('./expression.pdf', function (err, res) {
           console.log(res);
-            });
-      
-      
-        res.render("user/admin/question/make-questions", { data,title: "See Question", flashMessage: Flash.getMessage(req) })
+        });
+
+
+        res.render("user/admin/question/make-questions", { data, title: "See Question", flashMessage: Flash.getMessage(req) })
       }
     })
   } catch (error) {
@@ -228,11 +338,11 @@ exports.makeQuestionRender = (req, res, next) => {
 };
 exports.renderCreative = (req, res, next) => {
   try {
-    db.query("select * from classes",(e,data)=>{
-      if(e){
+    db.query("select * from classes", (e, data) => {
+      if (e) {
         next(e)
-      }else{
-        res.render("user/admin/question/creative", { data,title: "Creative Question", flashMessage: Flash.getMessage(req) })
+      } else {
+        res.render("user/admin/question/creative", { data, title: "Creative Question", flashMessage: Flash.getMessage(req) })
       }
     })
   } catch (error) {
@@ -240,21 +350,21 @@ exports.renderCreative = (req, res, next) => {
   }
 };
 exports.creativePost = (req, res, next) => {
-  let {class_id,subject_id,chapter_id,question_text,question_option,question_answer} = req.body
+  let { class_id, subject_id, chapter_id, question_text, question_option, question_answer } = req.body
   let options = [];
   console.log(req.body)
-  question_option.forEach(e =>{
+  question_option.forEach(e => {
     options.push(e);
   })
 
   try {
-    db.query("insert into creative values(?,?,?,?,?,?)",[null,class_id,subject_id,chapter_id,question_text,JSON.stringify(options)],(e,data)=>{
-      if(e){
+    db.query("insert into creative values(?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options)], (e, data) => {
+      if (e) {
         next(e)
-      }else{
-        if(data.affectedRows >= 1){
+      } else {
+        if (data.affectedRows >= 1) {
           req.flash("success", "Success!");
-        }else{
+        } else {
           req.flash("fail", "Error!");
         }
         res.redirect('/user/admin/questions/creative')

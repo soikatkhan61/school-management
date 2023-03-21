@@ -1,17 +1,6 @@
 <%- include('../../user_partials/header.ejs') %>
     <div class="main-content" style="background: #eee;min-height: 90vh;">
         <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
-            <div class="mb-3">
-                <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
-                    Create Class
-                </a>
-                <a href="/user/admin/questions/subject" type="button" class="btn btn-success btn-sm my-1">
-                    Create Subject
-                </a>
-                <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
-                    Create Chapter
-                </a>
-            </div>
             <% if(data.length==0){ %>
                 <p class="text-center text-dark">No Questions Found</p>
                 <% }else{ %>
@@ -25,22 +14,38 @@
                         <table class="table">
                             <thead class="table-dark">
                                 <tr>
+                                    <th scope="col">Question</th>
                                     <th scope="col">Action</th>
-                                    <th scope="col">Question</th>
-                                    <th scope="col">Question</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% for(let s of data){%>
                                     <tr>
                                         <td><%- s.question_text %></td>
-                                        <td>edit</td>
-                                        <td><a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>" class="btn btn-sm btn-dark">see question</a></td>
+                                        <td class="d-flex">
+                                            <a href="/user/admin/create-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>&question_id=<%= s.id %>&q_type=<%= q_type %>" class="btn btn-link border btn-sm m-1">Edit</a>
+                                            <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>" class="btn btn-sm btn-dark m-1">View</a>
+                                        </td>
                                     </tr>
                                     <% }%>
                             </tbody>
                         </table>
                     </div>
+                    <div class="d-flex justify-content-center py-5">
+                        <nav aria-label="...">
+                            <ul class="pagination">
+                              <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>"  >
+                                <a  href="/user/admin/questions/see-question?class_id=<%= data[0].class_id %>&subject_id=<%= data[0].subject_id %>&chapter_id=<%= data[0].chapter_id %>&page=<%=currentPage-1 %>&q_type=<%= q_type %>" class="page-link" >Previous</a>
+                              </li>
+                              <% for(let i=0; i< totalPage; i++) {%> 
+                                <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/user/admin/questions/see-question?class_id=<%= data[0].class_id %>&subject_id=<%= data[0].subject_id %>&chapter_id=<%= data[0].chapter_id %>&page=<%=i+1 %>&q_type=<%= q_type %>"><%= i+1 %> </a></li>
+                              <% }%> 
+                              <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>"  >
+                                <a class="page-link" href="/user/admin/questions/see-question?class_id=<%= data[0].class_id %>&subject_id=<%= data[0].subject_id %>&chapter_id=<%= data[0].chapter_id %>&page=<%=currentPage+1 %>&q_type=<%= q_type %>">Next</a>
+                              </li>
+                            </ul>
+                          </nav>
+                      </div>
                     <% } %>
         </div>
     </div>

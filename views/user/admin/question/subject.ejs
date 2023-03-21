@@ -2,103 +2,73 @@
 
 <!-- Button trigger modal -->
 
-  
-  <!-- Modal -->
-  <div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label"
-    aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
-    <div class="modal-dialog  ">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModal2Label">Create a subject</h5>
-          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="/user/admin/questions/create-subject" method="post">
-        
-                <!-- Text input -->
-                <div class="mb-2">
-                    <select name="class_name"  class="py-2 px-4 mb-3" required
-                        style="width: 100%; outline: black">
-                        <option class="py-2 px-5" value="">Select Class</option>
-    
-                        <% for(let s of data){ %> 
-                            <option class="py-2 px-5" value="<%= s.id %>"><%= s.class_name %> </option>
-                        <% } %> 
-    
-                    </select>
-                </div>
-              
-                <!-- Text input -->
-                <div class="form-outline mb-4">
-                  <input type="text" id="form6Example4" class="form-control" name="subject_name" required/>
-                  <label class="form-label" for="form6Example4">Subject Name *</label>
-                </div>
-              
-                <!-- Email input -->
-                <div class="form-outline mb-4">
-                  <input type="text" id="form6Example5" class="form-control" name="subject_code" required/>
-                  <label class="form-label" for="form6Example5">Subject Code</label>
-                </div>
 
-              
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
-            Close
-          </button>
-          <button type="submit" class="btn btn-success">Create</button>
-        </div>
-    </form>
+<!-- Modal -->
+<div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
+  <div class="modal-dialog  ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModal2Label">Subject</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <form action="/user/admin/questions/create-subject" method="post">
+
+          <!-- Text input -->
+          <div class="mb-2">
+            <select name="class_name" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+              <option class="py-2 px-5" value="">Select Class</option>
+
+              <% for(let s of data){ %>
+              <option class="py-2 px-5" value="<%= s.id %>"><%= s.class_name %> </option>
+              <% } %>
+
+            </select>
+          </div>
+
+          <!-- Text input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="subjectNameModal" class="form-control" name="subject_name" required />
+            <label class="form-label" for="subjectNameModal">Subject Name *</label>
+          </div>
+
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="form6Example5" class="form-control" name="subject_code" required />
+            <label class="form-label" for="form6Example5">Subject Code</label>
+          </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" class="btn btn-success">Create</button>
+      </div>
+      </form>
     </div>
   </div>
+</div>
 
-    <div class="main-content"style="background: #eee;min-height: 90vh;" >
-        <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
-            <div>
-                <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
-                    Create Subject
-                  </button>
-                  <a href="/user/admin/questions/class" type="button" class="btn btn-primary btn-sm my-1">
-                    Create Class
-                </a>
-                <a href="/user/admin/questions/create-chapter" type="button" class="btn btn-info btn-sm my-1">
-                    Create Chapter
-                </a>
-               
-            </div>
-            <% if(data[0].length==0){ %>
-                <p class="text-center text-dark">No Subject Found</p>
-                <a href="/user/admin/questions/create-subject">Create Subject</a>
-                <% }else{ %>
-                    <div class="table-responsive py-3">
-                        <table class="table">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">Class</th>
-                                    <th scope="col">Action</th>
-                                    <th scope="col">See Subject</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for(let s of data){%>
-                                    <tr>
-                                        <td><%= s.class_name %></td>
-                                        <td>Edit</td>
-                                        <td><a href="/user/admin/questions/get-subject-by-class?class_id=<%= s.id %>" class="btn btn-primary btn-sm">see subjects</a></td>
-                                    </tr>
-                                    <% }%>
-                            </tbody>
-                        </table>
-                    </div>
-                   
-                    
-                    <% } %>
-        </div>
-    </div>
+<div class="main-content" style="background: #eee;min-height: 90vh;">
+  <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
+    <% if(data[0].length==0){ %>
+    <p class="text-center text-dark">No Subject Found</p>
+    <a href="/user/admin/questions/create-subject">Create Subject</a>
+    <% }else{ %>
+      <ul class="list-group list-group-light">
+        <%for(let s of data){%>
+        <a href="/user/admin/questions/get-subject-by-class?class_id=<%= s.id %>" class="list-group-item text-primary border px-2"><%= s.class_name  %></a>
+        <%}%>
+      </ul>
+    <% } %>
+  </div>
+</div>
 
 
-    <%- include('../../user_partials/footer.ejs') %>
-        </body>
 
-        </html>
+<%- include('../../user_partials/footer.ejs') %>
+</body>
+
+</html>
