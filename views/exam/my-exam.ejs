@@ -1,0 +1,80 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2">
+  <% if(exams.length == 0){ %>
+  <p class="text-center">No Exams</p>
+  <% }else{ %>
+  <div class="table-responsive table-nowrap">
+    <table class="table">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">SL</th>
+          <th scope="col">Name</th>
+          <th scope="col">Code</th>
+          <th scope="col">Helds</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i<exams.length; i++){ %>
+        <tr>
+          <td><%= i+1 %></td>
+          <td><%= exams[i].name %></td>
+          <td><%= exams[i].code %></td>
+          <td>
+            <div>
+                <p class="mb-0"><%= exams[i].start_time %></p>
+                <p class="mb-0"><%= exams[i].end_time %></p>
+            </div>
+          </td>
+          <td>
+            <% 
+                const start_time = new Date(exams[i].start_time);
+                const end_time = new Date(exams[i].end_time);
+                const isExamOngoing = start_time.getTime() <= Date.now() && end_time.getTime() >= Date.now();
+                let examEligible =  isExamOngoing || exams[i].status == 1 ? true : false
+             %>
+            <% if(examEligible){ %>
+                <a class="btn btn-success btn-sm" href="/exam/join?exam_id=<%= exams[i].id %>"><span class="mx-1">Join</span> </a>
+            <% }else{ %>
+                <button  disabled class="btn btn-sm">Expired</button>
+            <% }%>
+            
+          </td>
+        </tr>
+        <% } %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex justify-content-center py-5">
+    <nav aria-label="...">
+      <ul class="pagination">
+        <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
+          <a href="/exam/view?page=<%=currentPage-1 %>" class="page-link">Previous</a>
+        </li>
+        <% for(let i=0; i< totalPage; i++) {%>
+        <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/exam/view?page=<%=i+1 %>"><%= i+1 %> </a></li>
+        <% }%>
+        <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>">
+          <a class="page-link" href="/exam/view?page=<%=currentPage+1 %>">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>

@@ -24,9 +24,6 @@
           <th scope="col">View Questions</th>
           <th scope="col">Question Create</th>
           <th scope="col">Action</th>
-          <th scope="col">Exam Code</th>
-          <th scope="col">Exam</th>
-          <th scope="col">Exam Create</th>
         </tr>
       </thead>
       <tbody>
@@ -35,20 +32,33 @@
           <td><%= i+1 %></td>
           <td><a class="text-primary" href="/combined-question/view-subject?class_id=1&subject=0&q_set=<%=q_set[i].id %>&q_formate=mcq"><%= q_set[i].name %></a></td>
           <td>
-            <a href="/combined-question/view-set?q_set_id=<%=q_set[i].q_set_id %>"><i class="fas fa-eye"></i> <span class="mx-1">view</span> </a>
+            <a href="/combined-question/view-set?q_set_id=<%=q_set[i].id %>"><i class="fas fa-eye"></i> <span class="mx-1">view</span> </a>
            
           </td>
           <td><%= q_set[i].created_at.toDateString() %></td>
           <td>
-            <a class="" href="/exam/create?class_id=<%=q_set[i].class_id %>&subject=<%=q_set[i].subject %>&q_set=<%=q_set[i].id %>"><i class="fas fa-book-open"></i> <span class="mx-1">Take Exam</span> </a>
+            <a class="btn btn-primary btn-sm" href="/exam/create?class_id=<%=q_set[i].class_id %>&subject=<%=q_set[i].subject %>&q_set=<%=q_set[i].id %>"><i class="fas fa-book-open"></i> <span class="mx-1">Take Exam</span> </a>
+            <a class="btn btn-dark btn-sm" href="/exam/view?q_set_id=<%=q_set[i].id %>"><span class="mx-1">View Exam</span> </a>
           </td>
-          <td><%= q_set[i].q_set_id ==  q_set[i].id ? q_set[i].code : '' %></td>
-          <td><a href="/exam/results" class=text-primary><%= q_set[i].q_set_id ==  q_set[i].id ? q_set[i].examName : '' %></a></td>
-          <td><%= q_set[i].q_set_id ==  q_set[i].id ? q_set[i].examCreateDate.toDateString() : '' %></td>
         </tr>
         <% } %>
       </tbody>
     </table>
+    <div class="d-flex justify-content-center py-5">
+      <nav aria-label="...">
+          <ul class="pagination">
+            <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>"  >
+              <a  href="/combined-question/saved?page=<%=currentPage-1 %>" class="page-link" >Previous</a>
+            </li>
+            <% for(let i=0; i< totalPage; i++) {%> 
+              <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/combined-question/saved?page=<%=i+1 %>"><%= i+1 %> </a></li>
+            <% }%> 
+            <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>"  >
+              <a class="page-link" href="/combined-question/saved?page=<%=currentPage+1 %>">Next</a>
+            </li>
+          </ul>
+        </nav>
+    </div>
   </div>
 
   <% } %>

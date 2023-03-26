@@ -3,7 +3,7 @@ const Flash = require("../../utils/Flash");
 
 exports.renderRandom = (req, res, next) => {
   try {
-    db.query("select id,class_name from classes;select school_name from schools where id=1",[req.user.school_id], (e, data) => {
+    db.query("select id,class_name from classes;select school_name from schools where id=?",[req.user.school_id], (e, data) => {
       if (e) {
         next(e)
       } else {
@@ -39,9 +39,7 @@ exports.randomView = (req, res, next) => {
 };
 exports.randomGenerator= (req, res, next) => {
   try {
-
     let{class_id,subject,total_qus,q_formate,name,total_mark,school_name} = req.query
-    console.log(req.query);
     if (q_formate == 'mcq') {
       q_formate = 'questions'
     } else {

@@ -28,9 +28,14 @@
 
 <body id="body">
 
-
-    <% if(user.userType === 'admin'){ %>
+      <% if(user.userType === 'superadmin'){ %>
         <%- include('../../sidebar/admin.ejs') %>
       <% }else if(user.userType === 'teacher'){ %>
         <%- include('../../sidebar/teacher.ejs') %>
+      <% }else if(user.userType === 'moderator'){ %>
+        <%- include('../../sidebar/moderator.ejs') %>
+      <% }else if(user.userType === 'admin'){ %>
+        <%- include('../../sidebar/administration.ejs') %>
+      <% }else if(user.userType === 'student'){ %>
+        <%- include('../../sidebar/student.ejs') %>
       <% } %>

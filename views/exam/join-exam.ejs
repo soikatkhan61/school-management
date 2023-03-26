@@ -1,0 +1,55 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2" style="background-color: #eee;min-height: 100vh;">
+    <section class="p-2 d-flex justify-content-center w-100">
+       
+            <% if(!examEligible){ %>
+                <p class="text-center py-3">Time expired</p>
+            <% }else if(data.length == 0){ %>
+                <p class="text-center py-3">Exams not found</p>
+            <% }else{ %>
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= data[0].name %></h5>
+                    <p class="mb-0">CODE: <%=data[0].code %> </p>
+                    <p class="mb-0">Duration:  <%= Math.floor((data[0].end_time - Date.now()) / (1000 * 60))  %> Minute </p>
+                    <p>Enter your name, student id properly </p>
+                    <form action="/exam/render-questions" method="post">
+                        <div class="form-outline mb-4">
+                            <input name="name" type="text" id="form1Example2" class="form-control" required/>
+                            <label class="form-label" for="form1Example2">Name</label>
+                          </div>
+                          <input type="text" value="<%=data[0].name %>" name="examname" hidden>
+                          <input type="text" value="<%=data[0].q_set_id %>" name="q_set_id" hidden>
+                          <input type="text" value="<%=data[0].start_time %>" name="start_time" hidden>
+                          <input type="text" value="<%=data[0].end_time %>" name="end_time" hidden>
+                          <input type="text" value="<%=data[0].id %>" name="exam_id" hidden>
+                        <div class="form-outline mb-4">
+                          <input name="student_id" type="text" id="xxx" class="form-control" required/>
+                          <label class="form-label" for="xxx">Student ID</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">JOIN</button>
+                      </form>
+                  </div>
+                  
+          </div>
+            <% } %>
+          
+    </section>
+  </div>
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>

@@ -1,0 +1,73 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2">
+  <% if(exams.length == 0){ %>
+  <p class="text-center">No Exams</p>
+  <% }else{ %>
+  <div class="table-responsive table-nowrap">
+    <table class="table">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">SL</th>
+          <th scope="col">Exam Code</th>
+          <th scope="col">Helds</th>
+          <th scope="col">View Questions</th>
+          <th scope="col">Create On</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i<exams.length; i++){ %>
+        <tr>
+          <td><%= i+1 %></td>
+          <td><%= exams[i].code %></td>
+          <td>
+            <div>
+                <p class="mb-0"><%= exams[i].start_time %></p>
+                <p class="mb-0"><%= exams[i].end_time %></p>
+            </div>
+          </td>
+          <td>
+            <a href="/combined-question/view-set?q_set_id=<%= exams[i].q_set_id %>"><i class="fas fa-eye"></i> <span class="mx-1">view</span> </a>
+          </td>
+          <td><%= exams[i].created_at.toDateString() %></td>
+          <td>
+            <a href="/exam/results?exam_id=<%= exams[i].id %>"><span class="mx-1">Dashboard</span> </a>
+          </td>
+        </tr>
+        <% } %>
+        <% } %>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center py-5">
+      <nav aria-label="...">
+        <ul class="pagination">
+          <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
+            <a href="/exam/view?page=<%=currentPage-1 %>" class="page-link">Previous</a>
+          </li>
+          <% for(let i=0; i< totalPage; i++) {%>
+          <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/exam/view?page=<%=i+1 %>"><%= i+1 %> </a></li>
+          <% }%>
+          <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>">
+            <a class="page-link" href="/exam/view?page=<%=currentPage+1 %>">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>

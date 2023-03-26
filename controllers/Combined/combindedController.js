@@ -4,15 +4,23 @@ const errorFormatter = require("../../utils/validationErrorFormatter");
 const Flash = require("../../utils/Flash");
 
 exports.renderCombined = (req, res, next) => {
+    let q_formate
+    if (q_formate == 'mcq') {
+        q_formate = 'questions'
+    } else {
+        q_formate = 'creative'
+    }
     try {
-        db.query("select id,class_name from classes", (e, data) => {
+        db.query("select id,class_name from classes order by id;select school_name from schools where id=?", [req.user.id], (e, data) => {
             if (e) {
                 next(e)
             } else {
+                console.log(data[0]);
                 res.render("combined", {
                     title: "Combined",
                     flashMessage: Flash.getMessage(req),
-                    classes: data
+                    classes: data[0],
+                    school: data[1]
                 });
             }
         })
@@ -22,14 +30,13 @@ exports.renderCombined = (req, res, next) => {
 
 };
 exports.viewSubject = (req, res, next) => {
-    let {name, class_id, subject, q_formate, total_mark, total_qus } = req.body
+    let { name, class_id, subject, q_formate, total_mark, total_qus } = req.body
     try {
-        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?)", [null,name, class_id, subject, q_formate, total_mark, total_qus, null, req.user.school_id, null, null], (e, data) => {
+        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?)", [null, name, class_id, subject, q_formate, total_mark, total_qus, null, req.user.school_id, null, null], (e, data) => {
             if (e) {
                 next(e)
             } else {
-                console.log(data.insertId);
-                return res.redirect(`/combined-question/view-subject?class_id=${class_id}&subject=${subject}&q_set=${data.insertId}&q_formate=${q_formate}`)
+                return res.redirect(`/combined-question/view-subject?class_id=${class_id}&subject=${subject}&q_set=${data.insertId}&q_type=${q_formate}`)
             }
         })
     } catch (error) {
@@ -38,7 +45,7 @@ exports.viewSubject = (req, res, next) => {
 
 };
 exports.viewSubjectGet = (req, res, next) => {
-    let { class_id, q_set, q_formate } = req.query
+    let { class_id, q_set, q_type } = req.query
     try {
         db.query("select * from subject_list where class_id=?", [class_id], (e, data) => {
             if (e) {
@@ -47,7 +54,7 @@ exports.viewSubjectGet = (req, res, next) => {
                 let filter = {
                     class_id,
                     q_set,
-                    q_formate
+                    q_type
                 }
                 res.render(`combined/view-subject`, {
                     title: "view subject", flashMessage: Flash.getMessage(req),
@@ -61,9 +68,9 @@ exports.viewSubjectGet = (req, res, next) => {
 
 };
 exports.viewChapterGet = (req, res, next) => {
-    let { class_id, subject, q_set, q_formate } = req.query
+    let { class_id, subject, q_set, q_type } = req.query
     try {
-        db.query("select * from chapter where class_id=? and subject_id=?", [class_id,subject], (e, data) => {
+        db.query("select * from chapter where class_id=? and subject_id=?", [class_id, subject], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -71,7 +78,7 @@ exports.viewChapterGet = (req, res, next) => {
                     class_id,
                     subject,
                     q_set,
-                    q_formate
+                    q_type
                 }
                 res.render(`combined/view-chapter`, {
                     title: "view subject", flashMessage: Flash.getMessage(req),
@@ -85,26 +92,34 @@ exports.viewChapterGet = (req, res, next) => {
 
 };
 exports.viewQuestionGet = (req, res, next) => {
-    let { class_id, subject,chapter, q_set, q_formate } = req.query
-    if(q_formate == 'mcq'){
-        q_formate = 'questions'
-    }else{
-        q_formate = 'creative'
+    let { class_id, subject_id, chapter, q_set, q_type } = req.query
+    let currentPage = parseInt(req.query.page) || 1
+    let itemPerPage = 25
+    if (q_type == 'mcq' || q_type == 'questions') {
+        q_type = 'questions'
+    } else {
+        q_type = 'creative'
     }
     try {
-        db.query(`select * from ${q_formate} where class_id=? and subject_id = ? and chapter_id=?`, [class_id, subject,chapter], (e, data) => {
+        db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;select * from ${q_type} where class_id=? and subject_id = ? and chapter_id=? limit ?,?;select questions from q_set where id=?`, [class_id, subject_id, chapter, class_id, subject_id, chapter, ((itemPerPage * currentPage) - itemPerPage), itemPerPage, q_set], (e, data) => {
             if (e) {
                 next(e)
             } else {
                 let filter = {
                     class_id,
-                    subject,
+                    subject_id,
                     q_set,
-                    q_formate
+                    q_type
                 }
+                console.log(q_type);
+                let totalMessage = data[0]
+                let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
+                console.log(data[2]);
                 res.render(`combined/view-questions`, {
                     title: "view subject", flashMessage: Flash.getMessage(req),
-                    questions: data, filter
+                    questions: data[1], filter,
+                    q_set_ids: data[2],
+                    currentPage, itemPerPage, totalPage, q_type
                 })
             }
         })
@@ -123,10 +138,10 @@ exports.addQuestion = (req, res, next) => {
                 if (e) {
                     next(e);
                 } else {
-                    if(data.changedRows == 1){
-                        res.send({status:200})
-                    }else if(data.changedRows == 0){
-                        res.send({status:400})
+                    if (data.changedRows == 1) {
+                        res.send({ status: 200 })
+                    } else if (data.changedRows == 0) {
+                        res.send({ status: 400 })
                     }
                 }
             }
@@ -138,19 +153,23 @@ exports.addQuestion = (req, res, next) => {
 };
 
 exports.renderSavedQuesSet = (req, res, next) => {
+    let currentPage = parseInt(req.query.page) || 1
+    let itemPerPage = 25
     try {
         db.query(
-            "select q_set.*,exams.created_at as examCreateDate,exams.name as examName,exams.q_set_id,exams.class,exams.subject as exam_subject,exams.code from q_set left join exams on exams.q_set_id=q_set.id and exams.class = q_set.class_id and exams.subject = q_set.subject where q_set.school_id=?",[req.user.school_id],
+            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? order by id desc limit ?,?", [req.user.school_id,req.user.school_id,((itemPerPage * currentPage) - itemPerPage), itemPerPage],
             (e, data) => {
                 if (e) {
                     next(e);
                 } else {
-                    console.log(data);
+                    let totalMessage = data[0]
+                    let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
                     res.render(`combined/saved`, {
                         title: "Saved Question",
                         flashMessage: Flash.getMessage(req),
-                        q_set: data,
-                    }); 
+                        q_set: data[1],
+                        currentPage, itemPerPage, totalPage
+                    });
                 }
             }
         );
@@ -162,35 +181,36 @@ exports.renderSavedQuesSet = (req, res, next) => {
 exports.renderviewSet = (req, res, next) => {
     let qset_id = req.query.q_set_id
     try {
-        db.query('select q_set.*,schools.school_name from q_set join schools on q_set.school_id = schools.id WHERE q_set.id = ? limit 1',[qset_id],(e,data)=>{
-            if(e){
+        db.query('select q_set.*,schools.school_name from q_set join schools on q_set.school_id = schools.id WHERE q_set.id = ? limit 1', [qset_id], (e, data) => {
+            if (e) {
                 next(e)
-            }else{
-               if(data && data[0].questions != null){
-                const questionIds = data[0].questions.split(',');
-                const query = 'SELECT * FROM questions WHERE id IN (?)';
-                db.query(query, [questionIds], (error, results) => {
-                    if (error) {
-                      console.error(error);
-                    } else {
-                        console.log(results);
-                      let obj = {
-                        total_qus:data[0].total_qus,
-                        total_mark:data[0].total_mark,
-                        school_name:data[0].school_name,
-                        name:data[0].name,
-                        q_formate:data[0].q_formate}
-                      res.render(`combined/view_qset`, {
-                        title: "Preview Question",
-                        flashMessage: Flash.getMessage(req),
-                        data:  results,
-                        obj
+            } else {
+                if (data && data[0].questions != null) {
+                    const questionIds = data[0].questions.split(',');
+                    const query = 'SELECT * FROM questions WHERE id IN (?)';
+                    db.query(query, [questionIds], (error, results) => {
+                        if (error) {
+                            console.error(error);
+                        } else {
+                            console.log(results);
+                            let obj = {
+                                total_qus: data[0].total_qus,
+                                total_mark: data[0].total_mark,
+                                school_name: data[0].school_name,
+                                name: data[0].name,
+                                q_formate: data[0].q_formate
+                            }
+                            res.render(`combined/view_qset`, {
+                                title: "Preview Question",
+                                flashMessage: Flash.getMessage(req),
+                                data: results,
+                                obj
+                            });
+                        }
                     });
-                    }
-                  });
-               }else{
+                } else {
                     res.send("No data")
-               }
+                }
             }
         })
     } catch (error) {

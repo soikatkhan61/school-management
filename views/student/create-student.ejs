@@ -1,109 +1,122 @@
 <%- include('../user/user_partials/header.ejs') %>
 
-    <div class="container py-4" style="min-height: 100vh;">
-        <h5 class="my-2 text-primary">Register a student</h5>
-        <div class="row">
-            <div class="col-6 col-sm-12">
-                <form action="/user/create-student" method="post" enctype="multipart/form-data">
-                    <!-- 2 column grid layout with text inputs for the first and last names -->
-                    <div class="row mb-4">
-                        <div class="col">
-                            <div class="form-outline">
-                                <input type="text" id="form6Example1" name="f_name" maxlength="25" class="form-control" />
-                                <label class="form-label" for="form6Example1">First name</label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-outline">
-                                <input type="text" id="form6Example2" maxlength="25" name="l_name" class="form-control" />
-                                <label class="form-label" for="form6Example2">Last name</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Text input -->
-                    <div class="form-outline mb-4">
-                        <input type="text" id="Student_ID" maxlength="25" name="student_id" class="form-control" />
-                        <label class="form-label" for="Student_ID">Student ID</label>
-                    </div>
-
-                    <!-- Text input -->
-                    <div class="form-outline mb-4">
-                        <input type="text" id="asdg" maxlength="30" name="password" class="form-control" />
-                        <label class="form-label" for="asdg">Password</label>
-                    </div>
-
-                    <!-- Default radio -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" value="male"/>
-                        <label class="form-check-label" for="flexRadioDefault1"> Male </label>
-                    </div>
-
-                    <!-- Default checked radio -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female"/>
-                        <label class="form-check-label" for="flexRadioDefault2"> Female </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault3" value="other"/>
-                        <label class="form-check-label" for="flexRadioDefault3"> Other </label>
-                    </div>
-
-                    <!-- Email input -->
-                    <div class="form-outline mb-4 mt-4">
-                        <input type="date" id="form6Example5" name="dob" class="form-control" />
-                        <label class="form-label" for="form6Example5">Date of Birth</label>
-                    </div>
-
-
-                    <!-- Number input -->
-                    <div class="form-outline mb-4">
-                        <textarea type="text" id="form6Example6" maxlength="340" name="address" class="form-control"></textarea>
-                        <label class="form-label" for="form6Example6">Adress</label>
-                    </div>
-
-
-
+<div class="container py-4" style="min-height: 100vh;">
+  <h5 class="my-2 text-primary">Register a student</h5>
+  <div class="row">
+    <div class="col-6 col-sm-12">
+      <form action="/user/create-student?edit=<%= data ? true : false %>&id=<%= data ? data.id : '' %>" method="post" enctype="multipart/form-data">
+        <!-- 2 column grid layout with text inputs for the first and last names -->
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input value="<%= data && data.name ? data.name: ''%>" type="text" id="form6Example1" name="f_name" maxlength="25" class="form-control" required />
+              <label class="form-label" for="form6Example1">First name</label>
             </div>
-            <div class="col-6 col-sm-12">
-                <div>
-                    <img src="/images/no_prev.jpg" class="object-cover" alt="" height="200" width="200" id="imagePreview">
-                </div>
-                <div class="my-4">
-                    <label class="form-label" for="customFile">Max file size 200KB</label>
-                    <input type="file" class="form-control" id="student_avater" name="student_avater"/>
-
-                    <script>
-                        const fileInput = document.getElementById('student_avater');
-                        const imagePreview = document.getElementById('imagePreview');
-                        fileInput.addEventListener('change', () => {
-                          const file = fileInput.files[0];
-                          const fileSize = file.size;
-                          const maxSize = 1024 * 200; // 200KB
-                      
-                          if (fileSize > maxSize) {
-                            alert('File size exceeds the limit of 200KB');
-                            fileInput.value = ''; // Clear the file input to prevent submitting the form
-                          }else{
-                            const file = fileInput.files[0];
-                            const reader = new FileReader();
-
-                            reader.onload = (event) => {
-                            imagePreview.src = event.target.result;
-                            };
-
-                            reader.readAsDataURL(file);
-                          }
-                        });
-                      </script>
-                </div>
-                
-            </div>
-            <!-- Submit button -->
-            <button type="submit" class="btn btn-primary btn-block mb-4">Register Student</button>
-            </form>
+          </div>
+        </div>
+        <div class="mb-2">
+            <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+            <option class="py-2 px-5" value="">Select Class</option>
+                <% for(let s of classes){ %>
+                    <option class="py-2 px-5" value="<%= s.id %>" <%= data && data.class_id == s.id ? 'selected' : ''  %> >
+                    <%= s.class_name %>
+                </option>
+                <% } %>
+            </select>
+          </div>
+        <!-- Text input -->
+        <div class="form-outline mb-4">
+          <input value="<%= data && data.student_id ? data.student_id : ''%>" type="text" id="Student_ID" maxlength="11" name="student_id" class="form-control" required />
+          <label class="form-label" for="Student_ID">Student ID</label>
         </div>
 
+        <!-- Text input -->
+        <div class="form-outline mb-4">
+          <input value="<%= data && data.password ? data.password : ''%>" type="text" id="asdg" maxlength="30" name="password" class="form-control" required />
+          <label class="form-label" for="asdg">Password</label>
+        </div>
+
+        <!-- Default radio -->
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault1" <%= data && data.gender == 'male' ? 'checked': ''%> value="male" required />
+          <label class="form-check-label" for="flexRadioDefault1"> Male </label>
+        </div>
+
+        <!-- Default checked radio -->
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault2" value="female" <%= data && data.gender == 'female' ? 'checked': ''%> required />
+          <label class="form-check-label" for="flexRadioDefault2"> Female </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="gender" id="flexRadioDefault3" value="other" <%= data && data.gender == 'other' ? 'checked': ''%> required />
+          <label class="form-check-label" for="flexRadioDefault3"> Other </label>
+        </div>
+
+        <!-- Email input -->
+        <div class="form-outline mb-4 mt-4">
+          <input type="date" id="form6Example5" name="dob" value="<%= data && data.dob ? data.dob : ''%>" class="form-control" required />
+          <label class="form-label" for="form6Example5">Date of Birth</label>
+          <script>
+            const input = document.getElementById('form6Example5');
+            let dob = '<%= data && data.dob ? data.dob : new Date() %>'
+            dob = new Date(dob)
+            const year = dob.getFullYear();
+            const month = String(dob.getMonth() + 1).padStart(2, '0');
+            const day = String(dob.getDate()).padStart(2, '0');
+            const formattedDob = `${year}-${month}-${day}`;
+            input.value = formattedDob;
+          </script>
+        </div>
+
+
+        <!-- Number input -->
+        <div class="form-outline mb-4">
+          <textarea type="text" id="form6Example6" maxlength="340" name="address" class="form-control"><%= data && data.address ? data.address : ''%></textarea>
+          <label class="form-label" for="form6Example6">Adress</label>
+        </div>
+
+
+
     </div>
+    <div class="col-6 col-sm-12">
+      <div>
+        <img src="<%= data && data.avater ? data.avater : '/images/user.png' %>" class="object-cover" alt="" height="200" width="200" id="imagePreview">
+      </div>
+      <div class="my-4">
+        <label class="form-label" for="customFile">Max file size 200KB</label>
+        <input type="file"  class="form-control" id="student_avater" name="student_avater" />
+
+        <script>
+          const fileInput = document.getElementById('student_avater');
+          const imagePreview = document.getElementById('imagePreview');
+          fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            const fileSize = file.size;
+            const maxSize = 1024 * 200; // 200KB
+
+            if (fileSize > maxSize) {
+              alert('File size exceeds the limit of 200KB');
+              fileInput.value = ''; // Clear the file input to prevent submitting the form
+            } else {
+              const file = fileInput.files[0];
+              const reader = new FileReader();
+
+              reader.onload = (event) => {
+                imagePreview.src = event.target.result;
+              };
+
+              reader.readAsDataURL(file);
+            }
+          });
+        </script>
+      </div>
+
     </div>
-    <%- include('../user/user_partials/footer.ejs') %>
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-<%= data ? 'warning' : 'primary' %> btn-block mb-4"> <%= data ? 'Update Profile' : 'Registere Student' %></button>
+    </form>
+  </div>
+
+</div>
+</div>
+<%- include('../user/user_partials/footer.ejs') %>

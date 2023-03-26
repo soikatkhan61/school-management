@@ -14,6 +14,7 @@
 <div class="main-content px-4 container py-4">
   <div style="max-width: max-content;">
     <form action="/combined-question" method="post">
+      <p>School Name: <input type="text"  class="fw-bold px-2" name="school_name" value="<%= school[0].school_name %>"></p>
       <div class="form-outline mb-4">
         <input name="name" type="text" id="form2Example2" class="form-control" required />
         <label class="form-label" for="form2Example2">Question Name</label>
@@ -39,12 +40,12 @@
       <input type="hidden" value="1" name="school_id">
 
       <div class="form-outline mb-4">
-        <input name="total_mark" type="number" id="form2Example1" class="form-control" required />
+        <input name="total_mark" type="number" id="form2Example1" class="form-control"  min="1" required />
         <label class="form-label" for="form2Example1">Total Mark</label>
       </div>
 
       <div class="form-outline mb-4">
-        <input name="total_qus" type="number" id="form2Example1" class="form-control" required />
+        <input name="total_qus" type="number" id="form2Example1" class="form-control" max="200" min="1"  required />
         <label class="form-label" for="form2Example1">Total Question</label>
       </div>
       <!-- Submit button -->

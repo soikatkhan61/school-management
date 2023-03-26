@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    Admin Panel
+  </title>
+  <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/grid.css">
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link rel="stylesheet" href="/styles/custom_user.css">
+  <link rel="stylesheet" href="/styles/alert.css">
+</head>
+
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content  py-2" style="background-color: #eee;min-height: 100vh;">
+  <form action="/exam/submit" method="post">
+  <div class="container">
+    <% if(qus.length == 0){ %>
+    <p class="text-center">No Data Found</p>
+    <% }else{ %>
+    <div class="py-4" style="border-top: 5px solid #240496;">
+      <p class="fw-bold">Exam: <%= examname %></p>
+      <p class="mb-0">Student Name: <%= name %></p>
+      <p>Student ID: <%= student_id %></p>
+      <div class="d-flex justify-content-between text-danger py-2 bg-light">
+        <button  type="submit" class="btn btn-primary btn-sm mx-2 ">Submit</button>
+        <p class="mb-0 mx-2 " id="time_left"> Time left: --</p>
+        <p class="mb-0 d-none" id="start_time"> <%= start_time %> </p>
+        <p class="mb-0  d-none" id="end_time"> <%= end_time %> </p>
+        <script>
+          const startTimeElement = document.getElementById("start_time");
+          const endTimeElement = document.getElementById("end_time");
+          const startTime = new Date(startTimeElement.textContent);
+          const endTime = new Date(endTimeElement.textContent);
+          const timeLeftElement = document.getElementById("time_left");
+
+          function updateCountdown() {
+            const now = new Date();
+            let remainingTime;
+            if (now < startTime) {
+              remainingTime = startTime - now;
+              const minutes = Math.floor(remainingTime / (1000 * 60));
+              timeLeftElement.textContent = `Time left: ${minutes} minute`;
+            } else if (now >= startTime && now <= endTime) {
+              remainingTime = endTime - now;
+              const minutes = Math.floor(remainingTime / (1000 * 60));
+              const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+              timeLeftElement.textContent = `Time left: ${minutes}m ${seconds}s`;
+            } else {
+              timeLeftElement.textContent = "The exam has ended.";
+            }
+          }
+          setInterval(updateCountdown, 1000);
+        </script>
+      </div>
+      <input type="text" name="code" value="<%= exam_id %>">
+      <% for(let i=0;i<qus.length;i++){ %>
+        <% let j=0 %>
+        <% let k=0 %>
+      <div class="bg-light p-2 my-1">
+        <div style=" display: flex!important;align-items: start;margin: 5px 0;">
+          <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p>
+          <p style="margin-left: 15px;"><%- qus[i].question_text %></p>
+        </div>
+        
+        <% let opt = JSON.parse(qus[i].question_option) %>
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k) %>" value="0" id="xx<%= (i+ "__" + j )  %>" required />
+          <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[0] %> </label>
+          <% j++ %>
+        </div>
+        <div class="mx-4">
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="1" id="xx<%= (i+ "__" + j )  %>"  required >
+          <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[1] %> </label>
+          <% j++ %>
+        </div>
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="2" id="xx<%= (i+ "__" + j ) %>" required />
+          <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[2] %> </label>
+          <% j++ %>
+        </div>
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="3" id="xx<%= (i+ "__" + j )  %>" required />
+          <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[3] %> </label>
+          <% j++ %>
+        </div>
+      </div>
+      <% j++ %>
+      <% k++ %>
+      <% } %>
+      <button class="btn btn-primary" type="submit">Submit</button>
+
+    </div>
+    <% } %>
+  </div>
+  </tbody>
+  </table>
+  </form>
+</div>
+
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+<script>
+    CKEDITOR.replace('content', {
+        height: 700,
+        removeButtons: 'PasteFromWord',
+        
+    });
+
+    if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
+        document.getElementById('ie8-warning').className = 'tip alert';
+    }
+
+</script>
+
+</body>
+
+</html>

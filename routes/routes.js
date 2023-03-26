@@ -11,12 +11,17 @@ const moderatorRoute = require("./moderatorRoute")
 const combinedQuestionRoute = require("./combinedQuestionRoute")
 const randomrRoute = require("./randomrRoute")
 const examRoute = require("./examRoute")
+const administrationRoute = require("./administrationRoute")
 
 
 
 
 const routes = [
 
+    {
+        path: "/administration",
+        handler: administrationRoute
+    },
     {
         path: "/auth",
         handler: authRoute

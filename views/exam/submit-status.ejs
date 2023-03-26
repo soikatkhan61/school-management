@@ -1,0 +1,29 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+    <style>
+        #loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            translate: (-50%, -50%);
+        }
+    </style>
+    <div id="loading-spinner" style="display:none;">
+        <img src="/images/spinner.gif" alt="Loading...">
+    </div>
+    <div class="main-content container py-2">
+        <% if(status){ %>
+            <div>
+                <p>Your response has been recorded!</p>
+                <a href="/exam/view-result?<%token%>" class="btn btn-primary btn-sm">View Results</a>
+            </div>
+        <% }else{ %>
+            <div>
+                <p>Something  went wrong! try again</p>
+            </div>
+        <% }%>
+    </div>
+    <%- include('../partials/footer.ejs') %>
+        </body>
+
+        </html>

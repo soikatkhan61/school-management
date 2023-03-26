@@ -105,9 +105,10 @@ exports.handleRegistration = async (req, res, next) => {
 
         }
         if (req.query.register == 'true') {
-            db.query("insert into schools values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            db.query("insert into schools values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 [
                     null,
+                    'asmin',
                     school_name,
                     school_address,
                     school_email,

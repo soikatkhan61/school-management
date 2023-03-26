@@ -13,11 +13,11 @@
     </div>
     <div class="main-content py-2">
 
-        <div class="row">
+        <div class="p-2 d-flex justify-content-center w-100">
             <form method="post" action="/exam/create">
-                <div class="container col-3 col-sm-12 ">
+                <div>
                     <div class="border border-gray card  p-4">
-                        <div class=" mb-2">
+                        <div class="mb-2">
                             <span class="mb-0">This exams is creating by</span>
                             <p class="fw-bold mb-0">
                                 <%= user.username %>
@@ -32,8 +32,9 @@
                                     <%= exam_code %>
                                 </p>
                                 <input type="text" id="exam-code2" name="exam_code" value="<%= exam_code %>" hidden>
+                                <button type="button" class="text-primary border-0 px-1 rounded mb-5" id="regenerate" style="cursor:pointer">Regenerate</button>
                             </div>
-                            <span class="text-primary" id="regenerate" style="cursor:pointer">Regenerate</span>
+                            
                             <script>
                                 const regenerateButton = document.getElementById('regenerate');
                                 const examCodeElement = document.getElementById('exam-code');
@@ -75,7 +76,7 @@
                                 <option class="py-2 px-5" value="" selected disabled>Subject</option>
                                 <% if(subject){ %>
                                     <option class="py-2 px-5" value="<%=subject%>" selected>
-                                        <%= classes[0].subject_name %>
+                                        <%= classes[0].subject_name ? classes[0].subject_name : 'All' %>
                                     </option>
                                     <% } %>>
                             </select>
