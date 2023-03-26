@@ -192,7 +192,7 @@ exports.submitResponse = (req, res, next) => {
         }
         let answer_str = JSON.stringify(answrs)
         console.log(req.user.school_id);
-        db.query("select stu_id from exams_participants where stu_id=?",[req.user.student_id],(e,data)=>{
+        db.query("select stu_id from exams_participants where exam_id = ? and stu_id=? and school_id",[req.body.code,req.user.student_id,req.user.school_id],(e,data)=>{
             if(e) return next(e)
             if(data.length >0) return res.send("Already Recorded!")
             db.query("INSERT INTO exams_participants values(?,?,?,?,?,?,?,?,?)",[null,answer_str,Date.now(),null,req.body.code,Number(req.user.student_id),req.user.school_id,null,null],(e,data)=>{
@@ -204,7 +204,6 @@ exports.submitResponse = (req, res, next) => {
                 }
             })
         })
-       
     } catch (error) {
         next(error)
     }
@@ -225,18 +224,36 @@ exports.renderSubmitStatus = (req, res, next) => {
 exports.renderStudentResult = (req, res, next) => {
     try {
         let {token} = req.query
-        console.log(token);
-        db.query("select score,answers from exams_participants where id=? and school_id=? and stu_id = ?",[token,req.user.school_id,req.user.student_id],(e,data)=>{
+        if(token == undefined || token == null) return res.send("Unauthorized access!")
+        db.query("select exam_id,score,answers from exams_participants where id=? and school_id=? and stu_id = ?",[token,req.user.school_id,req.user.student_id],(e,data)=>{
             if(e) return next(e)
-            if(data[0].score == null || data[0].score == undefined){
+            //data[0].score == null || data[0].score == undefined |
+            if( false){
                 return res.send("your result is 0")
             }else{
-                db.query("select ")
-                return res.render("exam/submit-status", {
-                    title: "Submit Status",
-                    flashMessage: Flash.getMessage(req),
-                    token
-                });
+                db.query("select q_set.answers,exams.q_set_id FROM exams JOIN q_set on q_set.id = exams.q_set_id WHERE exams.id = ? limit 1",[data[0].exam_id],(e,ans)=>{
+                    if(e) return next(e)
+                    if(ans.length == 0) return res.send("not found")
+                    let qus_ans_arr = JSON.parse(data[0].answers).split(',')
+                    let marks = 0
+                    console.log(data);
+                    console.log(ans);
+                    let correct = ans[0].answers.split(',').map((m,index)=>{
+                        if(m == qus_ans_arr[index]){
+                            return marks++
+                        }
+                        return marks
+                    })
+                    console.log(correct);          
+                    
+                    return
+                    return res.render("exam/submit-status", {
+                        title: "Submit Status",
+                        flashMessage: Flash.getMessage(req),
+                        token
+                    });
+                })
+                
             }
         })
         

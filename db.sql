@@ -163,6 +163,7 @@ CREATE TABLE IF NOT EXISTS q_set (
   total_mark int(4) not null, 
   total_qus int(4) not null,
   questions varchar(300),
+  answers  varchar(300),
   school_id int(11) not null,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -191,7 +192,7 @@ CREATE TABLE IF NOT EXISTS exams (
 CREATE TABLE IF NOT EXISTS exams_participants (
   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   answers VARCHAR NOT NULL,
-  submit_on DATETIME NOT NULL,
+  submit_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   score INT(5),
   exam_id INT(11),
   stu_id INT(10),

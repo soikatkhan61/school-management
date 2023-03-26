@@ -80,10 +80,11 @@
           <% for(let i=0; i<questions.length; i++){ %>
           <% let opt = JSON.parse(questions[i].question_option) %>
           <input type="text" class="q_id" value="<%= questions[i].id %>" hidden>
+          <input type="text" class="q_ans" value="<%= questions[i].question_answer %>" hidden>
           <tr>
             <td><%= i+1 + "," + questions[i].id %></td>
             <% if(object[questions[i].id]){ %>
-              <td><button class="btn btn-sm btn-success add_btn">Added</button></td>
+              <td><button class="btn btn-sm btn-success add_btn" disabled>Added</button></td>
             <% }else{ %>
               <td><button class="btn btn-sm btn-primary add_btn">Add</button></td>
             <% }%>
@@ -119,16 +120,18 @@
       let loading_spinner = document.getElementById('loading_spinner')
       let add_btn = document.getElementsByClassName('add_btn')
       let q_id = document.getElementsByClassName('q_id')
+      let q_ans = document.getElementsByClassName('q_ans')
       for (let i = 0; i < add_btn.length; i++) {
         add_btn[i].addEventListener('click', () => {
           loading_spinner.style.display='block'
-          fetch(`/combined-question/add-question?q_id=${q_id[i].value}&q_set=<%=filter.q_set%>`)
+          fetch(`/combined-question/add-question?q_id=${q_id[i].value}&a_id=${q_ans[i].value}&q_set=<%=filter.q_set%>`)
             .then(res => res.json())
             .then(data => {
               console.log(q_id[i].value);
               loading_spinner.style.display='none'
               if (data.status === 200) {
                 add_btn[i].innerText = 'added'
+                add_btn[i].disabled = true
                 add_btn[i].classList.add('btn-success')
               } else if (data.status === 400) {
                 add_btn[i].innerText = 'already added'

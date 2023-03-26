@@ -32,7 +32,7 @@ exports.renderCombined = (req, res, next) => {
 exports.viewSubject = (req, res, next) => {
     let { name, class_id, subject, q_formate, total_mark, total_qus } = req.body
     try {
-        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?)", [null, name, class_id, subject, q_formate, total_mark, total_qus, null, req.user.school_id, null, null], (e, data) => {
+        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?,?)", [null, name, class_id, subject, q_formate, total_mark, total_qus, null,null, req.user.school_id, null, null], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -128,16 +128,17 @@ exports.viewQuestionGet = (req, res, next) => {
     }
 };
 exports.addQuestion = (req, res, next) => {
-    let { q_id, q_set } = req.query;
+    let {q_id,q_set,a_id } = req.query;
     console.log(req.query);
     try {
         db.query(
-            "UPDATE q_set SET questions = IF(FIND_IN_SET(?, questions), questions, CONCAT_WS(',', questions, ?)) WHERE id = ?;",
-            [q_id, q_id, q_set],
+            "UPDATE q_set SET questions = IF(FIND_IN_SET(?, questions), questions, CONCAT_WS(',', questions, ?)), answers = IF(FIND_IN_SET(?, questions),  IF(answers IS NULL, ?, CONCAT_WS(',', answers, ?)), answers) WHERE id = ?;",
+            [q_id, q_id,q_id,a_id,a_id,q_set],
             (e, data) => {
                 if (e) {
                     next(e);
                 } else {
+                    console.log(data);
                     if (data.changedRows == 1) {
                         res.send({ status: 200 })
                     } else if (data.changedRows == 0) {
