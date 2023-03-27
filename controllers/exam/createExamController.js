@@ -221,42 +221,68 @@ exports.renderSubmitStatus = (req, res, next) => {
         next(error)
     }
 };
+
 exports.renderStudentResult = (req, res, next) => {
     try {
         let {token} = req.query
+       
         if(token == undefined || token == null) return res.send("Unauthorized access!")
         db.query("select exam_id,score,answers from exams_participants where id=? and school_id=? and stu_id = ?",[token,req.user.school_id,req.user.student_id],(e,data)=>{
             if(e) return next(e)
-            //data[0].score == null || data[0].score == undefined |
-            if( false){
-                return res.send("your result is 0")
+            if(data[0].score){
+                console.log("hello");
+                return res.render("exam/score", {
+                    title: "Submit Status",
+                    flashMessage: Flash.getMessage(req),
+                    score:data[0].score
+                });
             }else{
                 db.query("select q_set.answers,exams.q_set_id FROM exams JOIN q_set on q_set.id = exams.q_set_id WHERE exams.id = ? limit 1",[data[0].exam_id],(e,ans)=>{
                     if(e) return next(e)
-                    if(ans.length == 0) return res.send("not found")
+                    if(ans.length == 0 ||ans[0].answers == null ) return res.send("not found")
+                    console.log(data[0].answers);
+                    console.log(ans[0]);
                     let qus_ans_arr = JSON.parse(data[0].answers).split(',')
                     let marks = 0
-                    console.log(data);
-                    console.log(ans);
                     let correct = ans[0].answers.split(',').map((m,index)=>{
+                        console.log(m,qus_ans_arr[index]);
                         if(m == qus_ans_arr[index]){
                             return marks++
                         }
                         return marks
                     })
-                    console.log(correct);          
+                    db.query("update exams_participants set score=? where id=? and school_id=? and stu_id = ?",[correct[correct.length-1],token,req.user.school_id,req.user.student_id],(e,update)=>{
+                        if(e) return next(e)
+                        if(update.affectedRows == 0) return res.send("error")
+                        return res.render("exam/score", {
+                            title: "Submit Status",
+                            flashMessage: Flash.getMessage(req),
+                            score:correct[correct.length-1]
+                        });
+                    })
                     
-                    return
-                    return res.render("exam/submit-status", {
-                        title: "Submit Status",
-                        flashMessage: Flash.getMessage(req),
-                        token
-                    });
                 })
                 
             }
         })
         
+    } catch (error) {
+        next(error)
+    }
+};
+
+exports.renderStudentAllResult = (req, res, next) => {
+    try {
+        db.query("select exams_participants.*,exams.name,exams.id as exam_id from exams_participants join exams on exams_participants.exam_id = exams.id where exams_participants.stu_id = ? and exams_participants.school_id=?",[req.user.student_id,req.user.school_id],(e,exams)=>{
+            if(e) return next(e)
+            if(exams.length == 0) return res.send("error")
+            console.log(exams);
+            return res.render("exam/all-results", {
+                title: "Submit Status",
+                flashMessage: Flash.getMessage(req),
+                exams
+            });
+        })
     } catch (error) {
         next(error)
     }

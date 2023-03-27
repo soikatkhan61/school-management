@@ -1,0 +1,55 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2">
+  <% if(exams.length == 0){ %>
+  <p class="text-center">No Exams</p>
+  <% }else{ %>
+  <div class="table-responsive table-nowrap">
+    <table class="table">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">SL</th>
+          <th scope="col">Name</th>
+          <th scope="col">Submit on</th>
+          <th scope="col">Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i<exams.length; i++){ %>
+        <tr>
+          <td><%= i+1 %></td>
+          <td><%= exams[i].name %></td>
+          <td>
+            <% const date = new Date(exams[i].submit_on); %>
+            <%- date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }); %>
+          </td>
+          <td>
+            <% if(exams[i].score){ %>
+                <%= exams[i].score %>
+            <% }else{%>
+                <a class="btn btn-primary btn-sm" href="/exam/view-result?token=<%= exams[i].exam_id %>">view</a>
+            <% } %>
+        </td>
+        </tr>
+        <% } %>
+        <% } %>
+      </tbody>
+    </table>
+    
+  </div>
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>

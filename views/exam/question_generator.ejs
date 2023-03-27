@@ -383,7 +383,6 @@
               console.log(question_options[i].dataset.qusopt);
               const itemSet = (localStorage.getItem('question_genator') !== null);
               if (!itemSet) {
-                console.log("New Data peyechi, set korbo ekhn");
                 let obj = {
                   id: question_id[i].innerHTML,
                   question_text: question_text[i].dataset.qustext,
@@ -414,15 +413,10 @@
                   add_to_question_list[i].disabled = true;
                   add_to_question_list[i].innerText = "Already added";
                 }
-
               }
               MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             })
-
           }
-
-
-
         })
         .catch(error => console.error(error));
       MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
