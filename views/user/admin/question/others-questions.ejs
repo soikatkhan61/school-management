@@ -61,12 +61,12 @@
   </div>
 
   <div class="main-content container">
-    <form action="/user/admin/questions/creative<%= qus ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
+    <form action="/user/admin/questions/others<%= qus ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
       <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-end" style="background-color: antiquewhite;">
         <button type="submit" class="btn btn-success btn-sm my-1">Submit</button>
       </div>
       <!-- Text input -->
-      <div class="shadow-sm py-4">
+      <div class="py-4 shadow-sm">
         <div class="mb-2">
           <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
             <% if(obj.class_id ){ %>
@@ -106,51 +106,24 @@
           <a href="/user/admin/questions/creative" class="btn btn-danger my-1">Reset</a>
           <p class="fst-italic text-sm text-danger">Please do not edit this when your are edit question</p>
           <% } %>
-  
       </div>
       <div class="d-none">
         <input type="text" name="class_name" id="class_name" hidden>
         <input type="text" name="subject_name" id="subject_name" hidden>
         <input type="text" name="chapter_name" id="chapter_name" hidden>
       </div>
-
       <textarea id="content" name="question_text">
         <%- (qus && qus[0].question_text) && setContent == 'true'  ? qus[0].question_text : '' %>
       </textarea>
-      <% let opt %>
-      <% if(qus && qus[0].question_option){ %>
-      <%  opt = JSON.parse(qus[0].question_option) %>
-      <% } %>
+
       <div class="my-5">
         <hr>
         <div class="my-3">
-          <h5>জ্ঞান মুলক</h5>
-          <textarea id="opt1" name="question_option">
-            <%- (qus && opt[0]) &&  setContent   == 'true' ? opt[0] : '' %>
+          <h5>Answer</h5>
+          <textarea id="opt1" name="question_answer">
+            <%- (qus && qus[0].question_answer) && setContent == 'true'  ? qus[0].question_answer : '' %>
           </textarea>
         </div>
-
-        <div class="my-3">
-          <h5> অনুধাবন মুলক </h5>
-          <textarea id="opt2" name="question_option">
-            <%- (qus && opt[1]) &&  setContent   == 'true' ? opt[1] : '' %>
-          </textarea>
-        </div>
-
-        <div class="my-3">
-          <h5>প্রয়োগ</h5>
-          <textarea id="opt3" name="question_option">
-            <%- (qus && opt[2]) &&  setContent   == 'true' ? opt[2] : '' %>
-          </textarea>
-        </div>
-
-        <div class="my-3">
-          <h5> উচ্চতর দক্ষতা </h5>
-          <textarea id="opt4" name="question_option">
-            <%- (qus && opt[3]) &&  setContent   == 'true' ? opt[3] : '' %>
-          </textarea>
-        </div>
-
       </div>
 
       <button type="submit" class="btn btn-<%= qus && setContent == 'true' ? 'warning' : 'primary' %> btn-block my-4"><%= qus && setContent == 'true' ? 'Update' : 'Create' %></button>
@@ -229,41 +202,12 @@
         extraPlugins: 'mathjax',
         mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
     });
-    CKEDITOR.replace('opt2', {
-      height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
-    });
-    CKEDITOR.replace('opt3', {
-      height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
-    });
-    CKEDITOR.replace('opt4', {
-      height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
-    });
+    
 
 
     const class_select = document.getElementById('class_select');
     const subject_select = document.getElementById('subject_select');
     const chapter_select = document.getElementById('chapter_select');
-    const class_name = document.getElementById('class_name');
-    const subject_name = document.getElementById('subject_name');
-    const chapter_name = document.getElementById('chapter_name');
     const loading_spinner = document.getElementById('loading-spinner');
     let classes
     class_select.addEventListener('change', async (event) => {
@@ -274,6 +218,8 @@
         class_name.value = className
       }
       classes = event.target.value;
+      console.log(selectedOption    );
+      console.log("feting...");
       let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
@@ -287,7 +233,6 @@
       subject_select.appendChild(option);
 
       for (let i = 0; i < episod.length; i++) {
-        console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
         option.setAttribute('data-name', episod[i].subject_name); 
@@ -303,6 +248,7 @@
         subject_name.value = className
       }
       var chapter = event.target.value;
+      console.log("feting...");
       let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
@@ -313,6 +259,7 @@
       option.innerHTML = 'Select Chapter'
       chapter_select.appendChild(option);
       for (let i = 0; i < episod.length; i++) {
+        console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
         option.setAttribute('data-name', episod[i].chapter_name); 

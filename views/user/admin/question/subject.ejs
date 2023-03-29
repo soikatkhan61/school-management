@@ -18,11 +18,9 @@
           <div class="mb-2">
             <select name="class_name" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
               <option class="py-2 px-5" value="">Select Class</option>
-
               <% for(let s of data){ %>
               <option class="py-2 px-5" value="<%= s.id %>"><%= s.class_name %> </option>
               <% } %>
-
             </select>
           </div>
 
@@ -59,7 +57,7 @@
     <% }else{ %>
       <ul class="list-group list-group-light">
         <%for(let s of data){%>
-        <a href="/user/admin/questions/get-subject-by-class?class_id=<%= s.id %>" class="list-group-item text-primary border px-2"><%= s.class_name  %></a>
+        <a href="/user/admin/questions/get-subject-by-class?class_id=<%= s.id %>" class="list-group-item text-primary border px-4"><%= s.class_name  %></a>
         <%}%>
       </ul>
     <% } %>

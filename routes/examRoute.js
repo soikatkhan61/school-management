@@ -7,12 +7,13 @@ const {
 } = require('../middleware/authMiddleware')
 
 
-const {renderCreateExam,createExamPost,renderExamResults,renderAllExamList,renderMyExam,renderJoinExam,joinExamPost,submitResponse,renderSubmitStatus,renderStudentResult,renderStudentAllResult} = require("../controllers/exam/createExamController")
+const {renderCreateExam,createExamPost,renderExamResults,renderAllExamList,renderMyExam,renderJoinExam,joinExamPost,submitResponse,renderSubmitStatus,renderStudentResult,renderStudentAllResult,examStatusChange} = require("../controllers/exam/createExamController")
 const {viewGeneratedQuestion} = require("../controllers/exam/questionGeneratorController")
 
 router.get("/create",isAuthenticated,requireRole('admin,teacher'),renderCreateExam)
 router.post("/create",isAuthenticated,requireRole('admin,teacher'),createExamPost)
 router.get("/results",isAuthenticated,requireRole('admin,teacher'),renderExamResults)
+router.get("/status-change",isAuthenticated,requireRole('admin,teacher'),examStatusChange)
 router.get("/view",isAuthenticated,requireRole('admin,teacher'),renderAllExamList)
 router.get("/my-exam",isAuthenticated,requireRole('student'),renderMyExam)
 router.get("/join",isAuthenticated,requireRole('student'),renderJoinExam)

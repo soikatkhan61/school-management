@@ -82,7 +82,7 @@
           <input type="text" class="q_id" value="<%= questions[i].id %>" hidden>
           <input type="text" class="q_ans" value="<%= questions[i].question_answer %>" hidden>
           <tr>
-            <td><%= i+1 + "," + questions[i].id %></td>
+            <td><%= i+1  %></td>
             <% if(object[questions[i].id]){ %>
               <td><button class="btn btn-sm btn-success add_btn" disabled>Added</button></td>
             <% }else{ %>

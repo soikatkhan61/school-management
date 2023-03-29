@@ -12,7 +12,7 @@ const options = {
     database: process.env.DB_NAME,
     createDatabaseTable: true,
     clearExpired: true,
-    checkExpirationInterval: 900000, // How frequently expired sessions will be cleared (in milliseconds)
+    checkExpirationInterval: 86400000, // How frequently expired sessions will be cleared (in milliseconds)
     expiration: 86400000, // The maximum age of a valid session (in milliseconds)
   };
 const sessionStore = new MySQLStore(options);
@@ -25,7 +25,7 @@ const middleware = [
     express.static('public'),
     morgan('dev'),
     express.urlencoded({ extended: true }),
-    express.json(),
+    express.json({limit:5000000}),
     session({
         secret: 'your secret key',
         resave: false,

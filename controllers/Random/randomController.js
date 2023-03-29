@@ -3,7 +3,7 @@ const Flash = require("../../utils/Flash");
 
 exports.renderRandom = (req, res, next) => {
   try {
-    db.query("select id,class_name from classes;select school_name from schools where id=?",[req.user.school_id], (e, data) => {
+    db.query("select id,class_name from classes order by id asc;select school_name from schools where id=?",[req.user.school_id], (e, data) => {
       if (e) {
         next(e)
       } else {

@@ -1,7 +1,7 @@
 const db = require("../../../config/db.config");
 const fs = require("fs");
 const Flash = require("../../../utils/Flash");
-const pdf = require("html-pdf");
+
 
 exports.renderAllQuestions = (req, res, next) => {
   let id = req.query.id;
@@ -204,19 +204,22 @@ exports.getChapterBySubjectAndClass = (req, res, next) => {
     next(error)
   }
 };
-
-
 exports.renderCreateQuestion = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, question_id, q_type } = req.query
-  console.log(req.query);
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_id, q_type, setContent } = req.query
   let qus
   try {
     let obj
+    let savedInfo
     if (class_id && subject_id && chapter_id) {
       obj = {
         class_id,
         subject_id,
         chapter_id
+      }
+      savedInfo = {
+        class_name: class_name,
+        subject_name: subject_name,
+        chapter_name: chapter_name
       }
       db.query(`select * from ${q_type} where class_id=${class_id} and subject_id=${subject_id} and chapter_id=${chapter_id} and id=${question_id} limit 1`, (e, data) => {
         if (e) {
@@ -234,12 +237,17 @@ exports.renderCreateQuestion = (req, res, next) => {
         subject_id: '',
         chapter_id: ''
       }
+      savedInfo = {
+        class_name: '',
+        subject_name: '',
+        chapter_name: ''
+      }
     }
     db.query("select * from classes", (e, data) => {
       if (e) {
         return next(e)
       } else {
-        res.render("user/admin/question/create", { data, title: "Create Question", flashMessage: Flash.getMessage(req), obj, qus })
+        res.render("user/admin/question/create", { data, title: "Create Question", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
       }
     })
 
@@ -248,16 +256,20 @@ exports.renderCreateQuestion = (req, res, next) => {
   }
 };
 exports.createQuestionPost = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, question_text, question_option, question_answer } = req.body
-
-  let { edit,q_id } = req.query
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer } = req.body
+  let { edit, q_id } = req.query
   let options = [];
   question_option.forEach(e => {
     options.push(e);
   })
+  let savedInfo = {
+    class_name: class_name,
+    subject_name: subject_name,
+    chapter_name: chapter_name
+  }
   try {
     if (edit) {
-      db.query("update questions set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options), question_answer,q_id], (e, data) => {
+      db.query("update questions set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options), question_answer, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -266,7 +278,7 @@ exports.createQuestionPost = (req, res, next) => {
           } else {
             req.flash("fail", "Error!");
           }
-          return res.redirect(`/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${q_id}&q_type=questions`)
+          return res.redirect(`/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${q_id}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=questions`)
         }
       })
     } else {
@@ -275,11 +287,196 @@ exports.createQuestionPost = (req, res, next) => {
           next(e)
         } else {
           if (data.affectedRows >= 1) {
+            req.flash("success", "Question Create Successful!");
+          } else {
+            req.flash("fail", "Error!");
+          }
+          res.redirect(`/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=false&q_type=questions`)
+        }
+      })
+    }
+  } catch (error) {
+    next(error)
+  }
+};
+exports.renderCreative = (req, res, next) => {
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_id, q_type, setContent } = req.query
+  let qus
+  try {
+    let obj
+    let savedInfo
+    if (class_id && subject_id && chapter_id) {
+      obj = {
+        class_id,
+        subject_id,
+        chapter_id
+      }
+      savedInfo = {
+        class_name: class_name,
+        subject_name: subject_name,
+        chapter_name: chapter_name
+      }
+      db.query(`select * from ${q_type} where class_id=${class_id} and subject_id=${subject_id} and chapter_id=${chapter_id} and id=${question_id} limit 1`, (e, data) => {
+        if (e) {
+          return next(e)
+        } else {
+          if (data.length > 0) {
+            qus = data
+            console.log(qus);
+          }
+        }
+      })
+    } else {
+      obj = {
+        class_id: '',
+        subject_id: '',
+        chapter_id: ''
+      }
+      savedInfo = {
+        class_name: '',
+        subject_name: '',
+        chapter_name: ''
+      }
+    }
+    db.query("select * from classes", (e, data) => {
+      if (e) {
+        return next(e)
+      } else {
+        res.render("user/admin/question/creative", { data, title: "Creative", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+exports.creativePost = (req, res, next) => {
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option } = req.body
+  let { edit, q_id } = req.query
+  let options = [];
+  question_option.forEach(e => {
+    options.push(e);
+  })
+  let savedInfo = {
+    class_name: class_name,
+    subject_name: subject_name,
+    chapter_name: chapter_name
+  }
+  try {
+    if (edit) {
+      db.query("update creative set question_text=?,question_option=? where id = ?", [question_text, JSON.stringify(options), q_id], (e, data) => {
+        if (e) {
+          return next(e)
+        } else {
+          if (data.affectedRows >= 1) {
+            req.flash("success", "Update success!");
+          } else {
+            req.flash("fail", "Error!");
+          }
+          return res.redirect(`/user/admin/questions/creative?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${q_id}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=creative`)
+        }
+      })
+    } else {
+      db.query("insert into creative values(?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options)], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows >= 1) {
             req.flash("success", "Success!");
           } else {
             req.flash("fail", "Error!");
           }
-          res.redirect(`/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&q_type=questions`)
+          res.redirect(`/user/admin/questions/creative?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=creative`)
+        }
+      })
+    }
+  } catch (error) {
+    next(error)
+  }
+};
+exports.renderCreateOthersQuestion = (req, res, next) => {
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_id, q_type, setContent } = req.query
+  let qus
+  try {
+    let obj
+    let savedInfo
+    if (class_id && subject_id && chapter_id) {
+      obj = {
+        class_id,
+        subject_id,
+        chapter_id
+      }
+      savedInfo = {
+        class_name: class_name,
+        subject_name: subject_name,
+        chapter_name: chapter_name
+      }
+      db.query(`select * from ${q_type} where class_id=${class_id} and subject_id=${subject_id} and chapter_id=${chapter_id} and id=${question_id} limit 1`, (e, data) => {
+        if (e) {
+          return next(e)
+        } else {
+          if (data.length > 0) {
+            qus = data
+            console.log(qus);
+          }
+        }
+      })
+    } else {
+      obj = {
+        class_id: '',
+        subject_id: '',
+        chapter_id: ''
+      }
+      savedInfo = {
+        class_name: '',
+        subject_name: '',
+        chapter_name: ''
+      }
+    }
+    db.query("select * from classes", (e, data) => {
+      if (e) {
+        return next(e)
+      } else {
+        res.render("user/admin/question/others-questions", { data, title: "Others", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+exports.othersQuestionsPost = (req, res, next) => {
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_answer } = req.body
+  let { edit, q_id } = req.query
+  let savedInfo = {
+    class_name: class_name,
+    subject_name: subject_name,
+    chapter_name: chapter_name
+  }
+  console.log(req.body);
+  try {
+    if (edit) {
+      db.query("update q_others set question_text=?,question_answer=? where id = ?", [question_text, question_answer, q_id], (e, data) => {
+        if (e) {
+          return next(e)
+        } else {
+          if (data.affectedRows >= 1) {
+            req.flash("success", "Update success!");
+          } else {
+            req.flash("fail", "Error!");
+          }
+          return res.redirect(`/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${q_id}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=q_others`)
+        }
+      })
+    } else {
+      db.query("insert into q_others values(?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, question_answer], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows >= 1) {
+            req.flash("success", "Success!");
+          } else {
+            req.flash("fail", "Error!");
+          }
+          return res.redirect(`/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=q_others`)
         }
       })
     }
@@ -306,6 +503,23 @@ exports.renderSeeQuestion = (req, res, next) => {
     next(error)
   }
 };
+exports.renderSingleQuestionView = (req, res, next) => {
+  let { question_id, q_type } = req.query
+  console.log(q_type,question_id);
+  try {
+    db.query(`SELECT * FROM ${q_type} WHERE id = ?` , [question_id], (e, data) => {
+      if (e) {
+        next(e)
+      } else {
+        console.log(data);
+        res.render("user/admin/question/viewsingle", { data: data[0], q_type,title: "See Question", flashMessage: Flash.getMessage(req) })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+
 exports.makeQuestionRender = (req, res, next) => {
   var katex = require('katex');
   let { class_id, subject_id, chapter_id } = req.query
@@ -336,44 +550,5 @@ exports.makeQuestionRender = (req, res, next) => {
     next(error)
   }
 };
-exports.renderCreative = (req, res, next) => {
-  try {
-    db.query("select * from classes", (e, data) => {
-      if (e) {
-        next(e)
-      } else {
-        res.render("user/admin/question/creative", { data, title: "Creative Question", flashMessage: Flash.getMessage(req) })
-      }
-    })
-  } catch (error) {
-    next(error)
-  }
-};
-exports.creativePost = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, question_text, question_option, question_answer } = req.body
-  let options = [];
-  console.log(req.body)
-  question_option.forEach(e => {
-    options.push(e);
-  })
-
-  try {
-    db.query("insert into creative values(?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options)], (e, data) => {
-      if (e) {
-        next(e)
-      } else {
-        if (data.affectedRows >= 1) {
-          req.flash("success", "Success!");
-        } else {
-          req.flash("fail", "Error!");
-        }
-        res.redirect('/user/admin/questions/creative')
-      }
-    })
-  } catch (error) {
-    next(error)
-  }
-};
-
 
 

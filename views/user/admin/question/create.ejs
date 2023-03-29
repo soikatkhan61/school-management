@@ -18,7 +18,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" rel="stylesheet" />
-  <script src="https://cdn.ckeditor.com/4.20.1/full-all/ckeditor.js"></script>
+  <script src="/ckeditor/ckeditor.js"></script>
   <!-- APP CSS -->
   <link rel="stylesheet" href="/styles/grid.css">
   <link rel="stylesheet" href="/styles/dashboard.css">
@@ -67,27 +67,30 @@
       </div>
 
       <!-- Text input -->
-      <div class="my-2 shadow p-4">
+      <div class="my-2 shadow-sm py-4">
         <div class="mb-2">
           <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-            <% if(obj.class_id){ %>
-            <option class="py-2 px-5" value="<%= obj.class_id %>" selected ><%= obj.class_id %></option>
+            <% if(obj.class_id ){ %>
+            <option class="py-2 px-5" value="<%= obj.class_id %>" selected><%= savedInfo.class_name ? savedInfo.class_name  : obj.class_id %></option>
             <% }else{ %>
-              <option class="py-2 px-5" value="">Select Class</option>
+            <option class="py-2 px-5" value="">Select Class</option>
             <% for(let s of data){ %>
-            <option class="py-2 px-5" value="<%= s.id %>">
+            <option class="py-2 px-5" data-name="<%= s.class_name %>" value="<%= s.id %>">
               <%= s.class_name %>
             </option>
             <% } %>
             <% }%>
           </select>
         </div>
-        <!-- Text input -->
+        <div class="d-none">
+          <input type="text" name="class_name" id="class_name" hidden>
+          <input type="text" name="subject_name" id="subject_name" hidden>
+          <input type="text" name="chapter_name" id="chapter_name" hidden>
+        </div>
         <div class="mb-2">
           <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-
-            <% if(obj.subject_id){ %>
-            <option class="py-2 px-5" value="<%= obj.subject_id %>" selected ><%= obj.subject_id %></option>
+            <% if(obj.subject_id ){ %>
+            <option class="py-2 px-5" value="<%= obj.subject_id %>" selected><%= savedInfo.subject_name ? savedInfo.subject_name : obj.subject_id %></option>
             <% }else{ %>
             <option class="py-2 px-5" value="">Select Subject</option>
             <% }%>
@@ -98,10 +101,10 @@
         <div class="mb-2">
           <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
             <% if(obj.chapter_id){ %>
-              <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected ><%= obj.chapter_id %></option>
-              <% }else{ %>
-              <option class="py-2 px-5" value="">Select Chapter</option>
-              <% }%>
+            <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name :obj.chapter_id %></option>
+            <% }else{ %>
+            <option class="py-2 px-5" value="">Select Chapter</option>
+            <% }%>
           </select>
         </div>
         <% if(obj.class_id){ %>
@@ -113,42 +116,42 @@
 
       <div class="ck_editor_div">
         <textarea id="content" class="ck_editor" name="question_text">
-          <%- qus && qus[0].question_text ? qus[0].question_text : '' %>
+          <%- (qus && qus[0].question_text) && setContent == 'true'  ? qus[0].question_text : '' %>
         </textarea>
       </div>
-        <% let opt %>
-        <% if(qus && qus[0].question_option){ %>
-          <%  opt = JSON.parse(qus[0].question_option) %>
-        <% } %>
-        
+      <% let opt %>
+      <% if(qus && qus[0].question_option){ %>
+      <%  opt = JSON.parse(qus[0].question_option) %>
+      <% } %>
+
       <div class="my-5">
         <h3 class="text-center">Option of this question</h3>
         <hr>
         <div class="my-3 ck_editor_div">
           <h5>#option 1</h5>
           <textarea id="opt1" class="ck_editor" name="question_option">
-            <%- qus && opt[0] ? opt[0] : '' %>
+            <%- (qus && opt[0]) &&  setContent   == 'true' ? opt[0] : '' %>
           </textarea>
         </div>
 
         <div class="my-3 ck_editor_div">
           <h5>#option 2</h5>
           <textarea id="opt2" class="ck_editor" name="question_option">
-            <%-qus && opt[1] ? opt[1] : '' %>
+            <%- (qus && opt[1]) &&  setContent  == 'true' ? opt[1] : '' %>
           </textarea>
         </div>
 
         <div class="my-3 ck_editor_div">
           <h5>#option 3</h5>
           <textarea id="opt3" class="ck_editor" name="question_option">
-            <%- qus && opt[2] ? opt[2] : '' %>
+            <%- (qus && opt[2]) &&  setContent == 'true'  ? opt[2] : '' %>
           </textarea>
         </div>
 
         <div class="my-3 ck_editor_div">
           <h5>#option 4</h5>
           <textarea id="opt4" class="ck_editor" name="question_option">
-            <%- qus && opt[3] ? opt[3] : '' %>
+            <%- (qus && opt[3]) &&  setContent == 'true'  ? opt[3] : '' %>
           </textarea>
         </div>
 
@@ -158,32 +161,32 @@
         <h6 class="text-center">Corect Answer</h6>
         <hr>
         <div class="form-check">
-          <input <%= qus && qus[0].question_answer == 1 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
+          <input <%= (qus && qus[0].question_answer == 1) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
           <label class="form-check-label" for="flexRadioDefault1">
             #option 1
           </label>
         </div>
         <div class="form-check">
-          <input <%= qus && qus[0].question_answer == 2 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
+          <input <%= (qus && qus[0].question_answer == 2) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
           <label class="form-check-label" for="flexRadioDefault2">
             #option 2
           </label>
         </div>
         <div class="form-check">
-          <input <%= qus && qus[0].question_answer == 3 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
+          <input <%=( qus && qus[0].question_answer == 3) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
           <label class="form-check-label" for="flexRadioDefault3">
             #option 3
           </label>
         </div>
         <div class="form-check">
-          <input <%= qus && qus[0].question_answer == 4 ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
+          <input <%= (qus && qus[0].question_answer == 4) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
           <label class="form-check-label" for="flexRadioDefault4">
             #option 4
           </label>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-<%= qus ? 'warning' : 'primary' %> btn-block my-4"><%= qus ? 'Update' : 'Create' %></button>
+      <button type="submit" class="btn btn-<%= qus && setContent == 'true' ? 'warning' : 'primary' %> btn-block my-4"><%= qus && setContent == 'true' ? 'Update' : 'Create' %></button>
 
     </div>
   </form>
@@ -195,14 +198,55 @@
   </style>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"></script>
   <script type="text/javascript">
-    CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
-
     CKEDITOR.replace('content', {
-      extraPlugins: 'print,mathjax',
-      toolbar: 'ckeditor_wiris_formulaEditor',
+      extraPlugins: 'mathjax,filebrowser',
+      toolbar: [{
+          name: 'document',
+          items: ['Source', '-',  'NewPage', 'Preview',  '-']
+        },
+        {
+          name: 'editing',
+          items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt']
+        },
+        {
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat']
+        },
+        {
+          name: 'paragraph',
+          items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+        },
+        {
+          name: 'links',
+          items: ['Link', 'Unlink', 'Anchor']
+        },
+        {
+          name: 'insert',
+          items: ['Image', 'Table', 'HorizontalRule', 'PageBreak',]
+        },
+        '/',
+        {
+          name: 'styles',
+          items: ['Styles', 'Format', 'Font', 'FontSize']
+        },
+        {
+          name: 'colors',
+          items: ['TextColor', 'BGColor']
+        },
+        {
+          name: 'tools',
+          items: ['Maximize']
+        },
+
+      ],
       mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
       height: 320,
       removeButtons: 'PasteFromWord',
+      filebrowserBrowseUrl: '/upload/browse',
+      filebrowserUploadMethod: 'form',
+      filebrowserUploadUrl: '/upload',
+
+
     });
 
     if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
@@ -269,12 +313,19 @@
     const class_select = document.getElementById('class_select');
     const subject_select = document.getElementById('subject_select');
     const chapter_select = document.getElementById('chapter_select');
+    const class_name = document.getElementById('class_name');
+    const subject_name = document.getElementById('subject_name');
+    const chapter_name = document.getElementById('chapter_name');
     const loading_spinner = document.getElementById('loading-spinner');
     let classes
     class_select.addEventListener('change', async (event) => {
       loading_spinner.style.display = 'block'
       classes = event.target.value;
-      console.log("feting...");
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const className = selectedOption.getAttribute('data-name');
+      if(className){
+        class_name.value = className
+      }
       let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
@@ -288,16 +339,20 @@
       subject_select.appendChild(option);
 
       for (let i = 0; i < episod.length; i++) {
-        console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
-
+        option.setAttribute('data-name', episod[i].subject_name); 
         option.innerHTML = `${episod[i].subject_name}`;
         subject_select.appendChild(option);
       }
     });
     subject_select.addEventListener('change', async (event) => {
       loading_spinner.style.display = 'block'
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const className = selectedOption.getAttribute('data-name');
+      if(className){
+        subject_name.value = className
+      }
       var chapter = event.target.value;
       console.log("feting...");
       let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
@@ -310,14 +365,20 @@
       option.innerHTML = 'Select Chapter'
       chapter_select.appendChild(option);
       for (let i = 0; i < episod.length; i++) {
-        console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
-
+        option.setAttribute('data-name', episod[i].chapter_name); 
         option.innerHTML = `${episod[i].chapter_name}`;
         chapter_select.appendChild(option);
       }
     });
+    chapter_select.addEventListener('change', async (event) => {
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const className = selectedOption.getAttribute('data-name');
+      if(className){
+        chapter_name.value = className
+      }
+    })
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

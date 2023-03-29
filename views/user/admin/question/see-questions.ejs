@@ -23,8 +23,9 @@
                                     <tr>
                                         <td><%- s.question_text %></td>
                                         <td class="d-flex">
-                                            <a href="/user/admin/create-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>&question_id=<%= s.id %>&q_type=<%= q_type %>" class="btn btn-link border btn-sm m-1">Edit</a>
-                                            <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>" class="btn btn-sm btn-dark m-1">View</a>
+                                            <a href="/user/admin/<%=  q_type == 'questions'  ? 'create-question' : q_type == 'creative' ? 'questions/creative' : 'questions/others'  %>?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>&question_id=<%= s.id %>&setContent=true&q_type=<%= q_type %>" class="btn btn-link border btn-sm m-1">Edit</a>
+                                            
+                                            <a href="/user/admin/questions/view?q_type=<%= q_type %>&question_id=<%= s.id %>  %>" class="btn btn-sm btn-dark m-1">View</a>
                                         </td>
                                     </tr>
                                     <% }%>

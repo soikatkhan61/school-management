@@ -11,6 +11,7 @@ const moderatorRoute = require("./moderatorRoute")
 const combinedQuestionRoute = require("./combinedQuestionRoute")
 const randomrRoute = require("./randomrRoute")
 const examRoute = require("./examRoute")
+const uploadRoute = require("./uploadRoute")
 const administrationRoute = require("./administrationRoute")
 
 
@@ -69,6 +70,10 @@ const routes = [
     {
         path: "/user",
         handler: userRoute
+    },
+    {
+        path: "/upload",
+        handler: uploadRoute
     },
     {
         path: "/",

@@ -74,7 +74,7 @@ exports.moderatorLoginPost = async (req, res, next) => {
                                     userType: data[0].userType,
                                 },
                                 process.env.JWT_SECRET_KEY,
-                                { expiresIn: "2h" }
+                                { expiresIn: "24h" }
                             );
                             req.session.isLoggedIn = true;
                             req.session.token = token;

@@ -23,7 +23,7 @@
                         </div>
                         <div class="counter-info">
                             <div class="counter-count">
-                                54
+                                <%= data && data[0].total_participants !== null ? data[0].total_participants : '0' %>
                             </div>
                             <i class='bx bx-user'></i>
                         </div>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="counter-info">
                             <div class="counter-count">
-                                56,12
+                                <%= data && data[0].highest_score !== null ? data[0].highest_score : '0' %>,<%= data && data[0].lowest_score !== null ? data[0].lowest_score : '0' %>
                             </div>
                             <i class='bx bx-arrow-to-top'></i>
                         </div>
@@ -57,7 +57,7 @@
                         </div>
                         <div class="counter-info">
                             <div class="counter-count">
-                                34
+                                <%= data && data[0].average_score !== null ? data[0].average_score : '0' %>
                             </div>
                             <i class='bx bx-line-chart'></i>
                         </div>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="counter-info">
                             <div class="counter-count">
-                                3
+                                <%= data && data[0].participants_above_80_percent !== null ? data[0].participants_above_80_percent : '0' %>
                             </div>
                             <i class='bx bx-user'></i>
                         </div>
@@ -86,16 +86,46 @@
 
         <div class="my-2 border p-3 rounded shadow-sm">
             <div class="my-2 d-flex justify-content-between">
-                <p class="pb-0 mb-0">Status: <span class="fw-bold text-success">Running</span></p>
-                <p class="pb-0 mb-0">Remaining Time: <span class="fw-bold">14 minite left</span></p>
-                <button class="btn btn-danger">Stop</button>
+                <p class="pb-0 mb-0" id="time_left">Remaining Time: <span class="fw-bold">--</span></p>  
+                <% if((data && data[0].status) && data[0].status == 1 ){ %>
+                    <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=0" class="btn btn-danger">STOP</a>
+                    <p class="pb-0 mb-0">Status: <span class="fw-bold text-success">Runnig</span></p>
+                <% }else{ %>
+                    <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=1" class="btn btn-success">START</a> 
+                    <p class="pb-0 mb-0">Status: <span class="fw-bold text-danger">END</span></p>
+                <% } %>
+                
             </div>
-            <p class="pb-0 mb-0">Exam:Test</p>
-            <p class="pb-0 mb-0">Exam Code: SHS0222_2515</p>
-            <p class="pb-0 mb-0">Class: One</p>
-            <p class="pb-0 mb-0">Starting At: Tuesday, March 21, 2023</p>
-            <p class="pb-0 mb-0">Ending At: Tuesday, March 21, 2023</p>
-            <p class="pb-0 mb-0">Exam Link: <a href="https://chat.openai.com/chat">http://localhost:3000/exam/1/SHS0222_2515</a></p>
+            <p class="pb-0 mb-0">Exam:<%= data && data[0].name !== null ? data[0].name : 'Null' %></p>
+            <p class="pb-0 mb-0">Exam Code: <%= data && data[0].code !== null ? data[0].code : 'Null' %></p>
+            <p class="pb-0 mb-0" id="start_time">Starting At: <%= data && data[0].start_time !== null ? data[0].start_time : 'Null' %></p>
+            <p class="pb-0 mb-0" id="end_time">Ending At: <%= data && data[0].end_time !== null ? data[0].end_time : 'Null' %></p>
+            <script>
+                const startTimeElement = document.getElementById("start_time");
+                const endTimeElement = document.getElementById("end_time");
+                const startTime = new Date(startTimeElement.textContent);
+                const endTime = new Date(endTimeElement.textContent);
+                const timeLeftElement = document.getElementById("time_left");
+      
+                function updateCountdown() {
+                  const now = new Date();
+                  let remainingTime;
+                  if (now < startTime) {
+                    remainingTime = startTime - now;
+                    const minutes = Math.floor(remainingTime / (1000 * 60));
+                    timeLeftElement.textContent = `Time left: ${minutes} minute`;
+                  } else if (now >= startTime && now <= endTime) {
+                    remainingTime = endTime - now;
+                    const minutes = Math.floor(remainingTime / (1000 * 60));
+                    const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                    timeLeftElement.textContent = `Time left: ${minutes}m ${seconds}s`;
+                  } else {
+                    timeLeftElement.textContent = "0 Miniute Remaining";
+                    timeLeftElement.style.color= 'red'
+                  }
+                }
+                setInterval(updateCountdown, 1000);
+              </script>
         </div>
         <div>
         </div>

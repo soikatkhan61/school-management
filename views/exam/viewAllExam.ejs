@@ -43,7 +43,7 @@
           </td>
           <td><%= exams[i].created_at.toDateString() %></td>
           <td>
-            <a href="/exam/results?exam_id=<%= exams[i].id %>"><span class="mx-1">Dashboard</span> </a>
+            <a href="/exam/results?exam_id=<%= exams[i].id %>" class="btn btn-link border"><span class="mx-1">Dashboard</span> </a>
           </td>
         </tr>
         <% } %>
@@ -54,13 +54,13 @@
       <nav aria-label="...">
         <ul class="pagination">
           <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
-            <a href="/exam/view?page=<%=currentPage-1 %>" class="page-link">Previous</a>
+            <a href="/exam/view?page=<%=currentPage-1 %>&q_set_id=<%= exams.length > 0 && exams[0].q_set_id ? exams[0].q_set_id :''  %>" class="page-link">Previous</a>
           </li>
           <% for(let i=0; i< totalPage; i++) {%>
-          <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/exam/view?page=<%=i+1 %>"><%= i+1 %> </a></li>
+          <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/exam/view?page=<%=i+1 %>&q_set_id=<%= exams.length > 0 &&  exams[0].q_set_id ? exams[0].q_set_id :'' %>"><%= i+1 %> </a></li>
           <% }%>
           <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>">
-            <a class="page-link" href="/exam/view?page=<%=currentPage+1 %>">Next</a>
+            <a class="page-link" href="/exam/view?page=<%=currentPage+1 %>&q_set_id=<%= exams.length > 0 &&  exams[0].q_set_id ? exams[0].q_set_id :'' %>">Next</a>
           </li>
         </ul>
       </nav>

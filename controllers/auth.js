@@ -214,7 +214,7 @@ exports.loginPostController = async (req, res, next) => {
                   userType: data[0].userType,
                 },
                 process.env.JWT_SECRET_KEY,
-                { expiresIn: "2h" }
+                { expiresIn: "24h" }
               );
               const sessionID = uuid.v4();
               req.session.isLoggedIn = true;

@@ -1,0 +1,17 @@
+{
+    "database": {
+      "host": "localhost",
+      "port": 27017,
+      "name": "mydatabase",
+      "username": "myusername",
+      "password": "mypassword"
+    },
+    "server": {
+      "port": 3000,
+      "ssl": false
+    },
+    "logging": {
+      "level": "info"
+    }
+  }
+  

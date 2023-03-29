@@ -8,7 +8,7 @@ const {
 
 
 const {dashboardGetController,adminDashboardRender} = require("../controllers/user/dashboardController")
-const {renderAllQuestions,renderCreateQuestion,renderAllClass,createClassPost,renderAllSubject,getSubjectByClass,getSubject,createSubjectPost,createChaptePost,getChapterBySubjectAndClass,getChapter,createQuestionPost,renderSeeQuestion,makeQuestionRender,renderCreative,creativePost} = require("../controllers/user/question")
+const {renderAllQuestions,renderCreateQuestion,renderAllClass,createClassPost,renderAllSubject,getSubjectByClass,getSubject,createSubjectPost,createChaptePost,getChapterBySubjectAndClass,getChapter,createQuestionPost,renderSeeQuestion,renderSingleQuestionView,renderCreateOthersQuestion,othersQuestionsPost,renderCreative,creativePost} = require("../controllers/user/question")
 
 const {renderCreateStudnet,createStudentPost,renderRegisteredStudent} = require("../controllers/student/studentController")
 
@@ -22,12 +22,16 @@ router.post("/admin/questions/create-subject",isAuthenticated,requireRole('super
 router.post("/admin/questions/create-chapter",isAuthenticated,requireRole('superadmin,moderator'),createChaptePost)
 router.get("/admin/questions/get-chapter-by-subject-and-class",isAuthenticated,requireRole('superadmin,moderator'),getChapterBySubjectAndClass)
 router.get("/admin/questions/see-question",isAuthenticated,requireRole('superadmin,moderator'),renderSeeQuestion)
+router.get("/admin/questions/view",isAuthenticated,requireRole('superadmin,moderator'),renderSingleQuestionView)
 
 router.get("/admin/questions/creative",requireRole('superadmin,moderator'),isAuthenticated,renderCreative)
 router.post("/admin/questions/creative",isAuthenticated,requireRole('superadmin,moderator'),creativePost)
-
 router.get("/admin/create-question",isAuthenticated,requireRole('superadmin,moderator'),renderCreateQuestion)
 router.post("/admin/questions/create-question",isAuthenticated,requireRole('superadmin,moderator'),createQuestionPost)
+
+router.get("/admin/questions/others",isAuthenticated,requireRole('superadmin,moderator'),renderCreateOthersQuestion)
+router.post("/admin/questions/others",isAuthenticated,requireRole('superadmin,moderator'),othersQuestionsPost)
+
 router.get("/admin/questions",isAuthenticated,renderAllQuestions)
 router.get("/get-subject",getSubject)
 router.get("/get-chapter",getChapter)
