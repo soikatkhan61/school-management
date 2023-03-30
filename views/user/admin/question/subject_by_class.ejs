@@ -8,7 +8,6 @@
       </div>
       <div class="modal-body">
         <form action="/user/admin/questions/create-subject" method="post">
-
           <!-- Text input -->
           <div class="mb-2">
             <select name="class_id" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
@@ -69,7 +68,7 @@
               <input type="text" value="<%= s.id %>" class="subject_ids" hidden>
               <td> <span  class="subjectCode"><%= s.subject_code %></span></td>
               <td><button class="btn border editSubject" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">edit</button></td>
-              <td><a href="/user/admin/questions/get-chapter-by-subject-and-class?subject_id=<%= s.id %>&class_id=<%= class_id %> " class="btn btn-success btn-sm">see chapters</a></td>
+              <td><a href="/user/admin/questions/get-chapter-by-subject-and-class?subject_id=<%= s.id %>&class_id=<%= class_id %> " class="btn btn-dark btn-sm">see chapters</a></td>
             </tr>
             <% }%>
           </tbody>

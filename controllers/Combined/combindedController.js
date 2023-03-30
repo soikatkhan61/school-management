@@ -188,7 +188,13 @@ exports.renderviewSet = (req, res, next) => {
             } else {
                 if (data && data[0].questions != null) {
                     const questionIds = data[0].questions.split(',');
-                    const query = 'SELECT * FROM questions WHERE id IN (?)';
+                    let table = data[0].formate
+                    if(table == 'mcq'){
+                        table = 'questions'
+                    }else{
+                        table = 'creative'
+                    }
+                    const query = `SELECT * FROM ${table} WHERE id IN (?)`;
                     db.query(query, [questionIds], (error, results) => {
                         if (error) {
                             console.error(error);
@@ -199,7 +205,7 @@ exports.renderviewSet = (req, res, next) => {
                                 total_mark: data[0].total_mark,
                                 school_name: data[0].school_name,
                                 name: data[0].name,
-                                q_formate: data[0].q_formate
+                                q_formate: data[0].formate
                             }
                             res.render(`combined/view_qset`, {
                                 title: "Preview Question",

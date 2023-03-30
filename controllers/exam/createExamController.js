@@ -65,6 +65,7 @@ exports.createExamPost = (req, res, next) => {
 };
 exports.renderExamResults = (req, res, next) => {
     let { exam_id } = req.query
+    console.log(exam_id);
     try {
         db.query(`
         SELECT e.id,e.name, e.code, e.start_time, e.end_time, e.status, 
@@ -89,7 +90,9 @@ GROUP BY e.id;
 
         `, [exam_id,exam_id], (e, data) => {
             if (e) return next(e)
+            console.log(data);
             if(data.length == 0) data = ''
+            
             return res.render("exam/results", {
                 title: "Results of Exam",
                 flashMessage: Flash.getMessage(req),
@@ -273,12 +276,10 @@ exports.renderSubmitStatus = (req, res, next) => {
 exports.renderStudentResult = (req, res, next) => {
     try {
         let { token } = req.query
-
         if (token == undefined || token == null) return res.send("Unauthorized access!")
         db.query("select exam_id,score,answers from exams_participants where id=? and school_id=? and stu_id = ?", [token, req.user.school_id, req.user.student_id], (e, data) => {
             if (e) return next(e)
             if (data[0].score) {
-                console.log("hello");
                 return res.render("exam/score", {
                     title: "Submit Status",
                     flashMessage: Flash.getMessage(req),
@@ -288,12 +289,9 @@ exports.renderStudentResult = (req, res, next) => {
                 db.query("select q_set.answers,exams.q_set_id FROM exams JOIN q_set on q_set.id = exams.q_set_id WHERE exams.id = ? limit 1", [data[0].exam_id], (e, ans) => {
                     if (e) return next(e)
                     if (ans.length == 0 || ans[0].answers == null) return res.send("not found")
-                    console.log(data[0].answers);
-                    console.log(ans[0]);
                     let qus_ans_arr = JSON.parse(data[0].answers).split(',')
                     let marks = 0
                     let correct = ans[0].answers.split(',').map((m, index) => {
-                        console.log(m, qus_ans_arr[index]);
                         if (m == qus_ans_arr[index]) {
                             return marks++
                         }
@@ -323,8 +321,6 @@ exports.renderStudentAllResult = (req, res, next) => {
     try {
         db.query("select exams_participants.*,exams.name,exams.id as exam_id from exams_participants join exams on exams_participants.exam_id = exams.id where exams_participants.stu_id = ? and exams_participants.school_id=?", [req.user.student_id, req.user.school_id], (e, exams) => {
             if (e) return next(e)
-            if (exams.length == 0) return res.send("error")
-            console.log(exams);
             return res.render("exam/all-results", {
                 title: "Submit Status",
                 flashMessage: Flash.getMessage(req),

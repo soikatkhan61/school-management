@@ -32,20 +32,8 @@
                                         <td><a href="#" class="text-primary"><%= s.admin_name %></a></td>
                                         <td><span class="badge badge-<%= s.status == 1 ? 'success' : 'danger' %> rounded-pill d-inline"><%= s.status == 1 ? 'Active' : 'Inactive' %> </span></td>
                                         <td>
-                                            <div class="dropdown dropstart">
-                                                <button 
-                                                class="btn dropdown-toggle"
-                                                style="background-color: #edf2f6;box-shadow: 0 0 0 0;"
-                                                data-mdb-toggle="dropdown"
-                                                aria-expanded="false"
-                                                id="dropdownMenuButton<%= s.id %>"
-                                                >
-                                                action
-                                            </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= s.id %>">
-                                                  <li><a class="dropdown-item" href="/super-admin/register-school?edit=true&id=<%= s.id %>">Edit</a></li>
-                                                  <li><a class="dropdown-item" href="/super-admin/register-school?del=true&id=<%= s.id %>">Delete</a></li>
-                                                </ul>
+                                            <div style="background-color: #edf2f6;box-shadow: 0 0 0 0;" >
+                                                <a class="dropdown-item text-center" href="/super-admin/register-school?edit=true&id=<%= s.id %>">Edit</a>
                                               </div>
                                         </td>
                                     </tr>

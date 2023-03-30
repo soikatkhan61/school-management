@@ -1,1 +1,25 @@
-<%= score %>
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2" style="background-color: #eee;min-height: 100vh;">
+    <div class="p-4" style="background-color: #fff;">
+        <h3 class="display-6 text-success fw-bold text-center">Congratulations!!</h3>
+        <h3 class="py-2 border rounded text-center my-4">Your Score: <%= score %></h3>
+        <p>Remember, success is not just about achieving high scores - it's also about the effort you put in and the progress you make along the way. Keep up the good work!</p>
+    </div>
+  </div>
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>

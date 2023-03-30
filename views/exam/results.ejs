@@ -91,7 +91,7 @@
                     <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=0" class="btn btn-danger">STOP</a>
                     <p class="pb-0 mb-0">Status: <span class="fw-bold text-success">Runnig</span></p>
                 <% }else{ %>
-                    <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=1" class="btn btn-success">START</a> 
+                    <a href="/exam/status-change?exam_id=<%=data && data[0].id %>&status=1" class="btn btn-success">START</a> 
                     <p class="pb-0 mb-0">Status: <span class="fw-bold text-danger">END</span></p>
                 <% } %>
                 
@@ -100,6 +100,7 @@
             <p class="pb-0 mb-0">Exam Code: <%= data && data[0].code !== null ? data[0].code : 'Null' %></p>
             <p class="pb-0 mb-0" id="start_time">Starting At: <%= data && data[0].start_time !== null ? data[0].start_time : 'Null' %></p>
             <p class="pb-0 mb-0" id="end_time">Ending At: <%= data && data[0].end_time !== null ? data[0].end_time : 'Null' %></p>
+            <p class="text-center text-danger my-4" style="font-size: 30px;"><%= data.length == 0 ? 'No participants joined yet! Data will be available after join at least 1 participants' : '' %></p>
             <script>
                 const startTimeElement = document.getElementById("start_time");
                 const endTimeElement = document.getElementById("end_time");

@@ -23,38 +23,74 @@
            <% if(data.length==0){ %>
             No data
            <% }else{ %>
+            <div style="margin: 20px 0;">
+              <div style="text-align: center;margin: 6px 0;">
+                 <!-- <h2 style="font-weight: bold ;"><%= obj.school_name %></h2> -->
+                 <h2 style="font-weight: bold ;">সাতশিমুলিয়া দ্বিমুখী উচ্চ বিদ্যালয়</h2>
+              </div>
+               <div style="display: grid;grid-template-columns: 1fr 1fr 1.5fr 1fr;grid-template-rows: 1fr;gap: 0px 0px;grid-auto-flow: row; grid-template-areas: '. . . .'">
+                   <p>সময়ঃ <%= obj.total_qus %> মিনিট</p>
+                   <p>পুর্নমাণ: <%= obj.total_mark %></p>
+                   <p> বাংলা ২য় পত্র</p>
+                   <p>বিষয় কোড: BAN 186</p>
+              </div>
+              <div style="text-align: center;margin-top: 5px;">
+               [ দ্রষ্টব্যঃ  সরবরাহকৃত নৈর্ব্যত্তিক অভীক্ষার উত্তরপত্রে প্রশ্নের ক্রমিক নম্বরের বিপরীতে প্রদত্ত বর্ণসম্বলিত বৃত্ত সমুহ হতে সঠিক উত্তরের বৃত্তটি বল পয়েন্ট কলম দারা সম্পুর্ণ ভরাট কর । প্রতিটি প্রশ্নের মান ১ ]
+              </div>
+           </div>
 
-            <div style="margin: 10px 0;text-align: center;">
-               <h2><%= obj.school_name %></h2>
-               <h3><%=  obj.name %></h3>
-                <div style="display: flex;justify-content: space-between;">
-                    <p>Marks: <%= obj.total_mark %></p>
-                    <p>Time: <%= obj.total_qus %> Minutes</p>
-               </div>
-               <hr>
-            </div>
-  
             <% if(obj.q_formate == 'mcq'){ %>
-                <% for(let i=0; i<data.length; i++){ %>
+                    <div style="
+                   display: grid; 
+                   grid-template-rows: 1fr;
+                   grid-template-columns: 1fr 1fr;
+                   gap: 0px;
+                   height: 100%;
+                ">
+                <div style="padding-right: 20px;">
+                  <% for(let i=0; i<data.length; i= i+2){ %>
                     <% let opt = JSON.parse(data[i].question_option) %>
-                      <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
-                        <%= i+1 < 10 ? "0"+(i+1) : i+1  %>. <p style="margin-left: 20px;"><%- data[i].question_text %></p>
+                      <div style=" display: flex!important;align-items: start;margin: 5px 0;">
+                        <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p> <p style="margin-left: 15px;"><%- data[i].question_text %></p>
                       </div>
-                      <div style="margin-left:40px;">
+                      <div style="margin-left:30px;">
+                        <div style="display: grid; 
+                        grid-template-rows: 1fr 1fr;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 0px;
+                        ">
+                              <div> (ক) <%- opt[0] %></div> 
+                              <div> (খ) <%- opt[1] %></div> 
+                              <div> (গ) <%- opt[2] %></div> 
+                              <div> (ঘ) <%- opt[3] %></div> 
+                              
+                        </div>
+                      </div>              
+                    <% } %>
+                </div>
+                <div  style="padding-right: 20px;">
+                  <% for(let i=1; i<data.length; i= i+2){ %>
+                    <% let opt = JSON.parse(data[i].question_option) %>
+                      <div style=" display: flex!important;align-items: start!important;margin: 5px 0;">
+                        <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p> <p style="margin-left: 15px;"><%- data[i].question_text %></p>
+                      </div>
+                      <div style="margin-left:30px;">
                         <div style="display: grid; 
                         grid-template-rows: 1fr 1fr;
                         grid-template-columns: 1fr 1fr;
                         gap: 0px;
                         ">
                               
-                              <div> (a).  <%- opt[0] %></div> 
-                              <div> (b). <%- opt[1] %></div> 
-                              <div> (c). <%- opt[2] %></div> 
-                              <div> (d).  <%- opt[3] %></div> 
+                              <div> (ক) <%- opt[0] %></div> 
+                              <div> (খ) <%- opt[1] %></div> 
+                              <div> (গ) <%- opt[2] %></div> 
+                              <div> (ঘ) <%- opt[3] %></div> 
                               
                         </div>
                       </div>              
                     <% } %>
+                </div>
+              </div>
             <% }else{%>
                 <% for(let i=0; i<data.length; i++){ %>
                     <% let opt = JSON.parse(data[i].question_option) %>
@@ -63,7 +99,7 @@
                       </div>
                       <div style="margin-left:40px;">
                         <div>
-                              <div> (a).  <%- opt[0] %></div> 
+                              <div> (a). <%- opt[0] %></div> 
                               <div> (b). <%- opt[1] %></div> 
                               <div> (c). <%- opt[2] %></div> 
                               <div> (d).  <%- opt[3] %></div> 
@@ -71,8 +107,6 @@
                       </div>              
                     <% } %>
             <% } %>
-
-            
            <% } %>
         </textarea>
        

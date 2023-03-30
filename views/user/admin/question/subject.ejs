@@ -51,6 +51,11 @@
 
 <div class="main-content" style="background: #eee;min-height: 90vh;">
   <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
+    <div class="mb-3">
+      <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
+        Create Subject
+      </button>
+    </div>
     <% if(data[0].length==0){ %>
     <p class="text-center text-dark">No Subject Found</p>
     <a href="/user/admin/questions/create-subject">Create Subject</a>
