@@ -9,5 +9,12 @@ exports.renderTeacherDashboard = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+};
 
+exports.reanderCreateTeacher = async (req, res, next) => {
+    try {
+        res.render('teacher/register-teacher.ejs', { flashMessage: Flash.getMessage(req), title: 'Register Teacher',data:'' })
+    } catch (error) {
+        next(error)
+    }
 };

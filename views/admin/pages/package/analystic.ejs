@@ -10,6 +10,7 @@
                 <th scope="col">Package Name</th>
                 <th scope="col">Price</th>
                 <th scope="col">Validity</th>
+                <th scope="col">Teacher Limitation</th>
                 <th scope="col">Total Subscriber</th>
                 <th scope="col">Created At</th>
                 <th scope="col">Action</th>
@@ -20,10 +21,11 @@
                     <tr>
                         <td><%= p.package_name%></td>
                         <td><%= p.price%> TK</td>
-                        <td><%= p.package_comission%> Month</td>
+                        <td><%= p.validity %> Month</td>
+                        <td><%= p.teacher_limit %></td>
                         <td><%= p.total_subscriber%> </td>
                         <td><%= p.createdAt.toDateString() %></td>
-                        <td><a href="/admin/packages/edit-package?package=<%= p.package_name %>" class="btn btn-sm btn-warning" >edit</a></td>
+                        <td><a href="/packages/packages/edit-package?package=<%= p.package_name %>" class="btn btn-sm btn-warning" >edit</a></td>
                       </tr> 
                 <% } %>  
              

@@ -5,10 +5,7 @@
     <% if(data.length==0){ %>
         <p class="text-center text-dark">No registered student</p>
     <% }else{ %>
-        <div class="table-responsive">8
-            <div class="my-2">
-                filter
-            </div>
+        <div class="table-responsive">
             <table class="tablealign-middle y mb-0">
                 <thead>
                   <tr>
@@ -106,7 +103,7 @@ copyButtons.forEach(function(button) {
         setTimeout(function() {
             button.textContent = 'Copy';
             button.classList.remove('text-success')
-        }, 5000);
+        }, 3000);
 
 
         // remove the temporary element from the page

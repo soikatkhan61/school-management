@@ -15,6 +15,7 @@ const {
 
 
 const {
+    renderAllLoginPageController,
     loginGetController,
     loginPostController,
     logoutController,
@@ -36,6 +37,8 @@ router.post("/login/student",isUnAuthenticated,studentLoginPost)
 
 router.get("/login/moderator",isUnAuthenticated,renderModeratorLoginController)
 router.post("/login/moderator",isUnAuthenticated,moderatorLoginPost)
+
+router.get("/login-page",isUnAuthenticated,renderAllLoginPageController)
 
 router.get("/login",isUnAuthenticated,loginGetController)
 router.post("/login",isUnAuthenticated,loginPostController)

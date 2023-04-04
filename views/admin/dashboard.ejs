@@ -62,7 +62,7 @@
                         </div>
                         <div class="counter-info">
                             <div class="counter-count">
-                                <%= totalUser[0].totalUser %> 
+                                44
                             </div>
                             <i class='bx bx-user'></i>
                         </div>
@@ -77,7 +77,7 @@
                 <!-- TOP PRODUCT -->
                 <div class="box f-height">
                     <div class="box-header">
-                        Package Analystic
+                        Subscription Analystic
                         <hr>
                     </div>
                     <div class="box-body">
@@ -94,14 +94,13 @@
                                             </div>
                                         </div>
                                         <div class="item-sale-info">
-                                            <div class="text-second">Total User</div>
+                                            <div class="text-second">Total Registerd</div>
                                             <div class="product-sales"><%= p.total_subscriber%></div>
                                         </div>
                                     </li>
                                 <% }%> 
                             </ul>
                         <% } %> 
-                       
                     </div>
                 </div>
                 <!-- TOP PRODUCT -->
@@ -131,7 +130,7 @@
                 <!-- ORDERS TABLE -->
                 <div class="box">
                     <div class="box-header">
-                        Recent Joined Users
+                        Recent Register Request
                     </div>
                     <% if(recentUser.length==0){ %> 
                         <p class="text-center">No users joined yet</p>
@@ -140,20 +139,20 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>username</th>
-                                        <th>email</th>
-                                        <th>verify status</th>
+                                        <th>School Name</th>
+                                        <th>Admin Name</th>
+                                        <th>Admin Phone</th>
                                         <th>Joined on</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% for(let r of recentUser){ %> 
                                         <tr>
-                                            <td><a class="btn-link" href="#"><%= r.username %></a> </td>
+                                            <td><a class="btn-link" href="#"><%= r.school_name %></a> </td>
                                             <td>
-                                                <%= r.email %>
+                                                <%= r.admin_name %>
                                             </td>
-                                            <td><span class="badge badge-<%= r.isVerified == 1? 'success' : 'danger' %> rounded-pill d-inline"><%= r.isVerified == 1? 'Verified' : 'Non Verified' %> </span> </td>
+                                            <td><span class="badge badge-<%= r.status == 1? 'success' : 'danger' %> rounded-pill d-inline"><%= r.status == 1? 'Active' : 'Inactive' %> </span> </td>
 
                                             <td><%= moment(r.createdAt) %> </td>
                                         </tr>

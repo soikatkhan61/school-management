@@ -13,6 +13,7 @@ const randomrRoute = require("./randomrRoute")
 const examRoute = require("./examRoute")
 const uploadRoute = require("./uploadRoute")
 const administrationRoute = require("./administrationRoute")
+const exportRoute = require("./exportRoute")
 
 
 
@@ -38,6 +39,10 @@ const routes = [
     {
         path: "/exam",
         handler: examRoute
+    },
+    {
+        path: "/export",
+        handler: exportRoute
     },
     {
         path: "/profile",

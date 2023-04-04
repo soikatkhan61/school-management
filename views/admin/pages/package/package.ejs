@@ -27,8 +27,11 @@
 </head>
 
 <body>
-<%- include('../../partials/sidebar.ejs') %> 
-
+<% if(user.userType === 'superadmin'){ %>
+  <%- include('../../../sidebar/admin.ejs') %>
+<% }else if(user.userType === 'moderator'){ %>
+  <%- include('../../../sidebar/moderator.ejs') %>
+<% } %>
     <div class="container py-5">
         <h3 class="text-center">We provide the best package at <span class="text-success fw-bold"> Affordable Price  .</h3>
         <hr>
@@ -48,7 +51,8 @@
               <div class="ptable-description">
                 <ul>
                   <li>Silver</li>
-                  <li>Validity <%= pkg[0].package_comission %> Month</li>
+                  <li>Validity <%= pkg[0].validity %> Month</li>
+                   <li>Teacher Account <%= pkg[0].teacher_limit %></li>
                   <li>Customer Support</li>
                   <li>Entry Level Package</li>
                 </ul>
@@ -56,7 +60,7 @@
             </div>
             <div class="ptable-footer">
               <div class="ptable-action">
-                <a href="/admin/packages/edit-package?package=silver">Edit This</a>
+                <a href="/packages/packages/edit-package?package=silver">Edit This</a>
               </div>
             </div>
           </div>
@@ -79,7 +83,8 @@
               <div class="ptable-description">
                 <ul>
                   <li>Gold</li>
-                  <li>Validity <%= pkg[1].package_comission %> Month</li>
+                  <li>Validity <%= pkg[1].validity %> Month</li>
+                   <li>Teacher Account <%= pkg[1].teacher_limit %></li>
                   <li>Customer Support</li>
                   <li>Most Selling Package</li>
                 </ul>
@@ -87,7 +92,7 @@
             </div>
             <div class="ptable-footer">
               <div class="ptable-action">
-                <a href="/admin/packages/edit-package?package=gold">Edit This</a>
+                <a href="/packages/packages/edit-package?package=gold">Edit This</a>
               </div>
             </div>
           </div>
@@ -107,7 +112,8 @@
               <div class="ptable-description">
                 <ul>
                   <li>Platinium</li>
-                   <li>Validity <%= pkg[2].package_comission %> Month</li>
+                   <li>Validity <%= pkg[2].validity %> Month</li>
+                   <li>Teacher Account <%= pkg[2].teacher_limit %></li>
                   <li>Customer Support</li>
                   <li>Master Package</li>
                 </ul>
@@ -115,7 +121,7 @@
             </div>
             <div class="ptable-footer">
               <div class="ptable-action">
-                <a href="/admin/packages/edit-package?package=platinum">Edit This</a>
+                <a href="/packages/packages/edit-package?package=platinum">Edit This</a>
               </div>
             </div>
           </div>

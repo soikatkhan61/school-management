@@ -8,6 +8,17 @@ CREATE TABLE IF NOT EXISTS users (
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 
+CREATE TABLE IF NOT EXISTS contact (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name varchar (50) not null,
+    email VARCHAR(255),
+    phone VARCHAR(15) NOT NULL,
+    message varchar(1000),
+    respond ENUM('yes','no'),
+    createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
+);
+
+
 CREATE TABLE IF NOT EXISTS schools (
     id INT PRIMARY KEY AUTO_INCREMENT,
     userType Enum ('admin'),
@@ -32,14 +43,15 @@ CREATE TABLE IF NOT EXISTS packages (
     id INT PRIMARY KEY AUTO_INCREMENT,
     package_name  ENUM("silver","gold","platinum") not null,
     price int(6) NOT NULL ,
-    package_comission int(6) NOT NULL ,
+    validity int(6) NOT NULL ,
+    teacher_limit int(6) NOT NULL ,
     total_subscriber int(6) NOT NULL,
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 
-INSERT INTO `packages`(`id`, `package_name`, `price`, `package_comission`, `total_subscriber`, `createdAt`) VALUES (null,'silver',1000,2,0,null);
-INSERT INTO `packages`(`id`, `package_name`, `price`, `package_comission`, `total_subscriber`, `createdAt`) VALUES (null,'gold',5000,3,0,null);
-INSERT INTO `packages`(`id`, `package_name`, `price`, `package_comission`, `total_subscriber`, `createdAt`) VALUES (null,'platinum',30000,5,0,null);
+INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`, `teacher_limit`, `total_subscriber`, `createdAt`) VALUES (null,'silver',1000,2,5,0,null);
+INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`,  `teacher_limit`, `total_subscriber`, `createdAt`) VALUES (null,'gold',5000,3,10,0,null);
+INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`,  `teacher_limit`, `total_subscriber`, `createdAt`) VALUES (null,'platinum',30000,5,20,0,null);
 
 
 
@@ -52,18 +64,6 @@ CREATE TABLE IF NOT EXISTS pkg_subscriber (
     updatedAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 
-CREATE TABLE IF NOT EXISTS pkg_payment(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id int ,FOREIGN KEY(user_id) REFERENCES users(id),
-    pkg_sub_id  int, FOREIGN KEY(pkg_sub_id) REFERENCES pkg_subscriber(id),
-    pkg_id  int, FOREIGN KEY(pkg_id) REFERENCES packages(id),
-	  payment_method ENUM('Bkash','Rocket'),
-    phone_no varchar(15) not null,
-    transaction_number varchar(50) not null,
-    message varchar(1000) DEFAULT null,
-    createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    updatedAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
-);
 
 CREATE TABLE IF NOT EXISTS classes (
   id INT AUTO_INCREMENT PRIMARY KEY,

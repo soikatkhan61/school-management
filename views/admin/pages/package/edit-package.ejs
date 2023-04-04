@@ -4,7 +4,7 @@
         <h3 class="text-center text-primary">Edit Package</h3>
         <hr>
             <div class="add-product-form d-md-flex justify-content-center p-2"> 
-                <form action="/admin/packages/edit-package" method="post" class="py-2">
+                <form action="/packages/packages/edit-package" method="post" class="py-2">
                     <div class="mb-2">
                       <script>
                         function update() {
@@ -30,12 +30,16 @@
                     </div>
 
                     <div class="form-outline mb-3">
-                      <input type="number" name="package_comission" value="<%= pkg[0].package_comission %>" id="total_dollar" class="form-control" />
+                      <input type="number" name="validity" value="<%= pkg[0].validity %>" id="total_dollar" class="form-control" />
                       <label class="form-label" for="total_dollar">Validity in Month</label>
+                    </div>
+                    <div class="form-outline mb-3">
+                      <input type="number" name="teacher_limit" value="<%= pkg[0].teacher_limit %>" id="total_dollar" class="form-control" />
+                      <label class="form-label" for="total_dollar">Teacher Limit</label>
                     </div>
             
                     <!-- Submit button -->
-                    <button type="submit" style="background-color: rgb(245, 245, 49);padding:7px 15px; border:none;border-radius:5px" class="mt-4">Update</button>
+                    <button type="submit"  class="btn btn-warning mt-4">Update</button>
                   </form>
             </div>  
     </div>

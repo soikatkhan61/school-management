@@ -1,7 +1,7 @@
 <%- include('../user/user_partials/header.ejs') %>
 
-<div class="container py-4" style="min-height: 100vh;">
-  <h5 class="my-2 text-primary">Register a student</h5>
+<div class="container p-4" style="min-height: 100vh;">
+  <h5 class="my-2 text-primary py-2 border text-center" style="background-color: rgb(186, 214, 255,0.4);">Student Registration</h5>
   <div class="row">
     <div class="col-6 col-sm-12">
       <form action="/user/create-student?edit=<%= data ? true : false %>&id=<%= data ? data.id : '' %>" method="post" enctype="multipart/form-data">

@@ -154,6 +154,15 @@ exports.loginGetController = (req, res, next) => {
   });
 };
 
+exports.renderAllLoginPageController = (req, res, next) => {
+  res.render("pages/auth/login-page", {
+    title: "Login here",
+    error: {},
+    value: {},
+    flashMessage: Flash.getMessage(req),
+  });
+};
+
 exports.loginPostController = async (req, res, next) => {
   let { username, password } = req.body;
   console.log(req.body);
@@ -228,7 +237,7 @@ exports.loginPostController = async (req, res, next) => {
                 }
                 req.flash("success", "Successfully Logged In");
                 if (data[0].userType == "superadmin") {
-                  return res.redirect("/admin");
+                  return res.redirect("/super-admin");
                 } else if (data[0].userType == "admin") {
                   return res.redirect("/user/admin"); c
                 } else if (data[0].userType == "teacher") {
@@ -594,7 +603,7 @@ exports.logoutController = (req, res, next) => {
       return next(err);
     }
     res.clearCookie("token");
-    res.redirect("/auth/login");
+    res.redirect("/auth/login-page");
     res.end();
   });
 };

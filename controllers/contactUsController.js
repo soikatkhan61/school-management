@@ -1,5 +1,4 @@
 const db = require('../config/db1')
-
 exports.contactUsPostController = async(req,res,next) =>{
 
     try {
@@ -7,11 +6,11 @@ exports.contactUsPostController = async(req,res,next) =>{
         if(name == '' || phone == '' || message == ''){
            return res.redirect("/")
         }
-        console.log(req.body);
+
         const [rows, fields] = await db.query('insert into contact values(?,?,?,?,?,?,?)',[null,name,email,phone,message,'no',null]);
 
         if(rows.insertId){
-            res.render("pages/utils/thankyou",{title:`Thank you ${name}!` , name,flashMessage:''})
+            res.render("pages/utils/thankyou",{title:`Thank you ${name}!` , name})
         }else{
             res.send('falied')
         }
@@ -23,15 +22,21 @@ exports.contactUsPostController = async(req,res,next) =>{
 
 
 exports.msgGetContrller = async(req,res,next) =>{
+    let currentPage = parseInt(req.query.page) || 1
+    let itemPerPage = 15
     try {
         let respond = req.query.responded
-        let sql = 'select * from contact order by id desc limit 100'
+        let sql = `select count(*) as count from contact;select * from contact order by id desc limit ${((itemPerPage * currentPage) - itemPerPage)}, ${itemPerPage}`
         if(respond){
-            sql = `select * from contact where respond = '${respond}' order by id desc limit 100`
+            sql = `select count(*) as count from contact;select * from contact where respond = '${respond}' order by id desc limit ${((itemPerPage * currentPage) - itemPerPage)}, ${itemPerPage}`
         }
-        const [rows,fields] =await db.query(sql)
 
-      res.render("admin/pages/messages",{msgs:rows,flashMessage:''})
+        const [rows,fields] =await db.query(sql)
+       
+        let totalMessage = rows[0]
+        let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
+        
+        res.render("admin/pages/messages",{msgs:rows[1],currentPage,itemPerPage,totalPage})
     } catch (error) {
         next(error)
     }
@@ -41,7 +46,7 @@ exports.respondMessage = async(req,res,next) =>{
     try {
         let id = req.query.id
         const [rows,fields] =await db.query("update contact set respond='yes' where id = ?",[id])
-        res.redirect('/admin/messages')
+        res.redirect('/contact/messages')
     } catch (error) {
         next(error)
     }
@@ -52,7 +57,7 @@ exports.singleMsgGetContrller = async(req,res,next) =>{
     let msg_id = req.params.msg_id
     try {
         let [rows] = await db.query("select * from contact where id=? limit 1",[msg_id])
-        res.render("admin/pages/msgPage",{rows,flashMessage:''})
+        res.render("admin/pages/msgPage",{rows})
     } catch (error) {
         next(error)
     }
@@ -61,7 +66,7 @@ exports.deleteMsgGetContrller = async(req,res,next) =>{
     let msg_id = req.params.msg_id
     try {
         await db.query("delete FROM contact where id=?",[msg_id])
-        res.redirect("/admin/messages")
+        res.redirect("/contact/messages")
     } catch (error) {
         next(error)
     }

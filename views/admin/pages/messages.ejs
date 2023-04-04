@@ -4,55 +4,74 @@
     <% if(msgs.length == 0){ %> 
         <h4 class="text-center">No message! </h4>
     <% }else{ %> 
-        
-        <div class="table-responsive">
-            <h1 class="text-center">Messages</h1>
-            <div class="my-2">
-                <div class="dropdown show">
-                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Responded Type
-                    </a>
-                  
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                      <a class="dropdown-item" href="/admin/messages?responded=yes">Responded</a>
-                      <a class="dropdown-item" href="/admin/messages?responded=no">Not Responded</a>
-                    </div>
-                  </div>
-            </div>
-            <table class="table-striped">
-              <tr style="background-color: black; color:white">
-                <th class="px-3">Messgae Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Message</th>
-                <th>Time</th>
-                <th>Respond</th>
-                <th>Action</th>
-              </tr>
-    
-              <% for(let m of msgs) {%> 
-                <tr>
-                    <td class="px-3"><%= m.id %> </td>
-                    <td><%= m.name%> </td>
-                    <td><%= m.email %> </td>
-                    <td><%= m.phone %> </td>
-                    <td><%= m.message %> </td>      
-                    <td><%= moment(m.createdAt) %> </td>               
-                    <td>
-                        <% if(m.respond == 'yes'){ %> 
-                            <span class="fst-itaclic">Respnded</span>
-                        <% }else{ %> 
-                            <a href="/admin/messages/respond?id=<%= m.id %>" class="btn btn-sm btn-success">Respond</a>
-                        <% } %> 
-                    </td>               
-                    <td> <a href="/admin/messages/<%= m.id %>" class="btn btn-sm btn-primary">View</a>
-                        <a  href="/admin/messages/delete/<%= m.id %>" onclick="return confirm('Are you sure to Delete?')" class="btn btn-sm btn-danger">Delete</a>    </td>    
-                        
-                  </tr>
-              <% }%> 
-            </table>
+      <div class="table-responsive">
+        <h1 class="text-center">Messages</h1>
+        <div class="my-2">
+          <div class="dropdown">
+            <button
+              class="btn btn-primary dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Dropdown button
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="/contact/messages?responded=yes">Responded</a>
+              <a class="dropdown-item" href="/contact/messages?responded=no">Not Responded</a>
+            </ul>
+          </div>
         </div>
+        <table class="table-striped">
+          <tr style="background-color: black; color:white">
+            <th class="px-3">Messgae Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Message</th>
+            <th>Time</th>
+            <th>Respond</th>
+            <th>Action</th>
+          </tr>
+
+          <% for(let m of msgs) {%> 
+            <tr>
+                <td class="px-3"><%= m.id %> </td>
+                <td><%= m.name%> </td>
+                <td><%= m.email %> </td>
+                <td><%= m.phone %> </td>
+                <td><%= m.message %> </td>      
+                <td><%= moment(m.createdAt) %> </td>               
+                <td>
+                    <% if(m.respond == 'yes'){ %> 
+                        <span class="fst-itaclic">Respnded</span>
+                    <% }else{ %> 
+                        <a href="/contact/messages/respond?id=<%= m.id %>" class="btn btn-sm btn-success">Respond</a>
+                    <% } %> 
+                </td>               
+                <td> <a href="/contact/messages/<%= m.id %>" class="btn btn-sm btn-primary">View</a>
+                    <a  href="/contact/messages/delete/<%= m.id %>" onclick="return confirm('Are you sure to Delete?')" class="btn btn-sm btn-danger">Delete</a>    </td>    
+                    
+              </tr>
+          <% }%> 
+        </table>
+        <div class="d-flex justify-content-center py-5">
+          <nav aria-label="...">
+              <ul class="pagination">
+                <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>"  >
+                  <a  href="/contact/messages?page=<%=currentPage-1 %>" class="page-link" >Previous</a>
+                </li>
+                <% for(let i=0; i< totalPage; i++) {%> 
+                  <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/contact/messages?page=<%=i+1 %> "><%= i+1 %> </a></li>
+                <% }%> 
+                <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>"  >
+                  <a class="page-link" href="/contact/messages?page=<%=currentPage+1 %>">Next</a>
+                </li>
+              </ul>
+            </nav>
+        </div>
+    </div>
     <% } %> 
     
 </div>
