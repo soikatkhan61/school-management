@@ -121,7 +121,44 @@
         CKEDITOR.replace('content', {
             height: 700,
             removeButtons: 'PasteFromWord',
-            
+            toolbar: [{
+          name: 'document',
+          items: ['NewPage', 'Preview',  '-']
+        },
+        {
+          name: 'editing',
+          items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt']
+        },
+        {
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat']
+        },
+        {
+          name: 'paragraph',
+          items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+        },
+        {
+          name: 'insert',
+          items: ['Table', 'HorizontalRule', 'PageBreak',]
+        },
+        {
+          name: 'styles',
+          items: ['Styles', 'Format', 'Font', 'FontSize']
+        },
+        {
+          name: 'colors',
+          items: ['TextColor', 'BGColor']
+        },
+        {
+          name: 'tools',
+          items: ['Maximize']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+
+      ],
         });
 
         if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {

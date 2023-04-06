@@ -1,10 +1,12 @@
 <%- include("../../partials/header/head") %>
     <div class="container-fluid py-5" style="background: #eee;min-height: 90vh;">
-        <div class="container bg-light rounded p-4" style="padding-top: 26px;">
+        <div class="container bg-light rounded p-5" style="padding-top: 26px;">
             <form action="/super-admin/register-school<%= data !='' ? '?id=' + data.id + '&save=true' : '?register=true' %>" method="post">
                 <div class="row">
+                    <h4 class="text-center py-2 text-primary">Register your school to our software!</h4>
+                    <hr>
                     <div class="col-sm-12 col-md-6">
-                        <h6 class="py-3">Infomation of the schools</h6>
+                        <h6 class="py-3 text-center fst-italic">Infomation about the school</h6>
                         <div class="mb-2 <%= user && user.userType.superadmin ? 'd-block' : "d-none" %>">
                             <select name="status" class="py-2 px-4 mb-3"
                                 style="width: 100%; outline: black">
@@ -12,7 +14,6 @@
                                 <option class="py-2 px-5" value="0" >Inactive</option>
                             </select>
                         </div>
-                        
                         <div class="mb-2">
                             <select name="package" class="py-2 px-4 mb-3"
                                 style="width: 100%; outline: black;text-transform: capitalize;" required>
@@ -20,7 +21,6 @@
                                 <% for(let p of pkg){ %>
                                     <option class="py-2 px-5" value="<%= p.id %>"> <%= p.package_name %> | Price <%= p.price %>  TK </option>
                                 <% } %>
-                                
                             </select>
                         </div>
                         <div class="form-outline mb-4">
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="col-sm-12 col-md-6">
-                        <h6 class="py-3">Admin Info</h6>
+                        <h6 class="py-3 text-center fst-italic">Administration Info</h6>
                         <div class="form-outline mb-4">
                             <input name="admin_name"  maxlength="30" value="<%= data.admin_name ? data.admin_name : '' %>" type="text" id="form7Examplx2" class="form-control" required/>
                             <label class="form-label" for="form7Examplx2" >Admin Name *</label>

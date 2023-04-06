@@ -38,8 +38,13 @@
           </td>
           <td><%= q_set[i].created_at.toDateString() %></td>
           <td>
-            <a class="btn btn-primary btn-sm" href="/exam/create?class_id=<%=q_set[i].class_id %>&subject=<%=q_set[i].subject %>&q_set=<%=q_set[i].id %>"><i class="fas fa-book-open"></i> <span class="mx-1">Take Exam</span> </a>
-            <a class="btn btn-dark btn-sm" href="/exam/view?q_set_id=<%=q_set[i].id %>"><span class="mx-1">View Exam</span> </a>
+            <% if (q_set[i].formate == 'creative'){ %>
+              <button class="btn btn-sm" disabled><i class="fas fa-book-open"></i> <span class="mx-1">Take Exam</span> </button>
+              <button class="btn btn-sm" disabled><span class="mx-1">View Exam</span></button>
+            <% }else{ %>
+              <a class="btn btn-primary btn-sm" href="/exam/create?class_id=<%=q_set[i].class_id %>&subject=<%=q_set[i].subject %>&q_set=<%=q_set[i].id %>"><i class="fas fa-book-open"></i> <span class="mx-1">Take Exam</span> </a>
+              <a class="btn btn-dark btn-sm" href="/exam/view?q_set_id=<%=q_set[i].id %>"><span class="mx-1">View Exam</span> </a>
+            <% } %>
           </td>
         </tr>
         <% } %>
