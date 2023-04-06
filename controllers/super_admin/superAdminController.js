@@ -11,7 +11,7 @@ exports.renderSuperAdmin = async (req, res, next) => {
                     paid : 0,
                     due : 0
                }
-               let approval_package_price = data[4].filter(v=>{
+               data[4].filter(v=>{
                 if(v.approval_status == 0){
                     payment.due += v.price
                     return payment.due
@@ -20,7 +20,8 @@ exports.renderSuperAdmin = async (req, res, next) => {
                     return payment.paid
                 }
             })
-                res.render("admin/dashboard",{recentUser:data[0],pkg:data[1],totalPkgSell:data[3],payment})
+            console.log(payment);
+            res.render("admin/dashboard",{recentUser:data[0],pkg:data[1],totalPkgSell:data[3],payment,flashMessage:Flash.getMessage(req)})
             }
         })
     } catch (error) {

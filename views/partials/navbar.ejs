@@ -46,16 +46,35 @@
 
       <div class="d-flex align-items-center">
         <% if(isLoggedIn){ %> 
-          <button type="button" class="btn btn-success px-3 me-2">
-            Dashboard
-          </button>
+          <% if(user.userType == 'superadmin'){ %>
+            <a href="/super-admin" class="btn btn-success px-3 me-2">
+              Dashboard
+            </a>
+          <% }else if(user.userType == 'admin'){ %>
+              <a href="/admninstration" class="btn btn-success px-3 me-2">
+                Dashboard
+              </a>
+          <% }else if(user.userType == 'teacher'){ %>
+                <a href="/teacher" class="btn btn-success px-3 me-2">
+                  Dashboard
+                </a>
+          <% }else if(user.userType == 'student'){ %>
+              <a href="/student" class="btn btn-success px-3 me-2">
+                Dashboard
+              </a>
+          <% }else if(user.userType == 'moderator'){ %>
+            <a href="/moderator" class="btn btn-success px-3 me-2">
+              Dashboard
+            </a>
+          <% } %>
+         
         <% }else{ %> 
           <a href="/auth/login-page" type="button" class="btn btn-link px-3 me-2">
             Login
           </a>
-          <button type="button" class="btn btn-primary">
+          <a href="/super-admin/school-registration" class="btn btn-primary">
             Sign up for free
-          </button>
+          </a>
         <% } %> 
       </div>
     </div>

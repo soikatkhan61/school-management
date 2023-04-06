@@ -11,6 +11,7 @@
                   <tr>
                     <th>Info</th>
                     <th>Credentials(id,pass)</th>
+                    <th>Class</th>
                     <th>Gender</th>
                     <th>DOB</th>
                     <th>Adress</th>
@@ -38,6 +39,9 @@
                                 <span class="text-muted mb-0 border p-1 rounded student_password"><%= s.password %></span>
                                 <button class="btn btn-link text-primary p-1 copy_credential" style="cursor: pointer">copy</button>
                             </td> 
+                            <td>
+                              <span><%= s.class_name %></span>
+                            </td>
                             <td>
                               <span><%= s.gender %></span>
                             </td>

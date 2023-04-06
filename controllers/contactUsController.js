@@ -1,4 +1,6 @@
 const db = require('../config/db1')
+const Flash = require("../utils/Flash");
+
 exports.contactUsPostController = async(req,res,next) =>{
 
     try {
@@ -6,11 +8,10 @@ exports.contactUsPostController = async(req,res,next) =>{
         if(name == '' || phone == '' || message == ''){
            return res.redirect("/")
         }
-
         const [rows, fields] = await db.query('insert into contact values(?,?,?,?,?,?,?)',[null,name,email,phone,message,'no',null]);
 
         if(rows.insertId){
-            res.render("pages/utils/thankyou",{title:`Thank you ${name}!` , name})
+            res.render("pages/utils/thankyou",{title:`Thank you ${name}!` , name ,flashMessage:Flash.getMessage(req)})
         }else{
             res.send('falied')
         }
@@ -36,7 +37,7 @@ exports.msgGetContrller = async(req,res,next) =>{
         let totalMessage = rows[0]
         let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
         
-        res.render("admin/pages/messages",{msgs:rows[1],currentPage,itemPerPage,totalPage})
+        res.render("admin/pages/messages",{msgs:rows[1],currentPage,itemPerPage,totalPage,flashMessage:Flash.getMessage(req)})
     } catch (error) {
         next(error)
     }
@@ -57,7 +58,7 @@ exports.singleMsgGetContrller = async(req,res,next) =>{
     let msg_id = req.params.msg_id
     try {
         let [rows] = await db.query("select * from contact where id=? limit 1",[msg_id])
-        res.render("admin/pages/msgPage",{rows})
+        res.render("admin/pages/msgPage",{rows,flashMessage:Flash.getMessage(req)})
     } catch (error) {
         next(error)
     }

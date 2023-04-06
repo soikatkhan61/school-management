@@ -47,7 +47,7 @@ exports.packageEditGetController = async (req, res, next) => {
 };
 
 exports.packageEditPostController = async (req, res, next) => {
-  let { package_name, price, validity,teacher_limit } = req.body;
+  let { package_name, price, validity,teacher_limit,student_limit } = req.body;
   console.log(req.body);
   try {
     db.query(
@@ -65,13 +65,18 @@ exports.packageEditPostController = async (req, res, next) => {
           } else {
             console.log(data);
             db.query(
-              "update packages set price=? , validity =?, teacher_limit = ? where package_name=?",
-              [price, validity,teacher_limit, package_name],
+              "update packages set price=? , validity =?, teacher_limit = ?,student_limit=? where package_name=?",
+              [price, validity,teacher_limit,student_limit, package_name],
               (e, data) => {
                 if (e) {
-                  console.log(e);
-                  next(e);
+                  return next(e);
                 } else {
+                  console.log(data);
+                  if(data.affectedRows > 0){
+                    req.flash('success','Successfully updated packages')
+                  }else{
+                    req.flash('fail','Failed to update packages')
+                  }
                   res.redirect("/packages/packages/analystic");
                 }
               }
@@ -91,9 +96,8 @@ exports.packageAnalysticGetController =async (req,res,next) =>{
             if(e){
                 next(e)
             }
-            console.log(data)
             if(data){
-                res.render("admin/pages/package/analystic",{flashMessage:'',pkg:data})
+                res.render("admin/pages/package/analystic",{flashMessage:Flash.getMessage(req),pkg:data})
             }else{
                 res.status(200).send("no data found")
             }

@@ -27,14 +27,14 @@
           <label class="form-label" for="username">Username</label>
         </div>
 
-        <div class="form-outline mb-4">
+        <div class="form-outline">
           <input value="<%= data && data.password ? data.password : ''%>" type="password" id="password" maxlength="30" name="password" class="form-control" required />
           <label class="form-label" for="username">password</label>
         </div>
-
+        <span class="text-danger fst-italic"><%= data && data.password ? "This Password in secure hashed formate" : ''%></span>
 
         <!-- Number input -->
-        <div class="form-outline mb-4">
+        <div class="form-outline my-4">
           <textarea type="text" id="form6Example6" maxlength="340" name="address" class="form-control"><%= data && data.address ? data.address : ''%></textarea>
           <label class="form-label" for="form6Example6">Adress</label>
         </div>
@@ -45,7 +45,7 @@
       </div>
       <div class="my-4">
         <label class="form-label" for="customFile">Max file size 200KB</label>
-        <input type="file" class="form-control" id="student_avater" name="student_avater" />
+        <input type="file" class="form-control" id="student_avater" name="teacher_avater" />
 
         <script>
           const fileInput = document.getElementById('student_avater');

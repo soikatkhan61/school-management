@@ -3,39 +3,35 @@
     <div>
         <h3 class="text-center text-primary">Edit Package</h3>
         <hr>
-            <div class="add-product-form d-md-flex justify-content-center p-2"> 
+            <div class="d-md-flex justify-content-center p-2"> 
                 <form action="/packages/packages/edit-package" method="post" class="py-2">
+                  <p>Edit the package, you cannot change the packge</p>
                     <div class="mb-2">
-                      <script>
-                        function update() {
-                            var d = document.getElementById('country');
-                            var dText = d.options[d.selectedIndex].text;
-                            document.getElementById('result').value = dText
-                        }
-                    </script>
-                        <select id="country" class="py-2 px-4 mb-3" onchange="update();" style="width: 100%; outline: black">
+                        <select name="package_name" id="country" class="py-2 px-4 mb-3"" style="width: 100%; outline: black">
                           <option class="py-2 px-5" value="none" disabled>Package Name</option>
-
                           <% for(let p of pkgs){ %>
                             <option class="py-2 px-5" <%= p.package_name === pkg[0].package_name ? "selected" : "disabled" %>  value="<%= p.package_name %>" ><%= p.package_name %></option>
                           <% } %> 
                         </select>
-                        <input id="result" name="package_name"  value="<%=pkg[0].package_name%>"  class="d-none">
-
                         </div>
                     <!-- quantity input -->
                     <div class="form-outline mb-3">
-                      <input type="number" name="price" value="<%= pkg[0].price %>" id="total_dollar" class="form-control" />
+                      <input type="number" name="price" value="<%= pkg[0].price %>"  class="form-control" />
                       <label class="form-label" for="total_dollar">Package Price</label>
                     </div>
 
                     <div class="form-outline mb-3">
-                      <input type="number" name="validity" value="<%= pkg[0].validity %>" id="total_dollar" class="form-control" />
+                      <input type="number" name="validity" value="<%= pkg[0].validity %>"  class="form-control" />
                       <label class="form-label" for="total_dollar">Validity in Month</label>
                     </div>
                     <div class="form-outline mb-3">
-                      <input type="number" name="teacher_limit" value="<%= pkg[0].teacher_limit %>" id="total_dollar" class="form-control" />
+                      <input type="number" name="teacher_limit" value="<%= pkg[0].teacher_limit %>"class="form-control" />
                       <label class="form-label" for="total_dollar">Teacher Limit</label>
+                    </div>
+
+                    <div class="form-outline mb-3">
+                      <input type="number" name="student_limit" value="<%= pkg[0].student_limit %>" class="form-control" />
+                      <label class="form-label" for="total_dollar">Student Limit</label>
                     </div>
             
                     <!-- Submit button -->

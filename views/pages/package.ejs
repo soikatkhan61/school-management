@@ -19,7 +19,9 @@
           <div class="ptable-description">
             <ul>
               <li>Silver</li>
-              <li>Validity <%= pkg[0].package_comission %> Month</li>
+              <li>Teacher Account:  <%= pkg[0].teacher_limit %> </li>
+              <li>Student Account:  <%= pkg[0].student_limit %> </li>
+              <li>Validity <%= pkg[0].validity %> Month</li>
               <li>Customer Support</li>
               <li>Entry Level Package</li>
             </ul>
@@ -50,7 +52,9 @@
           <div class="ptable-description">
             <ul>
               <li>Gold</li>
-              <li>Validity <%= pkg[1].package_comission %> Month</li>
+              <li>Teacher Account:  <%= pkg[1].teacher_limit %> </li>
+              <li>Student Account:  <%= pkg[0].student_limit %> </li>
+              <li>Validity <%= pkg[1].validity %> Month</li>
               <li>Customer Support</li>
               <li>Most Selling Package</li>
             </ul>
@@ -78,7 +82,9 @@
           <div class="ptable-description">
             <ul>
               <li>Platinium</li>
-               <li>Validity <%= pkg[2].package_comission %> Month</li>
+              <li>Teacher Account:  <%= pkg[2].teacher_limit %> </li>
+              <li>Student Account:  <%= pkg[2].student_limit %> </li>
+              <li>Validity <%= pkg[2].validity %> Month</li>
               <li>Customer Support</li>
               <li>Master Package</li>
             </ul>
@@ -92,6 +98,6 @@
       </div>
     </div>
   </div>
-  <%- include('../partials/footer.ejs') %>
+  <%- include('../partials/homeFooter.ejs') %>
 </body>
 </html>

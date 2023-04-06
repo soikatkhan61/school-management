@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS schools (
     admin_email varchar(100) NOT NULL,
     admin_password varchar(250) NOT NULL,
     admin_avater varchar(250) DEFAULT "/uploades/school/admin_avater.png",
-    status int(1) DEFAULT 1,
+    status int(1) DEFAULT 0,
+    packages int(1) default NULL,
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 INSERT INTO `schools`(`id`, `school_name`, `school_address`, `school_email`, `school_phone`, `school_info`, `admin_name`, `admin_blood_group`, `admin_address`,`admin_phone`, `admin_email`,`admin_password`, `admin_avater`,`status`,`createdAt`) VALUES (null,'SHS','Demo Adress','shs@gmail.com','01733333','info demo','school_admin','b+','admin_adress','01822222','admin@gmail.com','$2b$11$GXOU60o9gOTiEe0pkjAR9.vKrcRzvagio0ZmYz1tPDHpt4CwiaM4G',null,1,null);
@@ -45,13 +46,14 @@ CREATE TABLE IF NOT EXISTS packages (
     price int(6) NOT NULL ,
     validity int(6) NOT NULL ,
     teacher_limit int(6) NOT NULL ,
+    student_limit int(6) NOT NULL ,
     total_subscriber int(6) NOT NULL,
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 
-INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`, `teacher_limit`, `total_subscriber`, `createdAt`) VALUES (null,'silver',1000,2,5,0,null);
-INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`,  `teacher_limit`, `total_subscriber`, `createdAt`) VALUES (null,'gold',5000,3,10,0,null);
-INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`,  `teacher_limit`, `total_subscriber`, `createdAt`) VALUES (null,'platinum',30000,5,20,0,null);
+INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`, `teacher_limit`,`student_limit`, `total_subscriber`, `createdAt`) VALUES (null,'silver',1000,2,5,5,0,null);
+INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`,  `teacher_limit`,`student_limit`, `total_subscriber`, `createdAt`) VALUES (null,'gold',5000,3,10,5,0,null);
+INSERT INTO `packages`(`id`, `package_name`, `price`, `validity`,  `teacher_limit`,`student_limit`, `total_subscriber`, `createdAt`) VALUES (null,'platinum',30000,5,20,5,0,null);
 
 
 
@@ -147,6 +149,7 @@ CREATE TABLE IF NOT EXISTS teachers (
   name VARCHAR(100) NOT NULL,
   username VARCHAR(30) NOT NULL,
   email VARCHAR(100),
+  address varchar(300),
   phone varchar(15) not null,
   password VARCHAR(255) NOT NULL,
   school_id INT(11),

@@ -4,6 +4,12 @@ const errorFormatter = require("../../utils/validationErrorFormatter");
 const Flash = require("../../utils/Flash");
 
 exports.renderCombined = (req, res, next) => {
+    let school_id
+    if(req.user.userType === "admin"){
+      school_id = req.user.id
+    }else if(req.user.userType === "teacher"){
+      school_id = req.user.school_id
+    }
     let q_formate
     if (q_formate == 'mcq') {
         q_formate = 'questions'
@@ -11,7 +17,7 @@ exports.renderCombined = (req, res, next) => {
         q_formate = 'creative'
     }
     try {
-        db.query("select id,class_name from classes order by id;select school_name from schools where id=?", [req.user.id], (e, data) => {
+        db.query("select id,class_name from classes order by id;select school_name from schools where id=?", [school_id], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -30,9 +36,15 @@ exports.renderCombined = (req, res, next) => {
 
 };
 exports.viewSubject = (req, res, next) => {
+    let school_id
+    if(req.user.userType === "admin"){
+      school_id = req.user.id
+    }else if(req.user.userType === "teacher"){
+      school_id = req.user.school_id
+    }
     let { name, class_id, subject, q_formate, total_mark, total_qus } = req.body
     try {
-        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?,?)", [null, name, class_id, subject, q_formate, total_mark, total_qus, null,null, req.user.school_id, null, null], (e, data) => {
+        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?,?)", [null, name, class_id, subject, q_formate, total_mark, total_qus, null,null, school_id, null, null], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -154,11 +166,17 @@ exports.addQuestion = (req, res, next) => {
 };
 
 exports.renderSavedQuesSet = (req, res, next) => {
+    let school_id
+    if(req.user.userType === "admin"){
+      school_id = req.user.id
+    }else if(req.user.userType === "teacher"){
+      school_id = req.user.school_id
+    }
     let currentPage = parseInt(req.query.page) || 1
     let itemPerPage = 25
     try {
         db.query(
-            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? order by id desc limit ?,?", [req.user.school_id,req.user.school_id,((itemPerPage * currentPage) - itemPerPage), itemPerPage],
+            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? order by id desc limit ?,?", [school_id,school_id,((itemPerPage * currentPage) - itemPerPage), itemPerPage],
             (e, data) => {
                 if (e) {
                     next(e);

@@ -1,49 +1,49 @@
-<%- include("../partials/header") %>
+<%- include("../../partials/header/head") %>
     <div class="container-fluid py-5" style="background: #eee;min-height: 90vh;">
-        <div class="bg-light rounded p-4" style="padding-top: 26px;">
+        <div class="container bg-light rounded p-4" style="padding-top: 26px;">
             <form action="/super-admin/register-school<%= data !='' ? '?id=' + data.id + '&save=true' : '?register=true' %>" method="post">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <h6 class="py-3">Infomation of the schools</h6>
-                        <div class="mb-2">
+                        <div class="mb-2 <%= user && user.userType.superadmin ? 'd-block' : "d-none" %>">
                             <select name="status" class="py-2 px-4 mb-3"
                                 style="width: 100%; outline: black">
                                 <option class="py-2 px-5" value="none">Status</option>
-                                <option class="py-2 px-5" value="1" <%= data.status == '1' ? 'selected' : '' %>>Active</option>
-                                <option class="py-2 px-5" value="0" <%= data.status == '0'? 'selected' : '' %>>Inactive</option>
+                                <option class="py-2 px-5" value="0" >Inactive</option>
                             </select>
                         </div>
+                        
                         <div class="mb-2">
                             <select name="package" class="py-2 px-4 mb-3"
                                 style="width: 100%; outline: black;text-transform: capitalize;" required>
                                 <option class="py-2 px-5" value="">Package</option>
                                 <% for(let p of pkg){ %>
-                                    <option class="py-2 px-5" <%= p.id  == data.package ? 'selected' : '' %> value="<%= p.id %>"> <%= p.package_name %> | Price <%= p.price %> TK</option>
+                                    <option class="py-2 px-5" value="<%= p.id %>"> <%= p.package_name %> | Price <%= p.price %>  TK </option>
                                 <% } %>
                                 
                             </select>
                         </div>
                         <div class="form-outline mb-4">
-                            <input name="school_name" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>
+                            <input name="school_name" maxlength="130" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>
                             <label class="form-label" for="form7Example13">School Name *</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input name="school_address" value="<%= data.school_address ? data.school_address : '' %>" type="text" id="form7Example2" class="form-control" required/>
+                            <input name="school_address" maxlength="300" value="<%= data.school_address ? data.school_address : '' %>" type="text" id="form7Example2" class="form-control" required/>
                             <label class="form-label" for="form7Example2">School Address *</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input name="school_email" value="<%= data.school_email ? data.school_email : '' %>" type="email" id="form7Example12" class="form-control" />
+                            <input name="school_email" maxlength="40" value="<%= data.school_email ? data.school_email : '' %>" type="email" id="form7Example12" class="form-control" />
                             <label class="form-label" for="form7Example12">School Email</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input name="school_phone" value="<%= data.school_phone ? data.school_phone : '' %>" type="text" id="form7Example3" class="form-control" required/>
+                            <input name="school_phone" maxlength="15" value="<%= data.school_phone ? data.school_phone : '' %>" type="text" id="form7Example3" class="form-control" required/>
                             <label class="form-label" for="form7Example3">School Phone *</label>
                         </div>
                         <div class="form-outline mb-4">
-                            <textarea name="school_info"  type="text" id="form7Example4" class="form-control" rows="4"><%= data.school_info ? data.school_info : '' %></textarea>
+                            <textarea name="school_info" maxlength="300"  type="text" id="form7Example4" class="form-control" rows="4"><%= data.school_info ? data.school_info : '' %></textarea>
                             <label class="form-label" for="form7Example4">School info</label>
                         </div>
                     </div>
@@ -51,32 +51,32 @@
                     <div class="col-sm-12 col-md-6">
                         <h6 class="py-3">Admin Info</h6>
                         <div class="form-outline mb-4">
-                            <input name="admin_name" value="<%= data.admin_name ? data.admin_name : '' %>" type="text" id="form7Examplx2" class="form-control" required/>
-                            <label class="form-label" for="form7Examplx2">Admin Name *</label>
+                            <input name="admin_name"  maxlength="30" value="<%= data.admin_name ? data.admin_name : '' %>" type="text" id="form7Examplx2" class="form-control" required/>
+                            <label class="form-label" for="form7Examplx2" >Admin Name *</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input name="admin_blood_group" value="<%= data.admin_blood_group ? data.admin_blood_group : '' %>" type="text" id="form7Example5" class="form-control" />
-                            <label class="form-label" for="form7Example5">Blood group</label>
+                            <input name="admin_blood_group"  maxlength="15" value="<%= data.admin_blood_group ? data.admin_blood_group : '' %>" type="text" id="form7Example5" class="form-control" />
+                            <label class="form-label" for="form7Example5" >Blood group</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input name="admin_address" value="<%= data.admin_address ? data.admin_address : '' %>" type="text" id="form7Examplex1" class="form-control" />
-                            <label class="form-label" for="form7Examplx1">Admin Address</label>
+                            <input name="admin_address"  maxlength="500" value="<%= data.admin_address ? data.admin_address : '' %>" type="text" id="form7Examplex1" class="form-control" />
+                            <label class="form-label" for="form7Examplx1" >Admin Address</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input name="admin_phone" value="<%= data.admin_phone ? data.admin_phone : '' %>" type="text" id="form7Example6" class="form-control" required/>
-                            <label class="form-label" for="form7Example6">Admin Phone Number *</label>
+                            <input name="admin_phone"  maxlength="15" value="<%= data.admin_phone ? data.admin_phone : '' %>" type="text" id="form7Example6" class="form-control" required/>
+                            <label class="form-label" for="form7Example6" >Admin Phone Number *</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input name="admin_email" value="<%= data.admin_email ? data.admin_email : '' %>" type="email" id="form7Example7" class="form-control" required/>
-                            <label class="form-label" for="form7Example7">Admin Email *</label>
+                            <input name="admin_email"  maxlength="45 value="<%= data.admin_email ? data.admin_email : '' %>" type="email" id="form7Example7" class="form-control" required/>
+                            <label class="form-label" for="form7Example7"" >Admin Email *</label>
                         </div>
                         <div class="form-outline mb-4">
-                            <input name="admin_password" value="<%= data.admin_password ? data.admin_password : '' %>" type="password" id="form7Example8" class="form-control" maxlength="15" required />
-                            <label class="form-label" for="form7Example8">Admin Password *</label>
+                            <input name="admin_password"  maxlength="15" value="<%= data.admin_password ? data.admin_password : '' %>" type="password" id="form7Example8" class="form-control" required />
+                            <label class="form-label" for="form7Example8" >Admin Password *</label>
                         </div>
 
                         <div class="mb-4">

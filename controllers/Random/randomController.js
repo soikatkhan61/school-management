@@ -1,9 +1,16 @@
 const db = require("../../config/db.config");
 const Flash = require("../../utils/Flash");
 
+
 exports.renderRandom = (req, res, next) => {
+  let school_id
+  if(req.user.userType === "admin"){
+    school_id = req.user.id
+  }else if(req.user.userType === "teacher"){
+    school_id = req.user.school_id
+  }
   try {
-    db.query("select id,class_name from classes order by id asc;select school_name from schools where id=?",[req.user.school_id], (e, data) => {
+    db.query("select id,class_name from classes order by id asc;select school_name from schools where id=?",[school_id], (e, data) => {
       if (e) {
         next(e)
       } else {
@@ -20,8 +27,14 @@ exports.renderRandom = (req, res, next) => {
   }
 };
 exports.randomView = (req, res, next) => {
+  let school_id
+  if(req.user.userType === "admin"){
+    school_id = req.user.id
+  }else if(req.user.userType === "teacher"){
+    school_id = req.user.school_id
+  }
   try {
-    db.query("select school_name from schools where id=?",[req.user.school_id], (e, data) => {
+    db.query("select school_name from schools where id=?",[school_id], (e, data) => {
       if (e) {
         next(e)
       } else {
