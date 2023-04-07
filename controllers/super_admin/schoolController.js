@@ -16,7 +16,8 @@ exports.renderSchools = async (req, res, next) => {
                     data: data[1], flashMessage: Flash.getMessage(req),
                     currentPage,
                     itemPerPage,
-                    totalPage
+                    totalPage,
+                    title:"School Details"
                 })
             }
         })
@@ -39,7 +40,7 @@ exports.renderRegisterSchool = async (req, res, next) => {
                     }
                 })
             } else {
-                res.render("admin/school/register-school", { flashMessage: Flash.getMessage(req), data: '',pkg })
+                res.render("admin/school/register-school", { title:"Register School",flashMessage: Flash.getMessage(req), data: '',pkg })
             }
         })
     } catch (error) {
@@ -49,7 +50,7 @@ exports.renderRegisterSchool = async (req, res, next) => {
 exports.schoolRegistrationByUser = async (req, res, next) => {
     try {
         db.query("select * from packages",(e,pkg) => {
-            res.render("admin/school/userSchoolRegistration", { flashMessage: Flash.getMessage(req), data: '',pkg })
+            res.render("admin/school/userSchoolRegistration", { title:"Register School", flashMessage: Flash.getMessage(req), data: '',pkg })
         })
     } catch (error) {
         next(error)

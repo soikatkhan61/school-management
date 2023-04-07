@@ -35,4 +35,7 @@
 
  <% if(user.userType === 'moderator'){ %>
   <%- include('../../sidebar/moderator.ejs') %>
+<% }else if(user.userType === 'superadmin'){ %>
+  <%- include('../../sidebar/admin.ejs') %>
 <% } %>
+<%- include('../../utils/alert.ejs') %>

@@ -8,6 +8,7 @@ exports.adminPackageGetController = async (req, res, next) => {
     }
     if (data) {
       res.render("admin/pages/package/package", {
+        title:"Package",
         flashMessage:'',
         pkg: data,
       });
@@ -34,6 +35,7 @@ exports.packageEditGetController = async (req, res, next) => {
           });
         } else {
           res.render("admin/pages/package/edit-package", {
+            title:"Edit Package",
             flashMessage:'',
             pkg: data[0],
             pkgs: data[1],
@@ -60,6 +62,7 @@ exports.packageEditPostController = async (req, res, next) => {
         } else {
           if (!data) {
             return res.render("pages/error/404", {
+              title:"Page not found",
               flashMessage: "",
             });
           } else {
@@ -97,7 +100,7 @@ exports.packageAnalysticGetController =async (req,res,next) =>{
                 next(e)
             }
             if(data){
-                res.render("admin/pages/package/analystic",{flashMessage:Flash.getMessage(req),pkg:data})
+                res.render("admin/pages/package/analystic",{ title:"Package Analysis",flashMessage:Flash.getMessage(req),pkg:data})
             }else{
                 res.status(200).send("no data found")
             }

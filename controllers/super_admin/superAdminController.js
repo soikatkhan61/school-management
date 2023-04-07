@@ -21,7 +21,7 @@ exports.renderSuperAdmin = async (req, res, next) => {
                 }
             })
             console.log(payment);
-            res.render("admin/dashboard",{recentUser:data[0],pkg:data[1],totalPkgSell:data[3],payment,flashMessage:Flash.getMessage(req)})
+            res.render("admin/dashboard",{ title:"Super Admin",recentUser:data[0],pkg:data[1],totalPkgSell:data[3],payment,flashMessage:Flash.getMessage(req)})
             }
         })
     } catch (error) {

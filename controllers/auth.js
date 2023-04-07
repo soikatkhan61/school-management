@@ -471,13 +471,13 @@ exports.changePasswordGetController = async (req, res, next) => {
   res.render("user/pages/change_password", {
     title: "Change Password",
     error: "",
+    flashMessage: Flash.getMessage(req),
     notMatched: false,
   });
 };
 
 exports.changePasswordPostController = async (req, res, next) => {
   let { old_password, new_password1, new_password2 } = req.body;
-  console.log(req.body);
 
   let errors = validationResult(req).formatWith(errorFormatter);
   if (!errors.isEmpty()) {
@@ -485,58 +485,98 @@ exports.changePasswordPostController = async (req, res, next) => {
       title: "Change Password",
       error: errors.mapped(),
       notMatched: false,
+      flashMessage: Flash.getMessage(req)
     });
   }
-
   try {
     if (new_password2 !== new_password1) {
       return res.render("user/pages/change_password", {
         title: "Change Password",
         error: errors.mapped(),
         notMatched: "New Password and Confirm password is not matched",
+        flashMessage: Flash.getMessage(req)
       });
     }
-    let hashPassword = await bcrypt.hash(new_password1, 11);
-    bcrypt.compare(old_password, req.user.password, function (err, match) {
-      if (err) {
-        return next(err);
-      } else if (match === false) {
-        console.log("i am here");
-        return res.render("user/pages/change_password", {
-          title: "Change Password",
-          error: errors.mapped(),
-          notMatched: "Old password is not valid",
-        });
-      } else {
-        db.query(
-          "update users set password = ? where id=?",
-          [hashPassword, req.user.id],
-          (e, data) => {
-            if (e) {
-              return next(e);
+    let table, hashPassword,userOriginalPassword
+    let isOldPasswordisValid = false
+    let feild = 'password'
+    if (req.user.userType === 'superadmin') {
+      table = 'users'
+      hashPassword = await bcrypt.hash(new_password1, 11);
+      userOriginalPassword = req.user.password
+      isOldPasswordisValid = matchOldPassword(old_password,userOriginalPassword)
+    }
+    else if (req.user.userType === 'admin') {
+      table = 'schools'
+      feild = 'admin_password'
+      hashPassword = await bcrypt.hash(new_password1, 11);
+      userOriginalPassword = req.user.admin_password
+      isOldPasswordisValid = matchOldPassword(old_password,userOriginalPassword)
+    }
+    else if (req.user.userType === 'teacher') {
+      table = 'teachers'
+      hashPassword = await bcrypt.hash(new_password1, 11);
+      userOriginalPassword = req.user.password
+      isOldPasswordisValid = matchOldPassword(old_password,userOriginalPassword)
+    }
+    else if (req.user.userType === 'student') {
+      table = 'students'
+      hashPassword = new_password1
+      userOriginalPassword = req.user.password
+      if(old_password == userOriginalPassword){
+        isOldPasswordisValid = true
+      }
+    }
+    else if (req.user.userType === 'moderator') {
+      table = 'moderator'
+      hashPassword = await bcrypt.hash(new_password1, 11);
+      userOriginalPassword = req.user.password
+      isOldPasswordisValid = await matchOldPassword(old_password,userOriginalPassword)
+    }
+
+    function matchOldPassword(old_password,userOriginalPassword) {
+      return bcrypt.compareSync(old_password, userOriginalPassword);
+    }
+    console.log(isOldPasswordisValid);
+    if(isOldPasswordisValid){
+      db.query(
+        `update ${table} set ${feild} = ? where id=?`,
+        [hashPassword, req.user.id],
+        (e, data) => {
+          if (e) {
+            return next(e);
+          } else {
+
+            if (data.changedRows == 1) {
+              console.log(data);
+              req.flash("success", "Password Changed Succefully,Login Now!");
+              req.session.destroy((err) => {
+                if (err) {
+                  return next(err);
+                }
+                res.clearCookie("token");
+                res.redirect("/auth/login-page");
+                res.end();
+              });
             } else {
-              if (data.changedRows == 1) {
-                req.flash("success", "Password Changed Succefully,Login Now!");
-                req.session.destroy((err) => {
-                  if (err) {
-                    return next(err);
-                  }
-                  res.clearCookie("token");
-                  res.redirect("/auth/login");
-                  res.end();
-                });
-              } else {
-                res
-                  .status(200)
-                  .send(
-                    "Something went wrong, try again with valid information!"
-                  );
-              }
+              res
+                .status(200)
+                .send(
+                  "Something went wrong, try again with valid information!"
+                );
             }
           }
-        );
-      }
-    });
+        }
+      );
+    }else{
+      return res.render("user/pages/change_password", {
+        title: "Change Password",
+        error: errors.mapped(),
+        notMatched: "Old password is not valid",
+        flashMessage: Flash.getMessage(req)
+      });
+    }
+    
   } catch (error) {
     next(e);
   }
