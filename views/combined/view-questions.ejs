@@ -39,13 +39,14 @@
     <div class="my-2 text-light">
       <a class="text-light btn btn-primary" href="/combined-question/view-subject?class_id=<%= filter.class_id %>&subject=<%= filter.subject %>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>">Subject List</a>
       <a class="text-light btn btn-success" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>">View Question Preview</a>
+      <button class="btn ">Selected : <span id="total_select"> <%= total_selected ? total_selected : '0'  %> </span> / <%= q_set_ids[0].total_qus ? q_set_ids[0].total_qus : '0'  %></button>
     </div>
     <% if(questions.length == 0){ %>
     <p>no question</p>
     <% }else{ %>
-    <div class="table-responsive table-nowrap">
-      <table class="table">
-        <thead class="table-dark">
+    <div class="table-responsive table-nowrap ">
+      <table class="table table-bordered">
+        <thead class="table-dark ">
           <tr>
             <th scope="col">SL</th>
             <th scope="col">Action</th>
@@ -76,7 +77,6 @@
               <% numString = '' %>
             <% } %>
           <% } %>
-          <% console.log(object); %>
           <% for(let i=0; i<questions.length; i++){ %>
           <% let opt = JSON.parse(questions[i].question_option) %>
           <input type="text" class="q_id" value="<%= questions[i].id %>" hidden>
@@ -130,6 +130,8 @@
               console.log(q_id[i].value);
               loading_spinner.style.display='none'
               if (data.status === 200) {
+                let total_select = document.getElementById('total_select')
+                total_select.innerText = Number(total_select.innerText) + 1
                 add_btn[i].innerText = 'added'
                 add_btn[i].disabled = true
                 add_btn[i].classList.add('btn-success')

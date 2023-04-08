@@ -207,6 +207,7 @@ exports.getChapterBySubjectAndClass = (req, res, next) => {
 exports.renderCreateQuestion = (req, res, next) => {
   let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_id, q_type, setContent } = req.query
   let qus
+  console.log(req.query);
   try {
     let obj
     let savedInfo
@@ -227,7 +228,6 @@ exports.renderCreateQuestion = (req, res, next) => {
         } else {
           if (data.length > 0) {
             qus = data
-            console.log(qus);
           }
         }
       })
@@ -258,6 +258,7 @@ exports.renderCreateQuestion = (req, res, next) => {
 exports.createQuestionPost = (req, res, next) => {
   let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer } = req.body
   let { edit, q_id } = req.query
+  console.log(req.query);
   let options = [];
   question_option.forEach(e => {
     options.push(e);

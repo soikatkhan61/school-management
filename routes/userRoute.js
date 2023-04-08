@@ -15,11 +15,11 @@ const {renderCreateStudnet,createStudentPost,renderRegisteredStudent} = require(
 
 
 router.get("/admin/questions/class",isAuthenticated,requireRole('superadmin,moderator'),renderAllClass)
-router.post("/admin/questions/create-class",isAuthenticated,requireRole('superadmin,moderator'),createClassPost)
+router.post("/admin/questions/create-class",isAuthenticated,requireRole('superadmin'),createClassPost)
 router.get("/admin/questions/subject",isAuthenticated,requireRole('superadmin,moderator'),renderAllSubject)
 router.get("/admin/questions/get-subject-by-class",isAuthenticated,requireRole('superadmin,moderator'),getSubjectByClass)
-router.post("/admin/questions/create-subject",isAuthenticated,requireRole('superadmin,moderator'),createSubjectPost)
-router.post("/admin/questions/create-chapter",isAuthenticated,requireRole('superadmin,moderator'),createChaptePost)
+router.post("/admin/questions/create-subject",isAuthenticated,requireRole('superadmin'),createSubjectPost)
+router.post("/admin/questions/create-chapter",isAuthenticated,requireRole('superadmin'),createChaptePost)
 router.get("/admin/questions/get-chapter-by-subject-and-class",isAuthenticated,requireRole('superadmin,moderator'),getChapterBySubjectAndClass)
 router.get("/admin/questions/see-question",isAuthenticated,requireRole('superadmin,moderator'),renderSeeQuestion)
 router.get("/admin/questions/view",isAuthenticated,requireRole('superadmin,moderator'),renderSingleQuestionView)

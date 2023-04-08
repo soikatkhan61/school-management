@@ -60,7 +60,7 @@
   <div id="loading-spinner" style="display:none;">
     <img src="/images/spinner.gif" alt="Loading...">
   </div>
-  <form id="question_form" action="/user/admin/questions/create-question<%= qus ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
+  <form id="question_form" action="/user/admin/questions/create-question<%= (qus && setContent == "true") ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
     <div class="main-content container">
       <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-end" style="background-color: antiquewhite;">
         <button type="submit" class="btn btn-success btn-sm my-1">Submit</button>
@@ -83,9 +83,9 @@
           </select>
         </div>
         <div class="d-none">
-          <input type="text" name="class_name" id="class_name" hidden>
-          <input type="text" name="subject_name" id="subject_name" hidden>
-          <input type="text" name="chapter_name" id="chapter_name" hidden>
+          <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>"  hidden>
+          <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
+          <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
         </div>
         <div class="mb-2">
           <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">

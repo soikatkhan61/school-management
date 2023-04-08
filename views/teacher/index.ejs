@@ -4,7 +4,7 @@
     <div class="col-lg-4">
       <div class="card mb-4">
         <div class="card-body text-center">
-          <img src="<%= user.avater ? user.avater : '/images/moderator.png' %>" alt="avatar" class="border rounded-circle img-fluid p-3" style="width: 150px;">
+          <img src="<%= user.avater ? user.avater : '/images/teacher.png' %>" alt="avatar" class="border rounded-circle img-fluid p-3" style="width: 150px;">
           <h5 class="my-3 mt-4"><%= user.name %></h5>
           <div class="border rounded shadow-sm p-3">
             <p class="mb-0">Full Name: <%= user.name %></p>
@@ -12,6 +12,8 @@
             <p class="mb-0">Phone: <%= user.phone %></p>
             <hr>
             <p class="mb-0">Email: <%= user.email ? user.email : '---' %></p>
+            <hr>
+            <p class="mb-0">Address: <%= user.address ? user.address : '---'  %></p>
           </div>
           <div class="d-flex justify-content-center my-2 mt-4">
             <button type="button" class="btn btn-outline-primary ms-1"><%= user.username %></button>

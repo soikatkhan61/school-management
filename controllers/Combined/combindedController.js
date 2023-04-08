@@ -113,7 +113,7 @@ exports.viewQuestionGet = (req, res, next) => {
         q_type = 'creative'
     }
     try {
-        db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;select * from ${q_type} where class_id=? and subject_id = ? and chapter_id=? limit ?,?;select questions from q_set where id=?`, [class_id, subject_id, chapter, class_id, subject_id, chapter, ((itemPerPage * currentPage) - itemPerPage), itemPerPage, q_set], (e, data) => {
+        db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;select * from ${q_type} where class_id=? and subject_id = ? and chapter_id=? limit ?,?;select questions,total_qus from q_set where id=?`, [class_id, subject_id, chapter, class_id, subject_id, chapter, ((itemPerPage * currentPage) - itemPerPage), itemPerPage, q_set], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -123,14 +123,16 @@ exports.viewQuestionGet = (req, res, next) => {
                     q_set,
                     q_type
                 }
-                console.log(q_type);
                 let totalMessage = data[0]
                 let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
-                console.log(data[2]);
+                let q_set_ids =  data[2]
+                let total_selected = q_set_ids[0].questions.split(',').length
+                console.log(total_selected);
                 res.render(`combined/view-questions`, {
                     title: "view subject", flashMessage: Flash.getMessage(req),
                     questions: data[1], filter,
-                    q_set_ids: data[2],
+                    q_set_ids,
+                    total_selected,
                     currentPage, itemPerPage, totalPage, q_type
                 })
             }
