@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS creative (
   chapter_id INT,
   question_text text NOT NULL,
   question_option text NOT NULL,
+  question_answer text NOT NULL,
   FOREIGN KEY (subject_id) REFERENCES subject_list(id),
   FOREIGN KEY (class_id) REFERENCES classes(id),
   FOREIGN KEY (chapter_id) REFERENCES chapter(id)

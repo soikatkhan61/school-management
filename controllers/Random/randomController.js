@@ -53,14 +53,18 @@ exports.randomView = (req, res, next) => {
 exports.randomGenerator= (req, res, next) => {
   try {
     let{class_id,subject,total_qus,q_formate,name,total_mark,school_name} = req.query
+    if (class_id == null || subject == null ){
+      return res.send("You need to select subject and class both")
+    }
     if (q_formate == 'mcq') {
       q_formate = 'questions'
     } else {
       q_formate = 'creative'
     }
+   
     let obj = {name,total_qus,total_mark,school_name,q_formate}
     if (subject !== '0') {
-      db.query(`SELECT question_text,question_option from ${q_formate} where class_id=${class_id} and subject_id = ${subject}  order by rand() limit  ${total_qus}`, (error, data, fields) => {
+      db.query(`SELECT id,question_text,question_option from ${q_formate} where class_id=${class_id} and subject_id = ${subject}  order by rand() limit  ${total_qus}`, (error, data, fields) => {
         if (error) {
           next(error)
           return
@@ -78,14 +82,13 @@ exports.randomGenerator= (req, res, next) => {
         const ids = data.map(row => row.id);
         const questionsPerSubject = Math.floor(total_qus / numSubjects);
         const remainder = total_qus % numSubjects;
-        console.log(questionsPerSubject, remainder, ids.join(', '));
-
-        const query = `SELECT question_text, question_option FROM ( SELECT *, ROW_NUMBER() OVER (PARTITION BY subject_id ORDER BY RAND ()) AS row_num FROM ${q_formate} AS subquery WHERE subject_id IN (${ids.join(', ')})) AS subquery2 WHERE row_num <= (CASE WHEN subject_id = ${data[data.length - 1].id} THEN ${questionsPerSubject + remainder} ELSE ${questionsPerSubject} END)`;
+        
+        const query = `SELECT id,question_text, question_option FROM ( SELECT *, ROW_NUMBER() OVER (PARTITION BY subject_id ORDER BY RAND ()) AS row_num FROM ${q_formate} AS subquery WHERE subject_id IN (${ids.join(', ')})) AS subquery2 WHERE row_num <= (CASE WHEN subject_id = ${data[data.length - 1].id} THEN ${questionsPerSubject + remainder} ELSE ${questionsPerSubject} END)`;
         db.query(query, (e, qus) => {
           if (e) {
-            next(e)
+            return next(e)
           } else {
-            res.render('random/view-questions', { flashMessage: Flash.getMessage(req), title: 'View Questions',data:qus,obj })
+            return res.render('random/view-questions', { flashMessage: Flash.getMessage(req), title: 'View Questions',data:qus,obj })
           }
         })
       });
@@ -94,5 +97,5 @@ exports.randomGenerator= (req, res, next) => {
   } catch (error) {
     next(error)
   }
-
 };
+

@@ -32,7 +32,7 @@
                 <select name="subject" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black"
                     required>
                     <option class="py-2 px-5" value="" selected>Subject</option>
-                    <option class="py-2 px-5" value="0">All</option>
+
                 </select>
                 <select name="q_formate" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black"
                     required>
@@ -75,7 +75,7 @@
         function generateOptions(data, getSelectDiv) {
             const option = document.createElement('option');
             option.innerHTML = `Select Subject`;
-            option.value = `none`;
+            option.value = ``;
             const optionAll = document.createElement('option');
             optionAll.innerHTML = `All`;
             optionAll.value = `0`;

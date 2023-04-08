@@ -351,7 +351,7 @@ exports.renderCreative = (req, res, next) => {
   }
 };
 exports.creativePost = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option } = req.body
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option ,question_answer} = req.body
   let { edit, q_id } = req.query
   let options = [];
   question_option.forEach(e => {
@@ -364,7 +364,7 @@ exports.creativePost = (req, res, next) => {
   }
   try {
     if (edit) {
-      db.query("update creative set question_text=?,question_option=? where id = ?", [question_text, JSON.stringify(options), q_id], (e, data) => {
+      db.query("update creative set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options),question_answer, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -377,16 +377,16 @@ exports.creativePost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into creative values(?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options)], (e, data) => {
+      db.query("insert into creative values(?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options),question_answer], (e, data) => {
         if (e) {
           next(e)
         } else {
           if (data.affectedRows >= 1) {
-            req.flash("success", "Success!");
+            req.flash("success", "Insert Success!");
           } else {
             req.flash("fail", "Error!");
           }
-          res.redirect(`/user/admin/questions/creative?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=creative`)
+          res.redirect(`/user/admin/questions/creative?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=false&q_type=creative`)
         }
       })
     }
@@ -473,11 +473,11 @@ exports.othersQuestionsPost = (req, res, next) => {
           next(e)
         } else {
           if (data.affectedRows >= 1) {
-            req.flash("success", "Success!");
+            req.flash("success", "Insert Success!");
           } else {
             req.flash("fail", "Error!");
           }
-          return res.redirect(`/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=q_others`)
+          return res.redirect(`/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=false&q_type=q_others`)
         }
       })
     }
@@ -491,7 +491,7 @@ exports.renderSeeQuestion = (req, res, next) => {
   let itemPerPage = 25
   console.log(currentPage);
   try {
-    db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;SELECT ${q_type}.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM ${q_type} JOIN classes ON ${q_type}.class_id = classes.id JOIN subject_list ON ${q_type}.subject_id = subject_list.id JOIN chapter ON ${q_type}.chapter_id = chapter.id WHERE ${q_type}.class_id=? and ${q_type}.subject_id=? and ${q_type}.chapter_id=? limit ?,?`, [class_id, subject_id, chapter_id, class_id, subject_id, chapter_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
+    db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;SELECT ${q_type}.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM ${q_type} JOIN classes ON ${q_type}.class_id = classes.id JOIN subject_list ON ${q_type}.subject_id = subject_list.id JOIN chapter ON ${q_type}.chapter_id = chapter.id WHERE ${q_type}.class_id=? and ${q_type}.subject_id=? and ${q_type}.chapter_id=? order by id desc limit ?,?`, [class_id, subject_id, chapter_id, class_id, subject_id, chapter_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
       if (e) {
         next(e)
       } else {

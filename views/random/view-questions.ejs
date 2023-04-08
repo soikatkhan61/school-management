@@ -2,44 +2,70 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
-    <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
-    <!-- GOOGLE FONT -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %>
+  </title>
+  <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
+  <!-- GOOGLE FONT -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <meta name="robots" content="noindex, nofollow">
 
-    <script src="/ckeditor/ckeditor.js"></script>
+  <script src="/ckeditor/ckeditor.js"></script>
 
 </head>
 
 <body>
-    <div style="padding: 0px 200px;">
-        <textarea id="content">
-           <% if(data.length==0){ %>
-            No data
-           <% }else{ %>
+  <div style="padding: 0px 200px;">
+    <% if(data.length==0){ %>
+    No data
+    <% }else{ %>
+    <% let ids = data.map(q => q.id).join(","); %>
 
-            <div style="margin: 20px 0;">
-               <div style="text-align: center;margin: 6px 0;">
-                  <!-- <h2 style="font-weight: bold ;"><%= obj.school_name %></h2> -->
-                  <h2 style="font-weight: bold ;">সাতশিমুলিয়া দ্বিমুখী উচ্চ বিদ্যালয়</h2>
-               </div>
-                <div style="display: grid;grid-template-columns: 1fr 1fr 1.5fr 1fr;grid-template-rows: 1fr;gap: 0px 0px;grid-auto-flow: row; grid-template-areas: '. . . .'">
-                    <p>সময়ঃ <%= obj.total_qus %> মিনিট</p>
-                    <p>পুর্নমাণ: <%= obj.total_mark %></p>
-                    <p> বাংলা ২য় পত্র</p>
-                    <p>বিষয় কোড: BAN 186</p>
-               </div>
-               <div style="text-align: center;margin-top: 5px;">
-                [ দ্রষ্টব্যঃ  সরবরাহকৃত নৈর্ব্যত্তিক অভীক্ষার উত্তরপত্রে প্রশ্নের ক্রমিক নম্বরের বিপরীতে প্রদত্ত বর্ণসম্বলিত বৃত্ত সমুহ হতে সঠিক উত্তরের বৃত্তটি বল পয়েন্ট কলম দারা সম্পুর্ণ ভরাট কর । প্রতিটি প্রশ্নের মান ১ ]
-               </div>
-            </div>
+    <div id="waring_text" style="padding: 20px;border: 1px solid gray; margin: 20px 0;font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">
+      before printing the question you need to download the questions answer to avoid this text in printed paper
+      <a target="_blank" id="link_btn" href="/combined-question/answer?name=<%= obj.name %>&total_qus=<%= obj.total_qus %>&total_mark=<%= obj.total_mark %>&q_type=<%= obj.q_formate %>&q_ids=<%= ids %>" style="font-weight: 500;">view answer in disappear this text</a>.
+    </div>
+    <script>
+      let waring_text = document.getElementById('waring_text');
+      let link_btn = document.getElementById('link_btn');
+      link_btn.addEventListener('click', (e) => {
+        waring_text.style.display = 'none';
+      });
+    </script>
+    <textarea id="content">
             <% if(obj.q_formate == 'questions'){ %>
+              <div style="margin: 20px 0;">
+                <div style="text-align: center;margin: 6px 0;">
+                   <h2 style="font-weight: bold ;"><%= obj.school_name %></h2>
+                </div>
+                <div style="
+                 font-size: 14px;
+                 display: grid; 
+                grid-template-columns:1fr 1fr 3fr 1fr 1fr; 
+                grid-template-rows: 1fr; 
+                gap: 0px 0px; 
+                grid-template-areas: 
+                  '. .'; 
+                justify-content: center; 
+                ">
+                  <p></p>
+                  <p></p>
+                  <p style="text-align: center;"><%= obj.name %></p>
+                  <p></p>
+                  <p style="text-align: end;">বিষয় কোডঃ</p>
+                </div>
+                <div style="text-align: center;">বিষয়: --- </div>
+                <div style="display: flex;justify-content: space-between;">
+                  <p>সময়ঃ <%= obj.total_qus %> মিনিট</p>
+                  <p>পুর্নমাণ: <%= obj.total_mark %></p>
+                </div>
+                <div style="text-align: center;margin-top: 5px;">
+                 [ দ্রষ্টব্যঃ  সরবরাহকৃত নৈর্ব্যত্তিক অভীক্ষার উত্তরপত্রে প্রশ্নের ক্রমিক নম্বরের বিপরীতে প্রদত্ত বর্ণসম্বলিত বৃত্ত সমুহ হতে সঠিক উত্তরের বৃত্তটি বল পয়েন্ট কলম দারা সম্পুর্ণ ভরাট কর । প্রতিটি প্রশ্নের মান ১ ]
+                </div>
+             </div>
               <div style="
                    display: grid; 
                    grid-template-rows: 1fr;
@@ -92,6 +118,35 @@
                 </div>
               </div>
             <% }else{%>
+              <div style="margin: 20px 0;">
+                <div style="text-align: center;margin: 6px 0;">
+                   <h2 style="font-weight: bold ;"><%= obj.school_name %></h2>
+                </div>
+                 <div style="
+                 font-size: 14px;
+                 display: grid; 
+                grid-template-columns:1fr 1fr 3fr 1fr 1fr; 
+                grid-template-rows: 1fr; 
+                gap: 0px 0px; 
+                grid-template-areas: 
+                  '. .'; 
+                justify-content: center; 
+                ">
+                  <p></p>
+                  <p></p>
+                  <p style="text-align: center;"><%= obj.name %></p>
+                  <p></p>
+                  <p style="text-align: end;">বিষয় কোডঃ</p>
+                </div>
+                <div style="text-align: center;">বিষয়: --- </div>
+                 <div style="display: flex;justify-content: space-between;">
+                     <p>সময়ঃ <%= obj.total_qus %> মিনিট</p>
+                     <p>পুর্নমাণ: <%= obj.total_mark %></p>
+                </div>
+                <div style="text-align: center;margin-top: 5px;">
+                 [ দ্রষ্টব্যঃ  প্রদত্ত উদ্দীপকগুলো মনোযোগ দিয়ে পড়ে সংশ্লিস্ট প্রশ্নগুলোর মধ্য থেকে যেকোনো __ প্রশ্নের উত্তর দাও ]
+                </div>
+             </div>
                 <% for(let i=0; i<data.length; i++){ %>
                     <% let opt = JSON.parse(data[i].question_option) %>
                       <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
@@ -107,23 +162,19 @@
                       </div>              
                     <% } %>
             <% } %>
-
-            
            <% } %>
-        </textarea>
-       
-       
-    </div>
-    
-   
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-    <script>
-        CKEDITOR.replace('content', {
-            height: 700,
-            removeButtons: 'PasteFromWord',
-            toolbar: [{
+    </textarea>
+  </div>
+
+
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+  <script>
+    CKEDITOR.replace('content', {
+      height: 700,
+      removeButtons: 'PasteFromWord',
+      toolbar: [{
           name: 'document',
-          items: ['NewPage', 'Preview',  '-']
+          items: ['NewPage', 'Preview', '-']
         },
         {
           name: 'editing',
@@ -139,7 +190,7 @@
         },
         {
           name: 'insert',
-          items: ['Table', 'HorizontalRule', 'PageBreak',]
+          items: ['Table', 'HorizontalRule', 'PageBreak', ]
         },
         {
           name: 'styles',
@@ -159,13 +210,12 @@
         }
 
       ],
-        });
+    });
 
-        if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
-            document.getElementById('ie8-warning').className = 'tip alert';
-        }
-    
-    </script>
+    if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
+      document.getElementById('ie8-warning').className = 'tip alert';
+    }
+  </script>
 
 </body>
 

@@ -10,7 +10,6 @@ const {
 const {renderRandom,randomGenerator} = require("../controllers/Random/randomController")
 
 router.get("/view",isAuthenticated,requireRole('admin,teacher'),randomGenerator)
-
 router.get("/",isAuthenticated,requireRole('admin,teacher'),renderRandom)
 
 

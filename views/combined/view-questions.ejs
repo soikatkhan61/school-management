@@ -32,7 +32,7 @@
       z-index: 999;
     }
   </style>
-   <div id="loading_spinner" style="display:none;">
+  <div id="loading_spinner" style="display:none;">
     <img src="/images/spinner.gif" alt="Loading...">
   </div>
   <div class="main-content py-2 container-fluid py-4">
@@ -44,6 +44,55 @@
     <% if(questions.length == 0){ %>
     <p>no question</p>
     <% }else{ %>
+      <% let object = {} %>
+          <% let str = q_set_ids[0].questions %>
+          <% if(str !== null){ %>
+          <% let numString = '' %>
+          <% for (let i=0;i<str.length;i++){ %>
+          <% if(str[i] !== ',' && str[i] !== ' '){ %>
+          <% numString += str[i] %>
+          <% continue %>
+          <% }%>
+          <% if(numString !== ''){ %>
+          <% object[numString] = true %>
+          <% numString = '' %>
+          <% } %>
+          <% } %>
+          <% if(numString !== ''){ %>
+          <% object[numString] = true %>
+          <% numString = '' %>
+          <% } %>
+          <% } %>
+    <% if(q_type == 'q_others'){ %>
+      <div class="table-responsive table-nowrap ">
+        <table class="table table-bordered">
+          <thead class="table-dark ">
+            <tr>
+              <th scope="col">SL</th>
+              <th scope="col">Action</th>
+              <th scope="col">Question</th>
+              <th scope="col">Answer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let i=0; i<questions.length; i++){ %>
+            <input type="text" class="q_id" value="<%= questions[i].id %>" hidden>
+            <input type="text" class="q_ans" value="0" hidden>
+            <tr>
+              <td><%= i+1  %></td>
+              <% if(object[questions[i].id]){ %>
+                <td><button class="btn btn-sm btn-success add_btn" disabled>Added</button></td>
+              <% }else{ %>
+                <td><button class="btn btn-sm btn-primary add_btn">Add</button></td>
+              <% }%>
+              <td><%- questions[i].question_text %></td>
+              <td><%- questions[i].question_answer %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% }else{%>
     <div class="table-responsive table-nowrap ">
       <table class="table table-bordered">
         <thead class="table-dark ">
@@ -58,25 +107,6 @@
           </tr>
         </thead>
         <tbody>
-          <% let object = {} %>
-          <% let str = q_set_ids[0].questions %>
-          <% if(str !== null){ %>
-            <% let numString = '' %>
-            <% for (let i=0;i<str.length;i++){ %>
-              <% if(str[i] !== ',' && str[i] !== ' '){ %>
-                <% numString += str[i] %>
-                <% continue %>
-              <% }%>
-              <% if(numString !== ''){ %>
-                <% object[numString] = true %>
-                <% numString = '' %>
-              <% } %>
-            <% } %>
-            <% if(numString !== ''){ %>
-              <% object[numString] = true %>
-              <% numString = '' %>
-            <% } %>
-          <% } %>
           <% for(let i=0; i<questions.length; i++){ %>
           <% let opt = JSON.parse(questions[i].question_option) %>
           <input type="text" class="q_id" value="<%= questions[i].id %>" hidden>
@@ -84,9 +114,9 @@
           <tr>
             <td><%= i+1  %></td>
             <% if(object[questions[i].id]){ %>
-              <td><button class="btn btn-sm btn-success add_btn" disabled>Added</button></td>
+            <td><button class="btn btn-sm btn-success add_btn" disabled>Added</button></td>
             <% }else{ %>
-              <td><button class="btn btn-sm btn-primary add_btn">Add</button></td>
+            <td><button class="btn btn-sm btn-primary add_btn">Add</button></td>
             <% }%>
             <td><%- questions[i].question_text %></td>
             <td><%- opt[0] %></td>
@@ -98,21 +128,23 @@
         </tbody>
       </table>
     </div>
-   
+    <% }%>
+
+
     <div class="d-flex justify-content-center py-5">
       <nav aria-label="...">
-          <ul class="pagination">
-            <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>"  >
-              <a  href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage-1 %>&q_type=<%= q_type %>" class="page-link" >Previous</a>
-            </li>
-            <% for(let i=0; i< totalPage; i++) {%> 
-              <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=i+1 %>&q_type=<%= q_type %>"><%= i+1 %> </a></li>
-            <% }%> 
-            <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>"  >
-              <a class="page-link" href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage+1 %>&q_type=<%= q_type %>">Next</a>
-            </li>
-          </ul>
-        </nav>
+        <ul class="pagination">
+          <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
+            <a href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage-1 %>&q_type=<%= q_type %>" class="page-link">Previous</a>
+          </li>
+          <% for(let i=0; i< totalPage; i++) {%>
+          <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=i+1 %>&q_type=<%= q_type %>"><%= i+1 %> </a></li>
+          <% }%>
+          <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>">
+            <a class="page-link" href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage+1 %>&q_type=<%= q_type %>">Next</a>
+          </li>
+        </ul>
+      </nav>
     </div>
     <% } %>
     <%- include('../partials/footer.ejs') %>
@@ -123,12 +155,12 @@
       let q_ans = document.getElementsByClassName('q_ans')
       for (let i = 0; i < add_btn.length; i++) {
         add_btn[i].addEventListener('click', () => {
-          loading_spinner.style.display='block'
+          loading_spinner.style.display = 'block'
           fetch(`/combined-question/add-question?q_id=${q_id[i].value}&a_id=${q_ans[i].value}&q_set=<%=filter.q_set%>`)
             .then(res => res.json())
             .then(data => {
               console.log(q_id[i].value);
-              loading_spinner.style.display='none'
+              loading_spinner.style.display = 'none'
               if (data.status === 200) {
                 let total_select = document.getElementById('total_select')
                 total_select.innerText = Number(total_select.innerText) + 1
@@ -143,15 +175,16 @@
         })
       }
     </script>
-     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-     <script>
-         CKEDITOR.replace('content', {
-             height: 700,
-             removeButtons: 'PasteFromWord',      
-         });
-         if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
-             document.getElementById('ie8-warning').className = 'tip alert';
-         }
-     </script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+    <script>
+      CKEDITOR.replace('content', {
+        height: 700,
+        removeButtons: 'PasteFromWord',
+      });
+      if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
+        document.getElementById('ie8-warning').className = 'tip alert';
+      }
+    </script>
 </body>
+
 </html>

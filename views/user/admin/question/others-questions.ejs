@@ -61,7 +61,7 @@
   </div>
 
   <div class="main-content container">
-    <form action="/user/admin/questions/others<%= qus ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
+    <form action="/user/admin/questions/others<%= (qus && setContent == "true") ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
       <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-end" style="background-color: antiquewhite;">
         <button type="submit" class="btn btn-success btn-sm my-1">Submit</button>
       </div>
@@ -70,47 +70,47 @@
         <div class="mb-2">
           <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
             <% if(obj.class_id ){ %>
-              <option class="py-2 px-5" value="<%= obj.class_id %>" selected><%= savedInfo.class_name ? savedInfo.class_name  : obj.class_id %></option>
-              <% }else{ %>
-              <option class="py-2 px-5" value="">Select Class</option>
-              <% for(let s of data){ %>
-              <option class="py-2 px-5" data-name="<%= s.class_name %>" value="<%= s.id %>">
-                <%= s.class_name %>
-              </option>
-              <% } %>
-              <% }%>
+            <option class="py-2 px-5" value="<%= obj.class_id %>" selected><%= savedInfo.class_name ? savedInfo.class_name  : obj.class_id %></option>
+            <% }else{ %>
+            <option class="py-2 px-5" value="">Select Class</option>
+            <% for(let s of data){ %>
+            <option class="py-2 px-5" data-name="<%= s.class_name %>" value="<%= s.id %>">
+              <%= s.class_name %>
+            </option>
+            <% } %>
+            <% }%>
           </select>
         </div>
         <!-- Text input -->
         <div class="mb-2">
           <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
             <% if(obj.subject_id ){ %>
-              <option class="py-2 px-5" value="<%= obj.subject_id %>" selected><%= savedInfo.subject_name ? savedInfo.subject_name : obj.subject_id %></option>
-              <% }else{ %>
-              <option class="py-2 px-5" value="">Select Subject</option>
-              <% }%>
+            <option class="py-2 px-5" value="<%= obj.subject_id %>" selected><%= savedInfo.subject_name ? savedInfo.subject_name : obj.subject_id %></option>
+            <% }else{ %>
+            <option class="py-2 px-5" value="">Select Subject</option>
+            <% }%>
           </select>
         </div>
-  
+
         <!-- Email input -->
         <div class="mb-2">
           <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
             <% if(obj.chapter_id){ %>
-              <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name :obj.chapter_id %></option>
-              <% }else{ %>
-              <option class="py-2 px-5" value="">Select Chapter</option>
-              <% }%>
+            <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name :obj.chapter_id %></option>
+            <% }else{ %>
+            <option class="py-2 px-5" value="">Select Chapter</option>
+            <% }%>
           </select>
         </div>
         <% if(obj.class_id){ %>
-          <a href="/user/admin/questions/creative" class="btn btn-danger my-1">Reset</a>
-          <p class="fst-italic text-sm text-danger">Please do not edit this when your are edit question</p>
-          <% } %>
+        <a href="/user/admin/questions/creative" class="btn btn-danger my-1">Reset</a>
+        <p class="fst-italic text-sm text-danger">Please do not edit this when your are edit question</p>
+        <% } %>
       </div>
       <div class="d-none">
-        <input type="text" name="class_name" id="class_name" hidden>
-        <input type="text" name="subject_name" id="subject_name" hidden>
-        <input type="text" name="chapter_name" id="chapter_name" hidden>
+        <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>" hidden>
+        <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
+        <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
       </div>
       <textarea id="content" name="question_text">
         <%- (qus && qus[0].question_text) && setContent == 'true'  ? qus[0].question_text : '' %>
@@ -142,7 +142,7 @@
       extraPlugins: 'mathjax,filebrowser',
       toolbar: [{
           name: 'document',
-          items: ['Source', '-',  'NewPage', 'Preview',  '-']
+          items: ['Source', '-', 'NewPage', 'Preview', '-']
         },
         {
           name: 'editing',
@@ -162,7 +162,7 @@
         },
         {
           name: 'insert',
-          items: ['Image', 'Table', 'HorizontalRule', 'PageBreak',]
+          items: ['Image', 'Table', 'HorizontalRule', 'PageBreak', ]
         },
         '/',
         {
@@ -199,14 +199,19 @@
 
     CKEDITOR.replace('opt1', {
       height: 80,
-      toolbar: [
-          { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] },
-          { name: 'math', items: [ 'Mathjax' ] }
-        ],
-        extraPlugins: 'mathjax',
-        mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+      toolbar: [{
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+      ],
+      extraPlugins: 'mathjax',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
     });
-    
+
 
 
     const class_select = document.getElementById('class_select');
@@ -218,11 +223,11 @@
       loading_spinner.style.display = 'block'
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
-      if(className){
+      if (className) {
         class_name.value = className
       }
       classes = event.target.value;
-      console.log(selectedOption    );
+      console.log(selectedOption);
       console.log("feting...");
       let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
@@ -239,7 +244,7 @@
       for (let i = 0; i < episod.length; i++) {
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
-        option.setAttribute('data-name', episod[i].subject_name); 
+        option.setAttribute('data-name', episod[i].subject_name);
         option.innerHTML = `${episod[i].subject_name}`;
         subject_select.appendChild(option);
       }
@@ -248,7 +253,7 @@
       loading_spinner.style.display = 'block'
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
-      if(className){
+      if (className) {
         subject_name.value = className
       }
       var chapter = event.target.value;
@@ -266,7 +271,7 @@
         console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
-        option.setAttribute('data-name', episod[i].chapter_name); 
+        option.setAttribute('data-name', episod[i].chapter_name);
         option.innerHTML = `${episod[i].chapter_name}`;
         chapter_select.appendChild(option);
       }
@@ -274,7 +279,7 @@
     chapter_select.addEventListener('change', async (event) => {
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
-      if(className){
+      if (className) {
         chapter_name.value = className
       }
     })

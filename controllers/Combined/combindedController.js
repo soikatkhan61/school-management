@@ -5,10 +5,10 @@ const Flash = require("../../utils/Flash");
 
 exports.renderCombined = (req, res, next) => {
     let school_id
-    if(req.user.userType === "admin"){
-      school_id = req.user.id
-    }else if(req.user.userType === "teacher"){
-      school_id = req.user.school_id
+    if (req.user.userType === "admin") {
+        school_id = req.user.id
+    } else if (req.user.userType === "teacher") {
+        school_id = req.user.school_id
     }
     let q_formate
     if (q_formate == 'mcq') {
@@ -37,14 +37,14 @@ exports.renderCombined = (req, res, next) => {
 };
 exports.viewSubject = (req, res, next) => {
     let school_id
-    if(req.user.userType === "admin"){
-      school_id = req.user.id
-    }else if(req.user.userType === "teacher"){
-      school_id = req.user.school_id
+    if (req.user.userType === "admin") {
+        school_id = req.user.id
+    } else if (req.user.userType === "teacher") {
+        school_id = req.user.school_id
     }
     let { name, class_id, subject, q_formate, total_mark, total_qus } = req.body
     try {
-        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?,?)", [null, name, class_id, subject, q_formate, total_mark, total_qus, null,null, school_id, null, null], (e, data) => {
+        db.query("INSERT into q_set values(?,?,?,?,?,?,?,?,?,?,?,?)", [null, name, class_id, subject, q_formate, total_mark, total_qus, null, null, school_id, null, null], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -109,9 +109,12 @@ exports.viewQuestionGet = (req, res, next) => {
     let itemPerPage = 25
     if (q_type == 'mcq' || q_type == 'questions') {
         q_type = 'questions'
-    } else {
+    } else if (q_type == 'creative') {
         q_type = 'creative'
+    } else {
+        q_type = 'q_others'
     }
+    console.log(req.query);
     try {
         db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;select * from ${q_type} where class_id=? and subject_id = ? and chapter_id=? limit ?,?;select questions,total_qus from q_set where id=?`, [class_id, subject_id, chapter, class_id, subject_id, chapter, ((itemPerPage * currentPage) - itemPerPage), itemPerPage, q_set], (e, data) => {
             if (e) {
@@ -123,10 +126,11 @@ exports.viewQuestionGet = (req, res, next) => {
                     q_set,
                     q_type
                 }
+                //console.log(data[1]);
                 let totalMessage = data[0]
                 let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
-                let q_set_ids =  data[2]
-                let total_selected = q_set_ids[0].questions.split(',').length
+                let q_set_ids = data[2]
+                let total_selected = q_set_ids[0].questions != null ? q_set_ids[0].questions.split(',').length : 0
                 console.log(total_selected);
                 res.render(`combined/view-questions`, {
                     title: "view subject", flashMessage: Flash.getMessage(req),
@@ -142,12 +146,12 @@ exports.viewQuestionGet = (req, res, next) => {
     }
 };
 exports.addQuestion = (req, res, next) => {
-    let {q_id,q_set,a_id } = req.query;
+    let { q_id, q_set, a_id } = req.query;
     console.log(req.query);
     try {
         db.query(
             "UPDATE q_set SET questions = IF(FIND_IN_SET(?, questions), questions, CONCAT_WS(',', questions, ?)), answers = IF(FIND_IN_SET(?, questions),  IF(answers IS NULL, ?, CONCAT_WS(',', answers, ?)), answers) WHERE id = ?;",
-            [q_id, q_id,q_id,a_id,a_id,q_set],
+            [q_id, q_id, q_id, a_id, a_id, q_set],
             (e, data) => {
                 if (e) {
                     next(e);
@@ -166,19 +170,18 @@ exports.addQuestion = (req, res, next) => {
     }
 
 };
-
 exports.renderSavedQuesSet = (req, res, next) => {
     let school_id
-    if(req.user.userType === "admin"){
-      school_id = req.user.id
-    }else if(req.user.userType === "teacher"){
-      school_id = req.user.school_id
+    if (req.user.userType === "admin") {
+        school_id = req.user.id
+    } else if (req.user.userType === "teacher") {
+        school_id = req.user.school_id
     }
     let currentPage = parseInt(req.query.page) || 1
     let itemPerPage = 25
     try {
         db.query(
-            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? order by id desc limit ?,?", [school_id,school_id,((itemPerPage * currentPage) - itemPerPage), itemPerPage],
+            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? order by id desc limit ?,?", [school_id, school_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage],
             (e, data) => {
                 if (e) {
                     next(e);
@@ -204,20 +207,22 @@ exports.renderviewSet = (req, res, next) => {
     try {
         db.query('select q_set.*,schools.school_name from q_set join schools on q_set.school_id = schools.id WHERE q_set.id = ? limit 1', [qset_id], (e, data) => {
             if (e) {
-                next(e)
+                return next(e)
             } else {
                 if (data && data[0].questions != null) {
                     const questionIds = data[0].questions.split(',');
                     let table = data[0].formate
-                    if(table == 'mcq'){
+                    if (table == 'mcq') {
                         table = 'questions'
-                    }else{
+                    } else if (table == 'creative') {
                         table = 'creative'
+                    } else {
+                        table = 'q_others'
                     }
                     const query = `SELECT * FROM ${table} WHERE id IN (?)`;
                     db.query(query, [questionIds], (error, results) => {
                         if (error) {
-                            console.error(error);
+                            return next(error);
                         } else {
                             console.log(results);
                             let obj = {
@@ -236,7 +241,7 @@ exports.renderviewSet = (req, res, next) => {
                         }
                     });
                 } else {
-                    res.send("No data")
+                    return res.send("No data")
                 }
             }
         })
@@ -244,4 +249,100 @@ exports.renderviewSet = (req, res, next) => {
         next(error);
     }
 
+};
+
+exports.renderAnswer = (req, res, next) => {
+    let { q_set_id, q_type, q_ids,name,total_mark,total_qus } = req.query
+    // if(q_type == 'mcq'){
+    //     q_type = 'questions'
+    // }
+    try {
+        if (q_set_id && q_type == 'mcq') {
+            console.log("q_set_id and q_type=mcq");
+            db.query("select * from q_set where id = ?", [q_set_id], async (e, q_set_data) => {
+                if (e) return next(e)
+                if (q_set_data) {
+                    const answers = q_set_data[0].answers.split(',');
+                    let data = await extract_questions_data(q_set_data[0].questions.split(','), 'questions')
+                    console.log(data);
+                    sendResponse(data, q_set_data[0], answers)
+                }
+            })
+        } else if (q_set_id && q_type == 'creative') {
+            console.log("q_set_id and q_type=creative");
+            db.query("select * from q_set where id = ?", [q_set_id], async (e, q_set_data) => {
+                if (e) return next(e)
+                if (q_set_data) {
+                    let answers = ''
+                    let data = await extract_questions_data(q_set_data[0].questions.split(','), 'creative')
+                    console.log(data);
+                    sendResponse(data, q_set_data[0], answers)
+                }
+            })
+        } else if (q_type == 'q_others') {
+            console.log("q_type=q_others");
+            db.query("select * from q_set where id = ?", [q_set_id], async (e, q_set_data) => {
+                if (e) return next(e)
+                if (q_set_data) {
+                    let answers = ''
+                    let data = await extract_questions_data(q_set_data[0].questions.split(','), 'q_others')
+                    sendResponse(data, q_set_data[0], answers)
+                }
+            })
+        } else if (q_ids && q_type && name) {
+            console.log("q_ids && q_type && name");
+            async function start_extract_question() {
+                let answers = ''
+                let data = await extract_questions_data(q_ids, q_type)
+                ///console.log(data);
+                let obj = {
+                    name,
+                    total_mark,
+                    total_qus
+                }
+                sendResponse(data,obj, answers)
+            }
+            start_extract_question()
+        }
+
+
+        function sendResponse(data, obj, answers) {
+            return res.render(`combined/view-answer`, {
+                title: "Show Answer",
+                flashMessage: Flash.getMessage(req),
+                data, q_type, obj, answers
+            });
+        }
+        async function extract_questions_data(questionIds, table) {
+            let options, query
+            if (table == 'q_others') {
+                query = `SELECT question_text,question_answer FROM ${table} WHERE id IN (?)`;
+            } else {
+                query = `SELECT question_text,question_option,question_answer FROM ${table} WHERE id IN (${questionIds})`;
+            }
+            const data = await generateResults(query);
+            if (data.length) {
+                return data
+            } else {
+                return null
+            }
+
+            //prepare the questions data for the response
+            function generateResults(query) {
+                return new Promise((resolve, reject) => {
+                    db.query(query, [questionIds], (error, data) => {
+                        if (error) {
+                            return next(error);
+                        } else {
+                            resolve(data);
+                        }
+                    });
+                });
+            }
+
+        }
+
+    } catch (error) {
+        next(error)
+    }
 };
