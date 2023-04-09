@@ -1,8 +1,118 @@
 <%- include('./partials/header.ejs') %>
 
-    <div class="container py-4" style="min-height: 100vh;">
-        <h5 class="my-2 text-primary">Register a student</h5>
-       
-        
+<section class="container">
+    <div class=" py-5">
+      <div class="row">
+        <div class="col-lg-3 d-flex justify-content-center card border border-2 border-primary">
+            <div class="p-3">
+                <p>Total Teacher: <%= teacherCount.count %></p>
+                <p>Total Student: <%= studentCount.count %></p>
+                <p>Registered on: <%= user.createdAt.toDateString()  %></p>
+                <hr>
+                <p class="mb-0 fst-italic">Adminstration Name: <%= user.admin_name %></p>
+                <p class="mb-0 fst-italic">Adminstration Username: <%= user.admin_email %></p>
+            </div>
+        </div>
+        <div class="col-lg-8 mx-2 border card">
+          <div class=" mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">School Name : </p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= user.school_name %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">School Email :</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= user.school_email %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">School Phone : </p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= user.school_phone %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">info : </p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= user.school_info%></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8  border card">
+          <div class=" mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="d-flex justify-content-between mb-3">
+                    <h4>Package Info</h4>
+                    <a class="btn btn-link" href="/packages">Upgrade</a>
+                </div>
+                <div class="col-sm-3">
+                  <p class="mb-0">Package Name :  </p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= package.package_name %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Package Price :</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= package.price %> TK</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Validity : </p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= package.validity %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Teacher Limit : </p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= package.teacher_limit %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Student Limit : </p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= package.student_limit %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+</div>
+</section>
+</div>
     <%- include('./partials/footer.ejs') %>
