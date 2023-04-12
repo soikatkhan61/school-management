@@ -94,7 +94,6 @@ exports.getSubjectByClass = (req, res, next) => {
 };
 exports.createSubjectPost = (req, res, next) => {
   let { class_id, subject_name, subject_code, subject_id } = req.body;
-  console.log(req.body);
   if (subject_id) {
     db.query("update subject_list set subject_name=? , subject_code = ? where id =?", [subject_name, subject_code, subject_id], (e, data) => {
       if (e) {

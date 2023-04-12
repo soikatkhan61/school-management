@@ -36,7 +36,7 @@ exports.renderRegisterSchool = async (req, res, next) => {
                     if (e) {
                         next(e)
                     } else {
-                        res.render("admin/school/register-school", { flashMessage: Flash.getMessage(req), data: data[0],pkg })
+                        res.render("admin/school/register-school", {title:"Register School", flashMessage: Flash.getMessage(req), data: data[0],pkg })
                     }
                 })
             } else {
@@ -45,7 +45,7 @@ exports.renderRegisterSchool = async (req, res, next) => {
         })
     } catch (error) {
         next(error)
-    }
+    } 
 }
 exports.schoolRegistrationByUser = async (req, res, next) => {
     try {

@@ -32,7 +32,7 @@
         <% for(let i=0; i<q_set.length; i++){ %>
         <tr>
           <td><%= i+1 %></td>
-          <td><a class="text-primary" href="/combined-question/view-subject?class_id=1&subject=0&q_set=<%=q_set[i].id %>&q_formate=mcq"><%= q_set[i].name %></a></td>
+          <td><a class="text-primary" href="/combined-question/view-subject?class_id=1&subject=0&q_set=<%=q_set[i].id %>&q_formate=<%= q_set[i].formate %>"><%= q_set[i].name %></a></td>
           <td><%= q_set[i].formate %></td>
           <td>
             <a target="_blank" href="/combined-question/view-set?q_set_id=<%=q_set[i].id %>"><i class="fas fa-eye"></i> <span class="mx-1">view</span> </a> 

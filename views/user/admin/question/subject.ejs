@@ -16,10 +16,10 @@
 
           <!-- Text input -->
           <div class="mb-2">
-            <select name="class_name" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+            <select name="class_id" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
               <option class="py-2 px-5" value="">Select Class</option>
               <% for(let s of data){ %>
-              <option class="py-2 px-5" value="<%= s.id %>"><%= s.class_name %> </option>
+              <option class="py-2 px-5" value="<%= s.id %>"><%= s.class_name %> <%= s.id %></option>
               <% } %>
             </select>
           </div>
