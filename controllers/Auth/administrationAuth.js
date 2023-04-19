@@ -16,10 +16,7 @@ exports.renderAdmininstrationLogin = (req, res, next) => {
 
 exports.admininstrationLoginPost = async (req, res, next) => {
     let { username, password } = req.body;
-    console.log(req.body);
-
     let errors = validationResult(req).formatWith(errorFormatter);
-
     if (!errors.isEmpty()) {
         req.flash("fail", "Please check your form");
         return res.render("auth/administration/login", {
@@ -31,7 +28,6 @@ exports.admininstrationLoginPost = async (req, res, next) => {
             flashMessage: Flash.getMessage(req),
         });
     }
-
     try {
         db.query(
             "select * from schools where admin_email=? LIMIT 1",
@@ -40,7 +36,6 @@ exports.admininstrationLoginPost = async (req, res, next) => {
                 if (e) {
                     next(e);
                 }
-                console.log(data);
                 if (data.length == 0) {
                     req.flash("fail", "User Not Found");
                     return res.render("auth/administration/login", {
@@ -52,7 +47,6 @@ exports.admininstrationLoginPost = async (req, res, next) => {
                         flashMessage: Flash.getMessage(req),
                     });
                 } else if (data.length > 0) {
-                   
                     bcrypt.compare(password, data[0].admin_password, function (err, match) {
                         if (err) return next(e)
                         if (match == false) {
@@ -66,30 +60,31 @@ exports.admininstrationLoginPost = async (req, res, next) => {
                                 flashMessage: Flash.getMessage(req),
                             });
                         } else {
-                            
-                            let token = jwt.sign(
-                                {
-                                    id: data[0].id,
-                                    username: data[0].admin_email,
-                                    table: 'schools',
-                                    userType: data[0].userType,
-                                },
-                                process.env.JWT_SECRET_KEY,
-                                { expiresIn: "24h" }
-                            );
-                            req.session.isLoggedIn = true;
-                            req.session.token = token;
-                            req.session.user = data[0];
-
-
-                            req.session.save((err) => {
-                                if (err) {
-                                    return next(err);
-                                }
-                                req.flash("success", "Successfully Logged In");
-                                res.redirect('/administration')
-
-                            });
+                            if(data[0].validity <= new Date()){
+                                let token = jwt.sign(
+                                    {
+                                        id: data[0].id,
+                                        username: data[0].admin_email,
+                                        table: 'schools',
+                                        userType: data[0].userType,
+                                    },
+                                    process.env.JWT_SECRET_KEY,
+                                    { expiresIn: "24h" }
+                                );
+                                req.session.isLoggedIn = true;
+                                req.session.token = token;
+                                req.session.user = data[0];
+                                req.session.save((err) => {
+                                    if (err) {
+                                        return next(err);
+                                    }
+                                    req.flash("success", "Successfully Logged In");
+                                    res.redirect('/administration')
+    
+                                });
+                            }else{
+                                return res.render("utils/expired",{flashMessage:''})
+                            }
                         }
                     });
                 }

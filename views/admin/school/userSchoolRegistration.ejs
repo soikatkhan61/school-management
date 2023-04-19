@@ -14,7 +14,7 @@
                                 <option class="py-2 px-5" value="0" >Inactive</option>
                             </select>
                         </div>
-                        <div class="mb-2">
+                        <div class="mb-2 ">
                             <select name="package" class="py-2 px-4 mb-3"
                                 style="width: 100%; outline: black;text-transform: capitalize;" required>
                                 <option class="py-2 px-5" value="">Package</option>
@@ -22,6 +22,10 @@
                                     <option class="py-2 px-5" value="<%= p.id %>"> <%= p.package_name %> | Price <%= p.price %>  TK </option>
                                 <% } %>
                             </select>
+                        </div>
+                        <div class="form-outline mb-4 <%= user && user.userType.superadmin ? 'd-block' : "d-none" %>">
+                            <input name="validity" value="<%= data.validity ? data.validity : '' %>" type="date" id="form7Example22" class="form-control"/>
+                            <label class="form-label" for="form7Example22">Validity *</label>
                         </div>
                         <div class="form-outline mb-4">
                             <input name="school_name" maxlength="130" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>

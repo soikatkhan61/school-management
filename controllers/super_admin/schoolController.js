@@ -31,16 +31,17 @@ exports.renderRegisterSchool = async (req, res, next) => {
         let id = req.query.id
         let edit = req.query.edit
         db.query("select * from packages",(e,pkg) => {
-            if (id && edit) {
+            if (id && edit && req.user.userType == 'superadmin') {
                 db.query("select * from schools where id = ?", [id], (e, data) => {
                     if (e) {
                         next(e)
                     } else {
-                        res.render("admin/school/register-school", {title:"Register School", flashMessage: Flash.getMessage(req), data: data[0],pkg })
+                        console.log(data[0]);
+                        return res.render("admin/school/register-school", {title:"Register School", flashMessage: Flash.getMessage(req), data: data[0],pkg })
                     }
                 })
             } else {
-                res.render("admin/school/register-school", { title:"Register School",flashMessage: Flash.getMessage(req), data: '',pkg })
+                return res.render("admin/school/register-school", { title:"Register School",flashMessage: Flash.getMessage(req), data: '',pkg })
             }
         })
     } catch (error) {
@@ -61,7 +62,6 @@ exports.handleRegistration = async (req, res, next) => {
     let headerSent = false
     try {
         let id = req.query.id
-        console.log(req.user);
         let del = req.query.del
         let edit = req.query.edit
         let save = req.query.save
@@ -79,20 +79,22 @@ exports.handleRegistration = async (req, res, next) => {
             admin_password,
             admin_avater,
             status,
-            package
+            package,
+            validity
         } = req.body
+        console.log(req.body);
         if(admin_password.length <= 15){
             admin_password = await bcrypt.hash(admin_password, 11);
         }
-        if(req.user == null ||  req.user == undefined){
+        if(req.user == null ||  req.user == undefined || req.user.userType !== 'superadmin'){
             status = 0
         }
         if (id && edit) {
             headerSent = true
             return res.redirect(`/super-admin/register-school?id=${id}&edit=true`)
         }
-        if (id && save) {
-            db.query("update schools set school_name=?,school_address=?,school_email=?,school_phone=?,school_info=?,admin_name=?,admin_blood_group=?,admin_address=?,admin_phone=?,admin_email=?,admin_password=?,admin_avater=?,status=?,package=? where id =?",
+        if ((id && save) && req.user.userType === 'superadmin' ) {
+            db.query("update schools set school_name=?,school_address=?,school_email=?,school_phone=?,school_info=?,admin_name=?,admin_blood_group=?,admin_address=?,admin_phone=?,admin_email=?,admin_password=?,admin_avater=?,status=?,package=?,validity=? where id =?",
                 [
                     school_name,
                     school_address,
@@ -108,6 +110,7 @@ exports.handleRegistration = async (req, res, next) => {
                     admin_avater,
                     status,
                     package,
+                    validity,
                     id
                 ], (e, result) => {
                     if (e) {
@@ -124,10 +127,10 @@ exports.handleRegistration = async (req, res, next) => {
 
         }
         if (req.query.register == 'true') {
-            db.query("insert into schools values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            db.query("insert into schools values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 [
                     null,
-                    'asmin',
+                    'admin',
                     school_name,
                     school_address,
                     school_email,
@@ -142,6 +145,7 @@ exports.handleRegistration = async (req, res, next) => {
                     admin_avater,
                     status,
                     package,
+                    new Date(),
                     null
                 ], (e, result) => {
                     if (e) {

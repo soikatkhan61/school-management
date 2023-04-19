@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS schools (
     admin_avater varchar(250) DEFAULT "/uploades/school/admin_avater.png",
     status int(1) DEFAULT 0,
     packages int(1) default NULL,
+    validity date,
     createdAt TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 );
 INSERT INTO `schools`(`id`, `school_name`, `school_address`, `school_email`, `school_phone`, `school_info`, `admin_name`, `admin_blood_group`, `admin_address`,`admin_phone`, `admin_email`,`admin_password`, `admin_avater`,`status`,`createdAt`) VALUES (null,'SHS','Demo Adress','shs@gmail.com','01733333','info demo','school_admin','b+','admin_adress','01822222','admin@gmail.com','$2b$11$GXOU60o9gOTiEe0pkjAR9.vKrcRzvagio0ZmYz1tPDHpt4CwiaM4G',null,1,null);

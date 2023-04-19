@@ -65,30 +65,41 @@ exports.teacherLoginPost = async (req, res, next) => {
                                 flashMessage: Flash.getMessage(req),
                             });
                         } else {
-                            console.log(data);
-                            let token = jwt.sign(
-                                {
-                                    id: data[0].id,
-                                    username: data[0].username,
-                                    table: 'teachers',
-                                    userType: data[0].userType,
-                                },
-                                process.env.JWT_SECRET_KEY,
-                                { expiresIn: "24h" }
-                            );
-                            req.session.isLoggedIn = true;
-                            req.session.token = token;
-                            req.session.user = data[0];
+                            db.query("select validity from schools where id = ?", [data[0].school_id], (e, result) => {
+                                if (e) {
+                                    return next(e);
+                                } else {
+                                    if (result[0].validity <= new Date()) {
+                                        let token = jwt.sign(
+                                            {
+                                                id: data[0].id,
+                                                username: data[0].username,
+                                                table: 'teachers',
+                                                userType: data[0].userType,
+                                            },
+                                            process.env.JWT_SECRET_KEY,
+                                            { expiresIn: "24h" }
+                                        );
+                                        req.session.isLoggedIn = true;
+                                        req.session.token = token;
+                                        req.session.user = data[0];
 
 
-                            req.session.save((err) => {
-                                if (err) {
-                                    return next(err);
+                                        req.session.save((err) => {
+                                            if (err) {
+                                                return next(err);
+                                            }
+                                            req.flash("success", "Successfully Logged In");
+                                            res.redirect('/teacher')
+
+                                        });
+                                    } else {
+                                        return res.render("utils/expired",{flashMessage:''})
+                                    }
+
                                 }
-                                req.flash("success", "Successfully Logged In");
-                                res.redirect('/teacher')
+                            })
 
-                            });
                         }
                     });
                 }

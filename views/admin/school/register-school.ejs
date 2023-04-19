@@ -24,10 +24,22 @@
                             </select>
                         </div>
                         <div class="form-outline mb-4">
+                            <input name="validity"  type="date" id="validity" class="form-control" required/>
+                            <label class="form-label" for="validity">Validity *</label>
+                        </div>
+                        <script>
+                            const validityInput = document.querySelector('#validity');
+                            const dateString = "<%= data.validity ? data.validity : '' %>";
+                            const date = new Date(dateString);
+                            const dateOnly = date.toLocaleDateString();
+                            const newDate = new Date(dateOnly);
+                            validityInput.value = newDate.toISOString().substring(0, 10);
+                        </script>
+
+                        <div class="form-outline mb-4">
                             <input name="school_name" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>
                             <label class="form-label" for="form7Example13">School Name *</label>
                         </div>
-
                         <div class="form-outline mb-4">
                             <input name="school_address" value="<%= data.school_address ? data.school_address : '' %>" type="text" id="form7Example2" class="form-control" required/>
                             <label class="form-label" for="form7Example2">School Address *</label>
