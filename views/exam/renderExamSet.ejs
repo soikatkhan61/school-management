@@ -85,22 +85,22 @@
         
         <% let opt = JSON.parse(qus[i].question_option) %>
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k) %>" value="0" id="xx<%= (i+ "__" + j )  %>" required />
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k) %>" value="1" id="xx<%= (i+ "__" + j )  %>" required />
           <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[0] %> </label>
           <% j++ %>
         </div>
         <div class="mx-4">
-          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="1" id="xx<%= (i+ "__" + j )  %>"  required >
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="2" id="xx<%= (i+ "__" + j )  %>"  required >
           <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[1] %> </label>
           <% j++ %>
         </div>
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="2" id="xx<%= (i+ "__" + j ) %>" required />
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="3" id="xx<%= (i+ "__" + j ) %>" required />
           <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[2] %> </label>
           <% j++ %>
         </div>
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="3" id="xx<%= (i+ "__" + j )  %>" required />
+          <input class="form-check-input" type="radio" name="<%= "answer_" + (i+k)  %>" value="4" id="xx<%= (i+ "__" + j )  %>" required />
           <label class="form-check-label" for="xx<%= (i+ "__" + j )  %>" > <%- opt[3] %> </label>
           <% j++ %>
         </div>

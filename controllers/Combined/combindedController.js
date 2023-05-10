@@ -262,9 +262,8 @@ exports.renderAnswer = (req, res, next) => {
             db.query("select * from q_set where id = ?", [q_set_id], async (e, q_set_data) => {
                 if (e) return next(e)
                 if (q_set_data) {
-                    const answers = q_set_data[0].answers.split(',');
+                    let answers = q_set_data[0].answers.split(',');
                     let data = await extract_questions_data(q_set_data[0].questions.split(','), 'questions')
-                    console.log(data);
                     sendResponse(data, q_set_data[0], answers)
                 }
             })
@@ -275,7 +274,6 @@ exports.renderAnswer = (req, res, next) => {
                 if (q_set_data) {
                     let answers = ''
                     let data = await extract_questions_data(q_set_data[0].questions.split(','), 'creative')
-                    console.log(data);
                     sendResponse(data, q_set_data[0], answers)
                 }
             })
@@ -321,6 +319,7 @@ exports.renderAnswer = (req, res, next) => {
                 query = `SELECT question_text,question_option,question_answer FROM ${table} WHERE id IN (${questionIds})`;
             }
             const data = await generateResults(query);
+            console.log(data);
             if (data.length) {
                 return data
             } else {
@@ -339,7 +338,6 @@ exports.renderAnswer = (req, res, next) => {
                     });
                 });
             }
-
         }
 
     } catch (error) {

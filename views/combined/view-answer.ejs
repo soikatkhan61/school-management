@@ -49,7 +49,7 @@
             <% if(q_type == 'mcq' || q_type == 'questions'){ %>
                 <div style="padding-right: 20px;">
                     <% for(let i=0; i<data.length; i++){ %>
-                        <% let ans = answers ? answers : data[i].question_answer %>
+                        <% let ans = data[i].question_answer %>
                       <% let opt = JSON.parse(data[i].question_option) %>
                         <div style=" display: flex!important;align-items: start;margin: 5px 0;">
                           <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p> <p style="margin-left: 15px;"><%- data[i].question_text %></p>
@@ -57,13 +57,13 @@
                         <div style="margin-left:30px;">
                           <div>
                             Answers:
-                            <% if(ans[i] == 1){ %>
+                            <% if(ans == '1'){ %>
                                 <%= opt[0] %>
-                            <% }else if(ans[i] == 2){ %>
+                            <% }else if(ans == '2'){ %>
                                 <%= opt[1] %>
-                            <% }else if(ans[i] == 3){ %>
+                            <% }else if(ans == '3'){ %>
                                 <%= opt[2] %>
-                            <% }else if(ans[i] == 4){ %>
+                            <% }else if(ans == '4'){ %>
                                 <%= opt[3] %>
                             <% } %>            
                           </div>

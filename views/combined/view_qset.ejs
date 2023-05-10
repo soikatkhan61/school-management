@@ -65,7 +65,8 @@
                   <% for(let i=0; i<ceilValue; i++){ %>
                     <% let opt = JSON.parse(data[i].question_option) %>
                       <div style=" display: flex!important;align-items: start;margin: 5px 0;">
-                        <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p> <p style="margin-left: 15px;"><%- data[i].question_text %></p>
+                        <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p> 
+                        <div style="margin-left: 15px;"><%- data[i].question_text %></div>
                       </div>
                       <div style="margin-left:30px;">
                         <div style="display: grid; 
@@ -86,7 +87,8 @@
                   <% for(let i=ceilValue; i < data.length  ; i++){ %>
                     <% let opt = JSON.parse(data[i].question_option) %>
                       <div style=" display: flex!important;align-items: start!important;margin: 5px 0;">
-                        <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p> <p style="margin-left: 15px;"><%- data[i].question_text %></p>
+                        <p><%= i+1 < 10 ? "0"+(i+1) + ". " : i+1 + ". "  %></p> 
+                        <div style="margin-left: 15px;"><%- data[i].question_text %></div>
                       </div>
                       <div style="margin-left:30px;">
                         <div style="display: grid; 
@@ -138,7 +140,8 @@
                 <% for(let i=0; i<data.length; i++){ %>
                     <% let opt = JSON.parse(data[i].question_option) %>
                       <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
-                        <%= i+1 < 10 ? "0"+(i+1) : i+1  %>. <p style="margin-left: 20px;"><%- data[i].question_text %></p>
+                        <%= i+1 < 10 ? "0"+(i+1) : i+1  %>. 
+                        <div style="margin-left: 20px;"><%- data[i].question_text %></div>
                       </div>
                       <div style="margin-left:40px;">
                         <div>

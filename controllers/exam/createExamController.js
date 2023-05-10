@@ -88,18 +88,18 @@ ON p.exam_id = e.id
 WHERE e.id = ?
 GROUP BY e.id;
 
-        `, [exam_id,exam_id], (e, data) => {
+        `, [exam_id, exam_id], (e, data) => {
             if (e) return next(e)
             console.log(data);
-            if(data.length == 0) data = ''
-            
+            if (data.length == 0) data = ''
+
             return res.render("exam/results", {
                 title: "Results of Exam",
                 flashMessage: Flash.getMessage(req),
                 data
             });
         })
-        
+
     } catch (error) {
         next(error)
     }
@@ -130,12 +130,12 @@ exports.examStatusChange = (req, res, next) => {
     let exam_id = req.query.exam_id
     console.log(req.query);
     try {
-        db.query("update exams set status = ? where id = ?", [status,exam_id], (e, data) => {
+        db.query("update exams set status = ? where id = ?", [status, exam_id], (e, data) => {
             if (e) return next(e)
             console.log(data);
-            if(data.affectedRows === 0){
+            if (data.affectedRows === 0) {
                 req.flash('failed', 'Update failed')
-            }else{
+            } else {
                 req.flash('success', 'Update success')
             }
             return res.redirect(`/exam/results?exam_id=${exam_id}}`)
@@ -206,7 +206,7 @@ exports.joinExamPost = (req, res, next) => {
     try {
         db.query("select questions from q_set where class_id=? and school_id=? and id=?", [req.user.class_id, req.user.school_id, req.body.q_set_id], (e, data) => {
             if (e) return next(e)
-            if (data.length == 0) return res.send("Invalid parameter or no data found")
+            if (data.length == 0) return res.send("No data found")
             console.log(data[0].questions)
             db.query(`select question_text,question_option from questions where id IN (${data[0].questions})`, (e, qus) => {
                 if (e) return next(e)
@@ -242,11 +242,10 @@ exports.submitResponse = (req, res, next) => {
             }
         }
         let answer_str = JSON.stringify(answrs)
-        console.log(req.user.school_id);
         db.query("select stu_id from exams_participants where exam_id = ? and stu_id=? and school_id", [req.body.code, req.user.student_id, req.user.school_id], (e, data) => {
             if (e) return next(e)
             if (data.length > 0) return res.send("Already Recorded!")
-            db.query("INSERT INTO exams_participants values(?,?,?,?,?,?,?,?,?)", [null, answer_str, Date.now(), null, req.body.code, Number(req.user.student_id), req.user.school_id, null, null], (e, data) => {
+            db.query("INSERT INTO exams_participants values(?,?,?,?,?,?,?,?,?)", [null, answer_str, null,  , req.body.code, Number(req.user.student_id), req.user.school_id, null, null], (e, data) => {
                 if (e) return next(e)
                 if (data.affectedRows > 0) {
                     return res.redirect(`/exam/submit?status=true&token=${data.insertId}`)
@@ -291,19 +290,22 @@ exports.renderStudentResult = (req, res, next) => {
                     if (ans.length == 0 || ans[0].answers == null) return res.send("not found")
                     let qus_ans_arr = JSON.parse(data[0].answers).split(',')
                     let marks = 0
+                    console.log("submit "+ qus_ans_arr);
+                    console.log("real "+ ans[0].answers.split(','));
+                    
                     let correct = ans[0].answers.split(',').map((m, index) => {
                         if (m == qus_ans_arr[index]) {
                             return marks++
                         }
                         return marks
                     })
-                    db.query("update exams_participants set score=? where id=? and school_id=? and stu_id = ?", [correct[correct.length - 1], token, req.user.school_id, req.user.student_id], (e, update) => {
+                    db.query("update exams_participants set score=? where id=? and school_id=? and stu_id = ?", [marks, token, req.user.school_id, req.user.student_id], (e, update) => {
                         if (e) return next(e)
                         if (update.affectedRows == 0) return res.send("error")
                         return res.render("exam/score", {
                             title: "Submit Status",
                             flashMessage: Flash.getMessage(req),
-                            score: correct[correct.length - 1]
+                            score: marks
                         });
                     })
 
