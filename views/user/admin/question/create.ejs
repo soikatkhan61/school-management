@@ -61,134 +61,220 @@
     <img src="/images/spinner.gif" alt="Loading...">
   </div>
   <form id="question_form" action="/user/admin/questions/create-question<%= (qus && setContent == "true") ? '?edit=true&q_id='+qus[0].id : '' %>" method="post">
-    <div class="main-content container">
-      <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-end" style="background-color: antiquewhite;">
-        <button type="submit" class="btn btn-success btn-sm my-1">Submit</button>
+
+    <div class="main-content">
+      <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-end" style="background-color: rgba(219, 219, 219, 0.5);">
+        <button type="submit" class="btn btn-primary btn-sm my-1">Publish</button>
       </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-3">
+          <div class="sticky-top">
+            <div class="mb-2 shadow-sm p-3 border rounded">
+              <p class="text-center">Class Information</p>
+              <div>
+                <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+                  <% if(obj.class_id ){ %>
+                  <option class="py-2 px-5" value="<%= obj.class_id %>" selected><%= savedInfo.class_name ? savedInfo.class_name  : obj.class_id %></option>
+                  <% }else{ %>
+                  <option class="py-2 px-5" value="">Class</option>
+                  <% for(let s of data){ %>
+                  <option class="py-2 px-5" data-name="<%= s.class_name %>" value="<%= s.id %>">
+                    <%= s.class_name %>
+                  </option>
+                  <% } %>
+                  <% }%>
+                </select>
+              </div>
+              <div class="d-none">
+                <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>" hidden>
+                <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
+                <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
+              </div>
+              <div class="">
+                <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+                  <% if(obj.subject_id ){ %>
+                  <option class="py-2 px-5" value="<%= obj.subject_id %>" selected><%= savedInfo.subject_name ? savedInfo.subject_name : obj.subject_id %></option>
+                  <% }else{ %>
+                  <option class="py-2 px-5" value="">Subject</option>
+                  <% }%>
+                </select>
+              </div>
 
-      <!-- Text input -->
-      <div class="my-2 shadow-sm py-4">
-        <div class="mb-2">
-          <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-            <% if(obj.class_id ){ %>
-            <option class="py-2 px-5" value="<%= obj.class_id %>" selected><%= savedInfo.class_name ? savedInfo.class_name  : obj.class_id %></option>
-            <% }else{ %>
-            <option class="py-2 px-5" value="">Select Class</option>
-            <% for(let s of data){ %>
-            <option class="py-2 px-5" data-name="<%= s.class_name %>" value="<%= s.id %>">
-              <%= s.class_name %>
-            </option>
-            <% } %>
-            <% }%>
-          </select>
-        </div>
-        <div class="d-none">
-          <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>"  hidden>
-          <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
-          <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
-        </div>
-        <div class="mb-2">
-          <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-            <% if(obj.subject_id ){ %>
-            <option class="py-2 px-5" value="<%= obj.subject_id %>" selected><%= savedInfo.subject_name ? savedInfo.subject_name : obj.subject_id %></option>
-            <% }else{ %>
-            <option class="py-2 px-5" value="">Select Subject</option>
-            <% }%>
-          </select>
+              <!-- Email input -->
+              <div>
+                <select name="chapter_id" id="chapter_select" class="py-2 px-4" required style="width: 100%; outline: black">
+                  <% if(obj.chapter_id){ %>
+                  <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name :obj.chapter_id %></option>
+                  <% }else{ %>
+                  <option class="py-2 px-5" value="">Chapter</option>
+                  <% }%>
+                </select>
+              </div>
+              <% if(obj.class_id){ %>
+              <a href="/user/admin/create-question" class="btn btn-danger my-1">Reset</a>
+              <p class="fst-italic text-sm text-danger">Please do not edit this when your are edit question</p>
+              <% } %>
+            </div>
+
+            <div class="my-4 shadow-sm p-3 border rounded">
+              <p class="text-center">Additional Information</p>
+              <hr>
+              <p>Board</p>
+                <% if(obj.class_id ){ %>
+                <option class="py-1 px-2" value="<%= obj.class_id %>" selected><%= savedInfo.class_name ? savedInfo.class_name  : obj.class_id %></option>
+                <% }else{ %>
+                <% for(let s of filter){ %>
+                  <% if(s.type == 'board') {%>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                      <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
+                    </div>
+                  <% }%>
+                <% } %>
+                <% }%>
+
+             <div class="mt-4">
+              <select name="year" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+                <% if(obj.subject_id ){ %>
+                <option class="py-2 px-5" value="<%= obj.subject_id %>" selected><%= savedInfo.subject_name ? savedInfo.subject_name : obj.subject_id %></option>
+                <% }else{ %>
+                  <option class="py-1 px-3" value="">Year</option>
+                  <option class="py-1 px-3" value="2023">2023</option>
+                  <option class="py-1 px-3" value="2022">2022</option>
+                  <option class="py-1 px-3" value="2021">2021</option>
+                  <option class="py-1 px-3" value="2020">2020</option>
+                  <option class="py-1 px-3" value="2019">2019</option>
+                  <option class="py-1 px-3" value="2018">2018</option>
+                  <option class="py-1 px-3" value="2017">2017</option>
+                  <option class="py-1 px-3" value="2016">2016</option>
+                  <option class="py-1 px-3" value="2015">2015</option>
+                  <option class="py-1 px-3" value="2014">2014</option>
+                  <option class="py-1 px-3" value="2013">2013</option>
+                  <option class="py-1 px-3" value="2012">2012</option>
+                  <option class="py-1 px-3" value="2011">2011</option>
+                  <option class="py-1 px-3" value="2010">2010</option>
+                  <option class="py-1 px-3" value="2009">2009</option>
+                  <option class="py-1 px-3" value="2008">2008</option>
+                  <option class="py-1 px-3" value="2007">2007</option>
+                  <option class="py-1 px-3" value="2006">2006</option>
+                  <option class="py-1 px-3" value="2005">2005</option>
+                  <option class="py-1 px-3" value="2004">2004</option>
+                  <option class="py-1 px-3" value="2003">2003</option>
+                  <option class="py-1 px-3" value="2002">2002</option>
+                  <option class="py-1 px-3" value="2001">2001</option>
+                  <option class="py-1 px-3" value="2000">2000</option>
+                  <option class="py-1 px-3" value="1999">1999</option>
+                  <option class="py-1 px-3" value="1998">1998</option>
+                  <option class="py-1 px-3" value="1997">1997</option>
+                  <option class="py-1 px-3" value="1996">1996</option>
+                  <option class="py-1 px-3" value="1995">1995</option>
+                <% }%>
+              </select>
+             </div>
+
+            </div>
+
+            <div class="my-4 shadow-sm p-3 border rounded">
+              <p>Univeristy</p>
+                <% if(obj.subject_id ){ %>
+                  <p>--</p>
+                <% }else{ %>
+                <% for(let s of filter){ %>
+                  <% if(s.type == 'uni') {%>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                      <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
+                    </div>
+                  <% }%>
+                <% } %>
+                <% }%>
+            </div>
+          </div>
+
         </div>
 
-        <!-- Email input -->
-        <div class="mb-2">
-          <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-            <% if(obj.chapter_id){ %>
-            <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name :obj.chapter_id %></option>
-            <% }else{ %>
-            <option class="py-2 px-5" value="">Select Chapter</option>
-            <% }%>
-          </select>
-        </div>
-        <% if(obj.class_id){ %>
-        <a href="/user/admin/create-question" class="btn btn-danger my-1">Reset</a>
-        <p class="fst-italic text-sm text-danger">Please do not edit this when your are edit question</p>
-        <% } %>
+        <div class="col-sm-12 col-md-9">
+          <div class="ck_editor_div">
+            <textarea id="content" class="ck_editor" name="question_text">
+              <%- (qus && qus[0].question_text) && setContent == 'true'  ? qus[0].question_text : '' %>
+            </textarea>
+          </div>
+          <% let opt %>
+          <% if(qus && qus[0].question_option){ %>
+          <%  opt = JSON.parse(qus[0].question_option) %>
+          <% } %>
 
+          <div class="my-5">
+            <h3 class="text-center">Option of this question</h3>
+            <hr>
+            <div class="my-3 ck_editor_div">
+              <h5>#option 1</h5>
+              <textarea id="opt1" class="ck_editor" name="question_option">
+                <%- (qus && opt[0]) &&  setContent   == 'true' ? opt[0] : '' %>
+              </textarea>
+            </div>
+
+            <div class="my-3 ck_editor_div">
+              <h5>#option 2</h5>
+              <textarea id="opt2" class="ck_editor" name="question_option">
+                <%- (qus && opt[1]) &&  setContent  == 'true' ? opt[1] : '' %>
+              </textarea>
+            </div>
+
+            <div class="my-3 ck_editor_div">
+              <h5>#option 3</h5>
+              <textarea id="opt3" class="ck_editor" name="question_option">
+                <%- (qus && opt[2]) &&  setContent == 'true'  ? opt[2] : '' %>
+              </textarea>
+            </div>
+
+            <div class="my-3 ck_editor_div">
+              <h5>#option 4</h5>
+              <textarea id="opt4" class="ck_editor" name="question_option">
+                <%- (qus && opt[3]) &&  setContent == 'true'  ? opt[3] : '' %>
+              </textarea>
+            </div>
+
+          </div>
+
+          <div class="my-4 py-4 px-3 rounded" style="background-color: #d3d3d331;">
+            <h6 class="text-center">Corect Answer</h6>
+            <hr>
+            <div class="form-check">
+              <input <%= (qus && qus[0].question_answer == 1) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
+              <label class="form-check-label" for="flexRadioDefault1">
+                #option 1
+              </label>
+            </div>
+            <div class="form-check">
+              <input <%= (qus && qus[0].question_answer == 2) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
+              <label class="form-check-label" for="flexRadioDefault2">
+                #option 2
+              </label>
+            </div>
+            <div class="form-check">
+              <input <%=( qus && qus[0].question_answer == 3) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
+              <label class="form-check-label" for="flexRadioDefault3">
+                #option 3
+              </label>
+            </div>
+            <div class="form-check">
+              <input <%= (qus && qus[0].question_answer == 4) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
+              <label class="form-check-label" for="flexRadioDefault4">
+                #option 4
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-<%= qus && setContent == 'true' ? 'warning' : 'primary' %> btn-block my-4"><%= qus && setContent == 'true' ? 'Update' : 'Create' %></button>
+
+        </div>
       </div>
-
-      <div class="ck_editor_div">
-        <textarea id="content" class="ck_editor" name="question_text">
-          <%- (qus && qus[0].question_text) && setContent == 'true'  ? qus[0].question_text : '' %>
-        </textarea>
-      </div>
-      <% let opt %>
-      <% if(qus && qus[0].question_option){ %>
-      <%  opt = JSON.parse(qus[0].question_option) %>
-      <% } %>
-
-      <div class="my-5">
-        <h3 class="text-center">Option of this question</h3>
-        <hr>
-        <div class="my-3 ck_editor_div">
-          <h5>#option 1</h5>
-          <textarea id="opt1" class="ck_editor" name="question_option">
-            <%- (qus && opt[0]) &&  setContent   == 'true' ? opt[0] : '' %>
-          </textarea>
-        </div>
-
-        <div class="my-3 ck_editor_div">
-          <h5>#option 2</h5>
-          <textarea id="opt2" class="ck_editor" name="question_option">
-            <%- (qus && opt[1]) &&  setContent  == 'true' ? opt[1] : '' %>
-          </textarea>
-        </div>
-
-        <div class="my-3 ck_editor_div">
-          <h5>#option 3</h5>
-          <textarea id="opt3" class="ck_editor" name="question_option">
-            <%- (qus && opt[2]) &&  setContent == 'true'  ? opt[2] : '' %>
-          </textarea>
-        </div>
-
-        <div class="my-3 ck_editor_div">
-          <h5>#option 4</h5>
-          <textarea id="opt4" class="ck_editor" name="question_option">
-            <%- (qus && opt[3]) &&  setContent == 'true'  ? opt[3] : '' %>
-          </textarea>
-        </div>
-
-      </div>
-
-      <div class="my-4 py-4 px-3 rounded" style="background-color: #aaaaaa31;">
-        <h6 class="text-center">Corect Answer</h6>
-        <hr>
-        <div class="form-check">
-          <input <%= (qus && qus[0].question_answer == 1) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="1" id="flexRadioDefault1" required>
-          <label class="form-check-label" for="flexRadioDefault1">
-            #option 1
-          </label>
-        </div>
-        <div class="form-check">
-          <input <%= (qus && qus[0].question_answer == 2) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="2" id="flexRadioDefault2" required>
-          <label class="form-check-label" for="flexRadioDefault2">
-            #option 2
-          </label>
-        </div>
-        <div class="form-check">
-          <input <%=( qus && qus[0].question_answer == 3) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="3" id="flexRadioDefault3" required>
-          <label class="form-check-label" for="flexRadioDefault3">
-            #option 3
-          </label>
-        </div>
-        <div class="form-check">
-          <input <%= (qus && qus[0].question_answer == 4) &&  setContent == 'true'  ? 'checked' : ''  %> class="form-check-input" type="radio" name="question_answer" value="4" id="flexRadioDefault4" required>
-          <label class="form-check-label" for="flexRadioDefault4">
-            #option 4
-          </label>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-<%= qus && setContent == 'true' ? 'warning' : 'primary' %> btn-block my-4"><%= qus && setContent == 'true' ? 'Update' : 'Create' %></button>
-
     </div>
+    <!-- Text input -->
+
+
+
   </form>
 
   <style>
@@ -202,7 +288,7 @@
       extraPlugins: 'mathjax,filebrowser',
       toolbar: [{
           name: 'document',
-          items: ['Source', '-',  'NewPage', 'Preview',  '-']
+          items: ['Source', '-', 'NewPage', 'Preview', '-']
         },
         {
           name: 'editing',
@@ -222,7 +308,7 @@
         },
         {
           name: 'insert',
-          items: ['Image', 'Table', 'HorizontalRule', 'PageBreak',]
+          items: ['Image', 'Table', 'HorizontalRule', 'PageBreak', ]
         },
         '/',
         {
@@ -327,7 +413,7 @@
       classes = event.target.value;
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
-      if(className){
+      if (className) {
         class_name.value = className
       }
       let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
@@ -345,7 +431,7 @@
       for (let i = 0; i < episod.length; i++) {
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
-        option.setAttribute('data-name', episod[i].subject_name); 
+        option.setAttribute('data-name', episod[i].subject_name);
         option.innerHTML = `${episod[i].subject_name}`;
         subject_select.appendChild(option);
       }
@@ -354,7 +440,7 @@
       loading_spinner.style.display = 'block'
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
-      if(className){
+      if (className) {
         subject_name.value = className
       }
       var chapter = event.target.value;
@@ -371,7 +457,7 @@
       for (let i = 0; i < episod.length; i++) {
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
-        option.setAttribute('data-name', episod[i].chapter_name); 
+        option.setAttribute('data-name', episod[i].chapter_name);
         option.innerHTML = `${episod[i].chapter_name}`;
         chapter_select.appendChild(option);
       }
@@ -379,7 +465,7 @@
     chapter_select.addEventListener('change', async (event) => {
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
-      if(className){
+      if (className) {
         chapter_name.value = className
       }
     })

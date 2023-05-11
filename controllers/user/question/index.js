@@ -203,10 +203,12 @@ exports.getChapterBySubjectAndClass = (req, res, next) => {
     next(error)
   }
 };
+
+//questions realated 
+
 exports.renderCreateQuestion = (req, res, next) => {
   let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_id, q_type, setContent } = req.query
   let qus
-  console.log(req.query);
   try {
     let obj
     let savedInfo
@@ -242,14 +244,13 @@ exports.renderCreateQuestion = (req, res, next) => {
         chapter_name: ''
       }
     }
-    db.query("select * from classes", (e, data) => {
+    db.query("select * from classes;select * from filter", (e, data) => {
       if (e) {
         return next(e)
       } else {
-        res.render("user/admin/question/create", { data, title: "Create Question", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
+        res.render("user/admin/question/create", { data:data[0],filter:data[1], title: "Create Question", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
       }
     })
-
   } catch (error) {
     next(error)
   }
@@ -350,7 +351,7 @@ exports.renderCreative = (req, res, next) => {
   }
 };
 exports.creativePost = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option ,question_answer} = req.body
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer } = req.body
   let { edit, q_id } = req.query
   let options = [];
   question_option.forEach(e => {
@@ -363,7 +364,7 @@ exports.creativePost = (req, res, next) => {
   }
   try {
     if (edit) {
-      db.query("update creative set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options),question_answer, q_id], (e, data) => {
+      db.query("update creative set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options), question_answer, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -376,7 +377,7 @@ exports.creativePost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into creative values(?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options),question_answer], (e, data) => {
+      db.query("insert into creative values(?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -505,14 +506,14 @@ exports.renderSeeQuestion = (req, res, next) => {
 };
 exports.renderSingleQuestionView = (req, res, next) => {
   let { question_id, q_type } = req.query
-  console.log(q_type,question_id);
+  console.log(q_type, question_id);
   try {
-    db.query(`SELECT * FROM ${q_type} WHERE id = ?` , [question_id], (e, data) => {
+    db.query(`SELECT * FROM ${q_type} WHERE id = ?`, [question_id], (e, data) => {
       if (e) {
         next(e)
       } else {
         console.log(data);
-        res.render("user/admin/question/viewsingle", { data: data[0], q_type,title: "See Question", flashMessage: Flash.getMessage(req) })
+        res.render("user/admin/question/viewsingle", { data: data[0], q_type, title: "See Question", flashMessage: Flash.getMessage(req) })
       }
     })
   } catch (error) {
@@ -550,5 +551,56 @@ exports.makeQuestionRender = (req, res, next) => {
     next(error)
   }
 };
+
+exports.renderCreateFilter = (req, res, next) => {
+  let { question_id, q_type } = req.query
+  try {
+    db.query("select * from filter",(e,data)=>{
+      if(e) return next(e)
+      res.render("user/admin/question/filter", {data, title: "Filter", flashMessage: Flash.getMessage(req) })
+    })
+    
+  } catch (error) {
+    next(error)
+  }
+};
+
+exports.filterPost = (req, res, next) => {
+  let { filter_type, filter_name,id } = req.body
+  try {
+    if(id){
+      db.query(`update filter set type=? ,name=? where id = ?`, [filter_type, filter_name,id], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows >= 1) {
+            req.flash('success', 'Update successfully')
+          } else {
+            req.flash('fail', 'failed to update')
+          }
+          return res.redirect('/user/admin/questions/filter')
+        }
+      })
+    }else{
+      db.query(`insert into filter values(?,?,?)`, [null, filter_type, filter_name], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows >= 1) {
+            req.flash('success', 'create successfully')
+          } else {
+            req.flash('fail', 'failed to create')
+          }
+          return res.redirect('/user/admin/questions/filter')
+        }
+      })
+    }
+    
+  } catch (error) {
+    next(error)
+  }
+};
+
+
 
 

@@ -8,7 +8,7 @@ const {
 
 
 const {dashboardGetController,adminDashboardRender} = require("../controllers/user/dashboardController")
-const {renderAllQuestions,renderCreateQuestion,renderAllClass,createClassPost,renderAllSubject,getSubjectByClass,getSubject,createSubjectPost,createChaptePost,getChapterBySubjectAndClass,getChapter,createQuestionPost,renderSeeQuestion,renderSingleQuestionView,renderCreateOthersQuestion,othersQuestionsPost,renderCreative,creativePost} = require("../controllers/user/question")
+const {renderAllQuestions,renderCreateQuestion,renderAllClass,createClassPost,renderAllSubject,getSubjectByClass,getSubject,createSubjectPost,createChaptePost,getChapterBySubjectAndClass,getChapter,createQuestionPost,renderSeeQuestion,renderSingleQuestionView,renderCreateOthersQuestion,othersQuestionsPost,renderCreateFilter,filterPost,renderCreative,creativePost} = require("../controllers/user/question")
 
 const {renderCreateStudnet,createStudentPost,renderRegisteredStudent} = require("../controllers/student/studentController")
 
@@ -31,6 +31,9 @@ router.post("/admin/questions/create-question",isAuthenticated,requireRole('supe
 
 router.get("/admin/questions/others",isAuthenticated,requireRole('superadmin,moderator'),renderCreateOthersQuestion)
 router.post("/admin/questions/others",isAuthenticated,requireRole('superadmin,moderator'),othersQuestionsPost)
+
+router.get("/admin/questions/filter",isAuthenticated,requireRole('superadmin'),renderCreateFilter)
+router.post("/admin/questions/filter",isAuthenticated,requireRole('superadmin'),filterPost)
 
 router.get("/admin/questions",isAuthenticated,renderAllQuestions)
 router.get("/get-subject",getSubject)

@@ -1,0 +1,138 @@
+<%- include('../../user_partials/header.ejs') %>
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
+  <div class="modal-dialog  ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModal2Label">Create Filter Option</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/user/admin/questions/filter" method="post">
+          <input type="text" name="id" id="filter_id_m" hidden>
+          <div class="mb-2">
+            <select name="filter_type" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+              <option class="py-2 px-5" value="">Type</option>
+              <option class="py-2 px-5" value="board">Board</option>
+              <option class="py-2 px-5" value="uni">Univeristy</option>
+            </select>
+          </div>
+
+          <!-- Text input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="filterNameM" class="form-control" name="filter_name" required />
+            <label class="form-label" for="filterNameM">Name *</label>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+          Close
+        </button>
+        <button id="actionModalButton" type="submit" class="btn btn-success">Create</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="main-content" style="background: #eee;min-height: 90vh;">
+  <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
+    <div class="mb-3">
+      <button type="button" class="btn btn-dark btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
+        Create Filter Option
+      </button>
+    </div>
+    <% if(data[0].length==0){ %>
+    <p class="text-center text-dark">No Filter Found</p>
+    <% }else{ %>
+    <div class="table-responsive">
+      <h5 class="text-primary">Board</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Filter Name</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let s of data){ %>
+          <% if(s.type == 'board'){ %>
+          <tr>
+            <td class="filterName"><%= s.name %></td>
+            <input type="text" class="filter_id" value="<%= s.id%>" hidden>
+            <input type="text" class="filter_type" value="<%= s.type%>" hidden>
+            <td> <a data-mdb-toggle="modal" data-mdb-target="#exampleModal2" class="btn btn-link border editFilter">Edit</a>
+            </td>
+          </tr>
+          <% } %>
+          <% } %>
+        </tbody>
+      </table>
+
+      <h5 class="text-success">Univeristy</h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Filter Name</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let s of data){ %>
+          <% if(s.type == 'uni'){ %>
+          <tr>
+            <td class="filterName"><%= s.name %></td>
+            <input type="text" class="filter_id" value="<%= s.id%>" hidden>
+            <input type="text" class="filter_type" value="<%= s.type%>" hidden>
+            <td> <a data-mdb-toggle="modal" data-mdb-target="#exampleModal2" class="btn btn-link border editFilter">Edit</a>
+            </td>
+          </tr>
+          <% } %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  let editFilter = document.getElementsByClassName('editFilter')
+  let filterName = document.getElementsByClassName('filterName')
+  let filterNameM = document.getElementById('filterNameM')
+  let makeEdit = document.getElementById('makeEdit')
+  let filter_id = document.getElementsByClassName('filter_id')
+  let filter_id_m = document.getElementById('filter_id_m')
+  let filter_type = document.getElementsByClassName('filter_type')
+
+  let actionModalButton = document.getElementById('actionModalButton')
+
+  var dropdown = document.querySelector('select[name="filter_type"]');
+
+
+
+  for (let i = 0; i < editFilter.length; i++) {
+    editFilter[i].addEventListener('click', (e) => {
+      for (var j = 0; j < dropdown.options.length; j++) {
+        if (dropdown.options[j].value === filter_type[i].value) {
+          dropdown.selectedIndex = j;
+          break;
+        }
+      }
+      filter_id_m.value = filter_id[i].value
+      filterNameM.value = filterName[i].textContent.trim()
+      actionModalButton.innerText = 'Update'
+      actionModalButton.classList.add('btn-warning')
+    })
+  }
+</script>
+
+<%- include('../../user_partials/footer.ejs') %>
+</body>
+
+</html>

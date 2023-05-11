@@ -32,7 +32,6 @@
           <td><%= exams[i].name %></td>
           <td>
             <% const date = new Date(exams[i].submit_on); %>
-            <%= date %>
             <%- date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }); %>
           </td>
           <td>
