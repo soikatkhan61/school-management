@@ -104,7 +104,7 @@ exports.viewChapterGet = (req, res, next) => {
 
 };
 exports.viewQuestionGet = (req, res, next) => {
-    let { class_id, subject_id, chapter, q_set, q_type } = req.query
+    let { class_id, subject_id, chapter, q_set, q_type,year,category } = req.query
     let currentPage = parseInt(req.query.page) || 1
     let itemPerPage = 25
     if (q_type == 'mcq' || q_type == 'questions') {
@@ -114,9 +114,33 @@ exports.viewQuestionGet = (req, res, next) => {
     } else {
         q_type = 'q_others'
     }
-    console.log(req.query);
+    if (req.query.category) {
+        category = JSON.parse(req.query.category).map(Number);
+        category = category.join(',');
+        console.log(category);
+    }
+
+    //contract the query
+    let sql = `SELECT * FROM ${q_type}`;
+    let sqlParams = [];
+    if (category) {
+        sql += ' WHERE FIND_IN_SET(?, filter)';
+        sqlParams.push(category);
+    }
+
+    if (year) {
+        sql += (sqlParams.length > 0 ? ' AND ' : ' WHERE ') + 'year = ?';
+        sqlParams.push(year);
+    }
+
+    sql += `;SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=${class_id} AND subject_id=${subject_id} AND chapter_id=${chapter};
+    select * from ${q_type} where class_id=${class_id} and subject_id = ${subject_id} and chapter_id=${chapter} limit ${((itemPerPage * currentPage) - itemPerPage)} , ${itemPerPage};select questions,total_qus from q_set where id=${q_set};
+    `
+
+    
+
     try {
-        db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;select * from ${q_type} where class_id=? and subject_id = ? and chapter_id=? limit ?,?;select questions,total_qus from q_set where id=?`, [class_id, subject_id, chapter, class_id, subject_id, chapter, ((itemPerPage * currentPage) - itemPerPage), itemPerPage, q_set], (e, data) => {
+        db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;select * from ${q_type} where class_id=? and subject_id = ? and chapter_id=? limit ?,?;select questions,total_qus from q_set where id=?;select * from filter`, [class_id, subject_id, chapter, class_id, subject_id, chapter, ((itemPerPage * currentPage) - itemPerPage), itemPerPage, q_set], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -127,17 +151,22 @@ exports.viewQuestionGet = (req, res, next) => {
                     q_type
                 }
                 //console.log(data[1]);
-                let totalMessage = data[0]
-                let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
+                let totalDoc = data[0]
+                let totalPage = Math.ceil(totalDoc[0].count / itemPerPage)
                 let q_set_ids = data[2]
                 let total_selected = q_set_ids[0].questions != null ? q_set_ids[0].questions.split(',').length : 0
                 console.log(total_selected);
                 res.render(`combined/view-questions`, {
                     title: "view subject", flashMessage: Flash.getMessage(req),
-                    questions: data[1], filter,
+                    questions: data[1],
+                    filter,
                     q_set_ids,
                     total_selected,
-                    currentPage, itemPerPage, totalPage, q_type
+                    currentPage,
+                    itemPerPage,
+                    totalPage,
+                    q_type,
+                    qus_filter: data[3]
                 })
             }
         })
@@ -183,7 +212,7 @@ exports.renderSavedByClass = (req, res, next) => {
     let class_id = req.params.class_id
     try {
         db.query(
-            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? and q_set.class_id=? order by id desc limit ?,?", [school_id, school_id,class_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage],
+            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? and q_set.class_id=? order by id desc limit ?,?", [school_id, school_id, class_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage],
             (e, data) => {
                 if (e) {
                     next(e);
@@ -226,6 +255,25 @@ exports.renderSavedQuesSet = (req, res, next) => {
     }
 
 };
+
+exports.getFilterData = (req, res, next) => {
+    try {
+        db.query(
+            "select * from filter",
+            (e, data) => {
+                if (e) {
+                    next(e);
+                } else {
+                   res.send(data)
+                }
+            }
+        );
+    } catch (error) {
+        next(error);
+    }
+
+};
+
 exports.renderviewSet = (req, res, next) => {
     let qset_id = req.query.q_set_id
     try {
@@ -276,7 +324,7 @@ exports.renderviewSet = (req, res, next) => {
 };
 
 exports.renderAnswer = (req, res, next) => {
-    let { q_set_id, q_type, q_ids,name,total_mark,total_qus } = req.query
+    let { q_set_id, q_type, q_ids, name, total_mark, total_qus } = req.query
     // if(q_type == 'mcq'){
     //     q_type = 'questions'
     // }
@@ -322,7 +370,7 @@ exports.renderAnswer = (req, res, next) => {
                     total_mark,
                     total_qus
                 }
-                sendResponse(data,obj, answers)
+                sendResponse(data, obj, answers)
             }
             start_extract_question()
         }

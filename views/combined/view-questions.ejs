@@ -6,19 +6,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
-    Admin Panel
+    Questions
   </title>
   <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" rel="stylesheet" />
-  <script src="/ckeditor/ckeditor.js"></script>
-  <link rel="stylesheet" href="/styles/grid.css">
-  <link rel="stylesheet" href="/styles/dashboard.css">
-  <link rel="stylesheet" href="/styles/custom_user.css">
   <link rel="stylesheet" href="/styles/alert.css">
+  <style>
+    #side-nav {
+      position: fixed;
+      top: 0;
+      overflow: hidden;
+      right: 0;
+      width: 300px;
+      height: 100vh;
+      background: #eaeaea;
+      box-shadow: 0 0 10px rgba(240, 236, 236, 0.2);
+      transition: right 0.5s;
+      z-index: 10;
+    }
+  </style>
 </head>
 
 <body>
@@ -36,62 +43,114 @@
     <img src="/images/spinner.gif" alt="Loading...">
   </div>
   <div class="main-content py-2 container-fluid py-4">
-    <div class="my-2 text-light">
-      <a class="text-light btn btn-primary" href="/combined-question/view-subject?class_id=<%= filter.class_id %>&subject=<%= filter.subject %>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>">Subject List</a>
-      <a class="text-light btn btn-success" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>">View Question Preview</a>
-      <button class="btn ">Selected : <span id="total_select"> <%= total_selected ? total_selected : '0'  %> </span> / <%= q_set_ids[0].total_qus ? q_set_ids[0].total_qus : '0'  %></button>
+    <div class="d-flex justify-content-between">
+      <div class="my-2 text-light">
+        <button id="menu-button" class="btn border border-primary"><i class="fas fa-filter"></i> Filter</button>
+        <a class="text-light btn btn-primary" href="/combined-question/view-subject?class_id=<%= filter.class_id %>&subject=<%= filter.subject %>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>">Subject List</a>
+        <a class="text-light btn btn-success" target="_blank" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>"> <i class="fas fa-up-right-from-square mx-1"></i> Preview</a>
+        <button class="btn ">Selected : <span id="total_select"> <%= total_selected ? total_selected : '0'  %> </span> / <%= q_set_ids[0].total_qus ? q_set_ids[0].total_qus : '0'  %></button>
+      </div>
     </div>
+
+    <nav id="side-nav" style="display: none;" class="p-3">
+
+      <select name="year" id="year" class="py-2 px-4 mb-3 filter_category select-filter" style="width: 100%; outline: black;margin-top: 60px;">
+        <option class="py-1 px-3" value="">Year</option>
+        <option class="py-1 px-3" value="2023">2023</option>
+        <option class="py-1 px-3" value="2022">2022</option>
+        <option class="py-1 px-3" value="2021">2021</option>
+        <option class="py-1 px-3" value="2020">2020</option>
+        <option class="py-1 px-3" value="2019">2019</option>
+        <option class="py-1 px-3" value="2018">2018</option>
+        <option class="py-1 px-3" value="2017">2017</option>
+        <option class="py-1 px-3" value="2016">2016</option>
+        <option class="py-1 px-3" value="2015">2015</option>
+        <option class="py-1 px-3" value="2014">2014</option>
+        <option class="py-1 px-3" value="2013">2013</option>
+        <option class="py-1 px-3" value="2012">2012</option>
+        <option class="py-1 px-3" value="2011">2011</option>
+        <option class="py-1 px-3" value="2010">2010</option>
+        <option class="py-1 px-3" value="2009">2009</option>
+        <option class="py-1 px-3" value="2008">2008</option>
+        <option class="py-1 px-3" value="2007">2007</option>
+        <option class="py-1 px-3" value="2006">2006</option>
+        <option class="py-1 px-3" value="2005">2005</option>
+        <option class="py-1 px-3" value="2004">2004</option>
+        <option class="py-1 px-3" value="2003">2003</option>
+        <option class="py-1 px-3" value="2002">2002</option>
+        <option class="py-1 px-3" value="2001">2001</option>
+        <option class="py-1 px-3" value="2000">2000</option>
+        <option class="py-1 px-3" value="1999">1999</option>
+        <option class="py-1 px-3" value="1998">1998</option>
+        <option class="py-1 px-3" value="1997">1997</option>
+        <option class="py-1 px-3" value="1996">1996</option>
+        <option class="py-1 px-3" value="1995">1995</option>
+      </select>
+
+
+      <div class="board my-4 shadow-sm p-3 border rounded bg-light">
+        <p>Board</p>
+
+      </div>
+
+      <div class="uni my-4 shadow-sm p-3 border rounded bg-light">
+        <p>Univeristy</p>
+      </div>
+
+
+    </nav>
+
     <% if(questions.length == 0){ %>
     <p>no question</p>
     <% }else{ %>
-      <% let object = {} %>
-          <% let str = q_set_ids[0].questions %>
-          <% if(str !== null){ %>
-          <% let numString = '' %>
-          <% for (let i=0;i<str.length;i++){ %>
-          <% if(str[i] !== ',' && str[i] !== ' '){ %>
-          <% numString += str[i] %>
-          <% continue %>
-          <% }%>
-          <% if(numString !== ''){ %>
-          <% object[numString] = true %>
-          <% numString = '' %>
-          <% } %>
-          <% } %>
-          <% if(numString !== ''){ %>
-          <% object[numString] = true %>
-          <% numString = '' %>
-          <% } %>
-          <% } %>
+    <% let object = {} %>
+    <% let str = q_set_ids[0].questions %>
+    <% if(str !== null){ %>
+    <% let numString = '' %>
+    <% for (let i=0;i<str.length;i++){ %>
+    <% if(str[i] !== ',' && str[i] !== ' '){ %>
+    <% numString += str[i] %>
+    <% continue %>
+    <% }%>
+    <% if(numString !== ''){ %>
+    <% object[numString] = true %>
+    <% numString = '' %>
+    <% } %>
+    <% } %>
+    <% if(numString !== ''){ %>
+    <% object[numString] = true %>
+    <% numString = '' %>
+    <% } %>
+    <% } %>
     <% if(q_type == 'q_others'){ %>
-      <div class="table-responsive table-nowrap ">
-        <table class="table table-bordered">
-          <thead class="table-dark ">
-            <tr>
-              <th scope="col">SL</th>
-              <th scope="col">Action</th>
-              <th scope="col">Question</th>
-              <th scope="col">Answer</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% for(let i=0; i<questions.length; i++){ %>
-            <input type="text" class="q_id" value="<%= questions[i].id %>" hidden>
-            <input type="text" class="q_ans" value="0" hidden>
-            <tr>
-              <td><%= i+1  %></td>
-              <% if(object[questions[i].id]){ %>
-                <td><button class="btn btn-sm btn-success add_btn" disabled>Added</button></td>
-              <% }else{ %>
-                <td><button class="btn btn-sm btn-primary add_btn">Add</button></td>
-              <% }%>
-              <td><%- questions[i].question_text %></td>
-              <td><%- questions[i].question_answer %></td>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
+    <div class="table-responsive table-nowrap ">
+      <table class="table table-bordered">
+        <thead class="table-dark ">
+          <tr>
+            <th scope="col">SL</th>
+            <th scope="col">Action</th>
+            <th scope="col">Question</th>
+            <th scope="col">Answer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let i=0; i<questions.length; i++){ %>
+          <input type="text" class="q_id" value="<%= questions[i].id %>" hidden>
+          <input type="text" class="q_ans" value="0" hidden>
+          <tr>
+            <td><%= i+1  %></td>
+            <% if(object[questions[i].id]){ %>
+            <td><button class="btn btn-sm btn-success add_btn" disabled>Added</button></td>
+            <% }else{ %>
+            <td><button class="btn btn-sm btn-primary add_btn">Add</button></td>
+            <% }%>
+            <td><%- questions[i].question_text %></td>
+            <td><%- questions[i].question_answer %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
     <% }else{%>
     <div class="table-responsive table-nowrap ">
       <table class="table table-bordered">
@@ -149,6 +208,100 @@
     <% } %>
     <%- include('../partials/footer.ejs') %>
     <script>
+      const menuButton = document.querySelector('#menu-button');
+      const sideNav = document.querySelector('#side-nav');
+
+      menuButton.addEventListener('click', function() {
+        if (sideNav.style.display == 'none') {
+          sideNav.style.display = 'block'
+        } else if (sideNav.style.display == 'block') {
+          sideNav.style.display = 'none'
+        }
+      });
+
+      //filter start
+      const yearSelect = document.getElementById("year");
+      let searchParams = new URLSearchParams(window.location.search);
+      let categoryParam = searchParams.get('category') || '';
+      let yearParam = searchParams.get('year') || '';
+      let pageParam = searchParams.get('page') || '';
+      let perPageParam = searchParams.get('perPage') || '';
+
+      let page = 1;
+      let perPage = 25;
+      let totalPages = 0;
+
+      let category = '';
+      let year = '';
+      let previousData = [];
+
+
+      //checkbox selec
+      var checkboxes = document.getElementsByClassName("checkbox");
+      var selectedCheckboxes = [];
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener("change", function() {
+          selectedCheckboxes = [];
+          for (var j = 0; j < checkboxes.length; j++) {
+            var checkbox = checkboxes[j];
+            if (checkbox.checked) {
+              selectedCheckboxes.push(checkbox.value);
+            }
+          }
+          category = JSON.stringify(selectedCheckboxes)
+          console.log(category);
+          //fetchQus()
+        });
+      }
+
+      yearSelect.addEventListener('change', (event) => {
+        year = event.target.value;
+        console.log(year);
+        previousData = [];
+        offset = 0;
+        //fetchMovies();
+      });
+
+
+      //initialize the page wirth necessary settings
+      window.addEventListener('load', function() {
+        let searchParams = new URLSearchParams(window.location.search);
+        category = searchParams.get('category') || '';
+        year = searchParams.get('year') || '';
+        class_id = searchParams.get('class_id') || '';
+        subject_id = searchParams.get('subject_id') || '';
+        chapter = searchParams.get('chapter') || '';
+        q_set = searchParams.get('q_set') || '';
+        q_type = searchParams.get('q_type') || '';
+
+        //initialize the filter section
+        if (localStorage.getItem('filter_data')) {
+          createFilterElement(localStorage.getItem('filter_data'))
+        } else {
+          fetch("/combined-question/get-filter-data")
+            .then(response => response.json())
+            .then(filter_data => {
+              localStorage.setItem('filter_data', JSON.stringify(filter_data))
+            })
+        }
+
+        ///fetchQus();
+      })
+
+
+      //fetch the questions
+      function fetchQus() {
+        let fetchURL = `/combined-question/view-questions?year=${year}&category=${category}&class_id=${class_id}&subject_id=${subject_id}&chapter=${chapter}&q_set=${q_set}&q_type=${q_type}`
+        let pushURL = `/combined-question/view-questions?year=${year}&category=${category}&class_id=${class_id}&subject_id=${subject_id}&chapter=${chapter}&q_set=${q_set}&q_type=${q_type}`
+        fetch(fetchURL)
+          .then(response => response.json())
+          .then(qus => {
+            console.log(qus);
+          })
+      }
+
+
+      //add question to set
       let loading_spinner = document.getElementById('loading_spinner')
       let add_btn = document.getElementsByClassName('add_btn')
       let q_id = document.getElementsByClassName('q_id')
@@ -174,17 +327,47 @@
             })
         })
       }
-    </script>
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-    <script>
-      CKEDITOR.replace('content', {
-        height: 700,
-        removeButtons: 'PasteFromWord',
-      });
-      if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
-        document.getElementById('ie8-warning').className = 'tip alert';
+
+      //some unitily functions
+      function createFilterElement(filter_data) {
+        const board = document.querySelector('.board');
+        const uni = document.querySelector('.uni');
+
+        const filterArray = JSON.parse(filter_data);
+        filterArray.forEach((item) => {
+          // Create the checkbox element
+          const checkbox = document.createElement('input');
+          checkbox.className = 'form-check-input checkbox';
+          checkbox.name = 'filter';
+          checkbox.type = 'checkbox';
+          checkbox.value = item.id;
+          checkbox.id = item.id;
+
+          // Create the label element
+          const label = document.createElement('label');
+          label.className = 'form-check-label';
+          label.htmlFor = item.id;
+          label.textContent = item.name;
+
+          // Create the div container for checkbox and label
+          const divContainer = document.createElement('div');
+          divContainer.className = 'form-check';
+
+          // Append checkbox and label to the div container
+          divContainer.appendChild(checkbox);
+          divContainer.appendChild(label);
+
+
+          if (item.type === 'board') {
+            // Append the div container to the main container
+            board.appendChild(divContainer);
+          } else {
+            uni.appendChild(divContainer);
+          }
+        });
       }
     </script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 </body>
 
 </html>

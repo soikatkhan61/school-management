@@ -33,7 +33,16 @@
         <tr>
           <td><%= i+1 %></td>
           <td><a class="text-primary" href="/combined-question/view-subject?class_id=1&subject=0&q_set=<%=q_set[i].id %>&q_formate=<%= q_set[i].formate %>"><%= q_set[i].name %></a></td>
-          <td><%= q_set[i].formate %></td>
+          <td>
+            <% if(q_set[i].formate == 'mcq'){ %>
+              <span class="badge rounded-pill badge-success">MCQ</span>
+            <% }else if(q_set[i].formate == 'creative'){ %>
+              <span class="badge rounded-pill badge-primary">Creative</span>
+            <% }else{ %>
+              <span class="badge rounded-pill badge-warning">Others</span>
+            <% } %>
+            
+          </td>
           <td>
             <a target="_blank" href="/combined-question/view-set?q_set_id=<%=q_set[i].id %>"><i class="fas fa-eye"></i> <span class="mx-1">view</span> </a> 
           </td>
@@ -46,8 +55,8 @@
               <button class="btn btn-sm" disabled><i class="fas fa-book-open"></i> <span class="mx-1">Take Exam</span> </button>
               <button class="btn btn-sm" disabled><span class="mx-1">View Exam</span></button>
             <% }else{ %>
-              <a class="btn btn-primary btn-sm" href="/exam/create?class_id=<%=q_set[i].class_id %>&subject=<%=q_set[i].subject %>&q_set=<%=q_set[i].id %>"><i class="fas fa-book-open"></i> <span class="mx-1">Take Exam</span> </a>
-              <a class="btn btn-dark btn-sm" href="/exam/view?q_set_id=<%=q_set[i].id %>"><span class="mx-1">View Exam</span> </a>
+              <a class="btn btn-primary btn-sm m-1" href="/exam/create?class_id=<%=q_set[i].class_id %>&subject=<%=q_set[i].subject %>&q_set=<%=q_set[i].id %>"><i class="fas fa-book-open"></i> <span class="m-1">Take Exam</span> </a>
+              <a class="btn btn-dark btn-sm m-1" href="/exam/view?q_set_id=<%=q_set[i].id %>"><span class="m-1">View Exam</span> </a>
             <% } %>
           </td>
         </tr>

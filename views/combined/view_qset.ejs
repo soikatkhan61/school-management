@@ -14,11 +14,21 @@
   <meta name="robots" content="noindex, nofollow">
 
   <script src="/ckeditor/ckeditor.js"></script>
-
+  <style>
+    @font-face {
+    font-family: ban;
+    src: url("/fonts/SolaimanLipiNormal.woff2");
+  }
+  @media only screen and (min-width: 600px) {
+  #main {
+    padding: 0px 200px
+  }
+}
+  </style>
 </head>
 
 <body>
-  <div style="padding: 0px 200px;">
+  <div id="main" style="font-family: ban;">
     <textarea id="content" name="question_text">
            <% if(data.length==0){ %>
             No data

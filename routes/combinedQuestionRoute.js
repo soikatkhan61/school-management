@@ -7,7 +7,7 @@ const {
 } = require('../middleware/authMiddleware')
 
 
-const {renderCombined,viewSubject,viewSubjectGet,viewChapterGet,viewQuestionGet,addQuestion,renderSavedQuesSet,renderSavedByClass,renderviewSet,renderAnswer} = require("../controllers/Combined/combindedController")
+const {renderCombined,viewSubject,viewSubjectGet,viewChapterGet,viewQuestionGet,addQuestion,renderSavedQuesSet,renderSavedByClass,renderviewSet,renderAnswer,getFilterData} = require("../controllers/Combined/combindedController")
 
 router.get("/view-subject",isAuthenticated,requireRole('admin,teacher'),viewSubjectGet)
 router.get("/view-questions",isAuthenticated,requireRole('admin,teacher'),viewQuestionGet)
@@ -19,6 +19,9 @@ router.get("/saved/:class_id",isAuthenticated,requireRole('admin,teacher'),rende
 router.get("/saved",isAuthenticated,requireRole('admin,teacher'),renderSavedQuesSet)
 router.get("/view-set",isAuthenticated,requireRole('admin,teacher'),renderviewSet)
 router.get("/answer",isAuthenticated,requireRole('admin,teacher'),renderAnswer)
+
+router.get("/get-filter-data",isAuthenticated,requireRole('admin,teacher'),getFilterData)
+
 
 router.get("/",isAuthenticated,requireRole('admin,teacher'),renderCombined)
 router.post("/",isAuthenticated,requireRole('admin,teacher'),viewSubject)
