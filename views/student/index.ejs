@@ -6,7 +6,7 @@
         <div class="col-lg-4">
           <div class="card mb-4">
             <div class="card-body text-center">
-              <img src="<%= user.avater %>" alt="avatar" class="border rounded-circle img-fluid p-3" style="width: 150px;">
+              <img src="<%= user.avater ? user.avater : '/images/user.png' %>" alt="avatar" class="border rounded-circle img-fluid p-3" style="width: 150px;">
               <h5 class="my-3 mt-4"><%= user.name %></h5>
               <div class="d-flex justify-content-center mb-2">
                 <button type="button" class="btn btn-outline-primary ms-1"><%= user.student_id %></button>

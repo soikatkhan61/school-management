@@ -1,0 +1,32 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2 container-fluid py-4">
+  <% if(data.length == 0){ %>
+  <p>No data</p>
+  <% }else{ %>
+    <h4>Class </h4>
+    <ul class="list-group list-group-light">
+        <%for(let s of data){%>
+            <a href="/combined-question/saved/<%= s.id %>" class="list-group-item px-3 border-2 rounded-3 list-group-item-light mb-2 border">
+              <span><%= s.class_name  %></span>
+            </a>
+          <%}%>
+      </ul>
+  <% } %>
+
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>

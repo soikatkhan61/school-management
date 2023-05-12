@@ -16,7 +16,7 @@ exports.renderAllQuestions = (req, res, next) => {
 };
 exports.renderAllClass = (req, res, next) => {
   try {
-    db.query("select * from classes limit 30", (e, data) => {
+    db.query("select * from classes", (e, data) => {
       if (e) {
         next(e)
       } else {
@@ -64,13 +64,26 @@ exports.createClassPost = (req, res, next) => {
   }
 };
 exports.renderAllSubject = (req, res, next) => {
-  db.query("select * from classes", (e, data) => {
-    if (e) {
-      next(e)
-    } else {
-      res.render("user/admin/question/subject", { data, title: "Subjects", flashMessage: Flash.getMessage(req) })
-    }
-  });
+  db.query(`SELECT c.id AS class_id, c.class_name, COUNT(q.id) AS total_questions
+  FROM classes AS c
+  LEFT JOIN (
+    SELECT class_id, id
+    FROM questions
+    UNION ALL
+    SELECT class_id, id
+    FROM creative
+    UNION ALL
+    SELECT class_id, id
+    FROM q_others
+  ) AS q ON c.id = q.class_id
+  GROUP BY c.id, c.class_name;
+  `, (e, data) => {
+  if (e) {
+    next(e)
+  } else {
+    res.render("user/admin/question/subject", { data, title: "Subjects", flashMessage: Flash.getMessage(req) })
+  }
+});
 };
 exports.getSubjectByClass = (req, res, next) => {
   let class_id = req.query.class_id
@@ -204,6 +217,41 @@ exports.getChapterBySubjectAndClass = (req, res, next) => {
   }
 };
 
+exports.renderSeeQuestion = (req, res, next) => {
+  let { class_id, subject_id, chapter_id, q_type } = req.query
+  let currentPage = parseInt(req.query.page) || 1
+  let itemPerPage = 25
+  console.log(currentPage);
+  try {
+    db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;SELECT ${q_type}.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM ${q_type} JOIN classes ON ${q_type}.class_id = classes.id JOIN subject_list ON ${q_type}.subject_id = subject_list.id JOIN chapter ON ${q_type}.chapter_id = chapter.id WHERE ${q_type}.class_id=? and ${q_type}.subject_id=? and ${q_type}.chapter_id=? order by id desc limit ?,?`, [class_id, subject_id, chapter_id, class_id, subject_id, chapter_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
+      if (e) {
+        next(e)
+      } else {
+        let totalQus = data[0]
+        let totalPage = Math.ceil(totalQus[0].count / itemPerPage)
+        res.render("user/admin/question/see-questions", { data: data[1], title: "See Question", flashMessage: Flash.getMessage(req), currentPage, itemPerPage, totalPage, q_type,totalQus })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+
+exports.renderSingleQuestionView = (req, res, next) => {
+  let { question_id, q_type } = req.query
+  try {
+    db.query(`SELECT * FROM ${q_type} WHERE id = ?`, [question_id], (e, data) => {
+      if (e) {
+        next(e)
+      } else {
+        res.render("user/admin/question/viewsingle", { data: data[0], q_type, title: "See Question", flashMessage: Flash.getMessage(req) })
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+
 //questions realated 
 
 exports.renderCreateQuestion = (req, res, next) => {
@@ -221,7 +269,7 @@ exports.renderCreateQuestion = (req, res, next) => {
       savedInfo = {
         class_name: class_name,
         subject_name: subject_name,
-        chapter_name: chapter_name
+        chapter_name: chapter_name,
       }
       db.query(`select * from ${q_type} where class_id=${class_id} and subject_id=${subject_id} and chapter_id=${chapter_id} and id=${question_id} limit 1`, (e, data) => {
         if (e) {
@@ -248,7 +296,7 @@ exports.renderCreateQuestion = (req, res, next) => {
       if (e) {
         return next(e)
       } else {
-        res.render("user/admin/question/create", { data:data[0],filter:data[1], title: "Create Question", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
+        res.render("user/admin/question/create", { data: data[0], filter: data[1], title: "Create Question", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
       }
     })
   } catch (error) {
@@ -256,9 +304,8 @@ exports.renderCreateQuestion = (req, res, next) => {
   }
 };
 exports.createQuestionPost = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer } = req.body
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer, filter, year } = req.body
   let { edit, q_id } = req.query
-  console.log(req.query);
   let options = [];
   question_option.forEach(e => {
     options.push(e);
@@ -283,7 +330,7 @@ exports.createQuestionPost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into questions values(?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer], (e, data) => {
+      db.query("insert into questions values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer, JSON.stringify(filter), year, req.user.id], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -339,11 +386,11 @@ exports.renderCreative = (req, res, next) => {
         chapter_name: ''
       }
     }
-    db.query("select * from classes", (e, data) => {
+    db.query("select * from classes;select * from filter", (e, data) => {
       if (e) {
         return next(e)
       } else {
-        res.render("user/admin/question/creative", { data, title: "Creative", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
+        res.render("user/admin/question/creative", { data: data[0], filter: data[1], title: "Creative", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
       }
     })
   } catch (error) {
@@ -351,7 +398,7 @@ exports.renderCreative = (req, res, next) => {
   }
 };
 exports.creativePost = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer } = req.body
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer, filter, year } = req.body
   let { edit, q_id } = req.query
   let options = [];
   question_option.forEach(e => {
@@ -377,7 +424,7 @@ exports.creativePost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into creative values(?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer], (e, data) => {
+      db.query("insert into creative values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer, JSON.stringify(filter), year, req.user.id], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -433,11 +480,11 @@ exports.renderCreateOthersQuestion = (req, res, next) => {
         chapter_name: ''
       }
     }
-    db.query("select * from classes", (e, data) => {
+    db.query("select * from classes;select * from filter", (e, data) => {
       if (e) {
         return next(e)
       } else {
-        res.render("user/admin/question/others-questions", { data, title: "Others", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
+        res.render("user/admin/question/others-questions", { data: data[0], filter: data[1], title: "Others", flashMessage: Flash.getMessage(req), obj, qus, savedInfo, setContent })
       }
     })
   } catch (error) {
@@ -445,7 +492,7 @@ exports.renderCreateOthersQuestion = (req, res, next) => {
   }
 };
 exports.othersQuestionsPost = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_answer } = req.body
+  let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_answer, filter, year } = req.body
   let { edit, q_id } = req.query
   let savedInfo = {
     class_name: class_name,
@@ -468,7 +515,7 @@ exports.othersQuestionsPost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into q_others values(?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, question_answer], (e, data) => {
+      db.query("insert into q_others values(?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, question_answer, JSON.stringify(filter), year, req.user.id], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -481,41 +528,6 @@ exports.othersQuestionsPost = (req, res, next) => {
         }
       })
     }
-  } catch (error) {
-    next(error)
-  }
-};
-exports.renderSeeQuestion = (req, res, next) => {
-  let { class_id, subject_id, chapter_id, q_type } = req.query
-  let currentPage = parseInt(req.query.page) || 1
-  let itemPerPage = 25
-  console.log(currentPage);
-  try {
-    db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;SELECT ${q_type}.*, classes.class_name, subject_list.subject_name, chapter.chapter_name FROM ${q_type} JOIN classes ON ${q_type}.class_id = classes.id JOIN subject_list ON ${q_type}.subject_id = subject_list.id JOIN chapter ON ${q_type}.chapter_id = chapter.id WHERE ${q_type}.class_id=? and ${q_type}.subject_id=? and ${q_type}.chapter_id=? order by id desc limit ?,?`, [class_id, subject_id, chapter_id, class_id, subject_id, chapter_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
-      if (e) {
-        next(e)
-      } else {
-        let totalMessage = data[0]
-        let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
-        res.render("user/admin/question/see-questions", { data: data[1], title: "See Question", flashMessage: Flash.getMessage(req), currentPage, itemPerPage, totalPage, q_type })
-      }
-    })
-  } catch (error) {
-    next(error)
-  }
-};
-exports.renderSingleQuestionView = (req, res, next) => {
-  let { question_id, q_type } = req.query
-  console.log(q_type, question_id);
-  try {
-    db.query(`SELECT * FROM ${q_type} WHERE id = ?`, [question_id], (e, data) => {
-      if (e) {
-        next(e)
-      } else {
-        console.log(data);
-        res.render("user/admin/question/viewsingle", { data: data[0], q_type, title: "See Question", flashMessage: Flash.getMessage(req) })
-      }
-    })
   } catch (error) {
     next(error)
   }
@@ -555,21 +567,21 @@ exports.makeQuestionRender = (req, res, next) => {
 exports.renderCreateFilter = (req, res, next) => {
   let { question_id, q_type } = req.query
   try {
-    db.query("select * from filter",(e,data)=>{
-      if(e) return next(e)
-      res.render("user/admin/question/filter", {data, title: "Filter", flashMessage: Flash.getMessage(req) })
+    db.query("select * from filter", (e, data) => {
+      if (e) return next(e)
+      res.render("user/admin/question/filter", { data, title: "Filter", flashMessage: Flash.getMessage(req) })
     })
-    
+
   } catch (error) {
     next(error)
   }
 };
 
 exports.filterPost = (req, res, next) => {
-  let { filter_type, filter_name,id } = req.body
+  let { filter_type, filter_name, id } = req.body
   try {
-    if(id){
-      db.query(`update filter set type=? ,name=? where id = ?`, [filter_type, filter_name,id], (e, data) => {
+    if (id) {
+      db.query(`update filter set type=? ,name=? where id = ?`, [filter_type, filter_name, id], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -581,7 +593,7 @@ exports.filterPost = (req, res, next) => {
           return res.redirect('/user/admin/questions/filter')
         }
       })
-    }else{
+    } else {
       db.query(`insert into filter values(?,?,?)`, [null, filter_type, filter_name], (e, data) => {
         if (e) {
           next(e)
@@ -595,7 +607,7 @@ exports.filterPost = (req, res, next) => {
         }
       })
     }
-    
+
   } catch (error) {
     next(error)
   }

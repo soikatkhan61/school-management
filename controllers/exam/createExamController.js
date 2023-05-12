@@ -56,7 +56,7 @@ exports.createExamPost = (req, res, next) => {
                 } else {
                     req.flash('fail', "Failed to create")
                 }
-                res.redirect('/combined-question/saved')
+                res.redirect(`/exam/view?q_set_id=${q_set}`)
             }
         })
     } catch (error) {
@@ -96,7 +96,8 @@ GROUP BY e.id;
             return res.render("exam/results", {
                 title: "Results of Exam",
                 flashMessage: Flash.getMessage(req),
-                data
+                data,
+                exam_id
             });
         })
 
@@ -321,13 +322,55 @@ exports.renderStudentResult = (req, res, next) => {
 
 exports.renderStudentAllResult = (req, res, next) => {
     try {
-        db.query("select exams_participants.*,exams.name,exams.id as exam_id from exams_participants join exams on exams_participants.exam_id = exams.id where exams_participants.stu_id = ? and exams_participants.school_id=?", [req.user.student_id, req.user.school_id], (e, exams) => {
+        db.query("select exams_participants.*,exams.name,exams.id as exam_id from exams_participants join exams on exams_participants.exam_id = exams.id where exams_participants.stu_id = ? and exams_participants.school_id=? order by exams_participants.id desc" , [req.user.student_id, req.user.school_id], (e, exams) => {
             if (e) return next(e)
             return res.render("exam/all-results", {
                 title: "Submit Status",
                 flashMessage: Flash.getMessage(req),
                 exams
             });
+        })
+    } catch (error) {
+        next(error)
+    }
+};
+
+exports.renderExamParticipats = (req, res, next) => {
+    try {
+        db.query("select exams_participants.submit_on,exams_participants.score,students.name,students.avater from exams_participants join students on exams_participants.stu_id = students.student_id where exams_participants.school_id=? and exam_id=? order by exams_participants.score and exams_participants.submit_on", [req.user.school_id,req.query.exam_id], (e, data) => {
+            if (e) return next(e)
+            console.log(data);
+            return res.render("exam/participants", {
+                title: "Participants",
+                flashMessage: Flash.getMessage(req),
+                data
+            });
+        })
+    } catch (error) {
+        next(error)
+    }
+};
+
+exports.compareMyAnswerList = (req, res, next) => {
+    try {
+        db.query("select exams_participants.answers as my_ans,exams_participants.exam_id,exams.q_set_id,exams.name,q_set.questions,q_set.answers as real_ans from exams_participants join exams on exams_participants.exam_id = exams.id join q_set on exams.q_set_id = q_set.id where exams_participants.stu_id=? and exams_participants.id = ?", [req.user.student_id,req.query.exam_id], (e, findExmData) => {
+            if (e) return next(e)
+            if(findExmData.length){
+                db.query(`select * from questions where id in(${findExmData[0].questions})`,(e, data) => {
+                    if (e) return next(e)
+                    console.log(JSON.parse(findExmData[0].my_ans));
+                    console.log(findExmData[0].real_ans);
+                    return res.render("exam/compare-answer", {
+                        title: "Answer",
+                        flashMessage: Flash.getMessage(req),
+                        data,
+                        findExmData
+                    });
+                })
+            }else{
+                res.send("no data")
+            }
+            
         })
     } catch (error) {
         next(error)

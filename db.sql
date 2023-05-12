@@ -222,10 +222,19 @@ CREATE TABLE IF NOT EXISTS exams_participants (
 );
 
 
---10-05-2023
+--10-05-2023 -- pending update
 CREATE TABLE IF NOT EXISTS filter (
   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(10) NOT NULL,
   name VARCHAR(300)
 );
 
+ALTER TABLE questions ADD COLUMN filter VARCHAR(300), ADD COLUMN year VARCHAR(4),ADD COLUMN fk_author int(11);
+ALTER TABLE questions ADD CONSTRAINT FOREIGN KEY (fk_author) REFERENCES moderator(id);
+
+ALTER TABLE creative ADD COLUMN filter VARCHAR(300), ADD COLUMN year VARCHAR(4),ADD COLUMN fk_author int(11);
+ALTER TABLE creative ADD CONSTRAINT FOREIGN KEY (fk_author) REFERENCES moderator(id);
+
+ALTER TABLE q_others ADD COLUMN filter VARCHAR(300), ADD COLUMN year VARCHAR(4),ADD COLUMN fk_author int(11);
+ALTER TABLE q_others ADD CONSTRAINT FOREIGN KEY (fk_author) REFERENCES moderator(id);
+  

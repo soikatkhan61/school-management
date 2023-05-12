@@ -23,6 +23,7 @@
           <th scope="col">Name</th>
           <th scope="col">Submit on</th>
           <th scope="col">Score</th>
+          <th scope="col">Answers</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +42,7 @@
                 <a class="btn btn-primary btn-sm" href="/exam/view-result?token=<%= exams[i].exam_id %>">view</a>
             <% } %>
         </td>
+        <td><a class="btn btn-link" href="/exam/compare-answers?exam_id=<%= exams[i].id %>">Answer</a></td>
         </tr>
         <% } %>
         <% } %>

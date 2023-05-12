@@ -18,9 +18,8 @@
                 <div>
                     <div class="border border-gray card  p-4">
                         <div class="mb-2">
-                            <span class="mb-0">This exams is creating by</span>
-                            <p class="fw-bold mb-0">
-                                <%= user.username %>
+                            <p class="mb-0 d-flex justify-content-between">This exams is creating by <span class="fw-bold border rounded-pill px-3 border-primary"><%= user.username %></span></p>
+                            <p class="mb-0">
                                 <input type="text" name="teacher" value="<%= user.id %>" hidden>
                                 <input type="text" name="school_id" value="<%= user.school_id %>" hidden>
                             </p>
@@ -109,7 +108,7 @@
                             }
                         </script>
                         <input type="text" value="<%= q_set %>" hidden name="q_set">
-                        <button type="submit">sumit</button>
+                        <button type="submit" class="btn btn-primary">sumit</button>
             </form>
         </div>
     </div>

@@ -69,7 +69,7 @@
       <div class="row">
         <div class="col-sm-12 col-md-3">
           <div class="sticky-top">
-            <div class="mb-2 shadow-sm p-3 border rounded">
+            <div class="mb-2 shadow-sm p-3 border <%= obj.class_id && 'border-success border-2' %> rounded">
               <p class="text-center">Class Information</p>
               <div>
                 <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
@@ -99,8 +99,6 @@
                   <% }%>
                 </select>
               </div>
-
-              <!-- Email input -->
               <div>
                 <select name="chapter_id" id="chapter_select" class="py-2 px-4" required style="width: 100%; outline: black">
                   <% if(obj.chapter_id){ %>
@@ -111,8 +109,7 @@
                 </select>
               </div>
               <% if(obj.class_id){ %>
-              <a href="/user/admin/create-question" class="btn btn-danger my-1">Reset</a>
-              <p class="fst-italic text-sm text-danger">Please do not edit this when your are edit question</p>
+              <a href="/user/admin/create-question" class="btn btn-sm btn-danger mt-2">Reset</a>
               <% } %>
             </div>
 
@@ -120,13 +117,13 @@
               <p class="text-center">Additional Information</p>
               <hr>
               <p>Board</p>
-                <% if(obj.class_id ){ %>
-                <option class="py-1 px-2" value="<%= obj.class_id %>" selected><%= savedInfo.class_name ? savedInfo.class_name  : obj.class_id %></option>
-                <% }else{ %>
+              <% if(!filter){ %>
+                <p>--</p>
+              <% }else{ %>
                 <% for(let s of filter){ %>
                   <% if(s.type == 'board') {%>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                      <input class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
                       <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
                     </div>
                   <% }%>
@@ -134,10 +131,7 @@
                 <% }%>
 
              <div class="mt-4">
-              <select name="year" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
-                <% if(obj.subject_id ){ %>
-                <option class="py-2 px-5" value="<%= obj.subject_id %>" selected><%= savedInfo.subject_name ? savedInfo.subject_name : obj.subject_id %></option>
-                <% }else{ %>
+              <select name="year" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
                   <option class="py-1 px-3" value="">Year</option>
                   <option class="py-1 px-3" value="2023">2023</option>
                   <option class="py-1 px-3" value="2022">2022</option>
@@ -168,7 +162,6 @@
                   <option class="py-1 px-3" value="1997">1997</option>
                   <option class="py-1 px-3" value="1996">1996</option>
                   <option class="py-1 px-3" value="1995">1995</option>
-                <% }%>
               </select>
              </div>
 
@@ -176,13 +169,13 @@
 
             <div class="my-4 shadow-sm p-3 border rounded">
               <p>Univeristy</p>
-                <% if(obj.subject_id ){ %>
+                <% if(!filter){ %>
                   <p>--</p>
                 <% }else{ %>
                 <% for(let s of filter){ %>
                   <% if(s.type == 'uni') {%>
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                      <input class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
                       <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
                     </div>
                   <% }%>
@@ -195,7 +188,7 @@
 
         <div class="col-sm-12 col-md-9">
           <div class="ck_editor_div">
-            <textarea id="content" class="ck_editor" name="question_text">
+            <textarea id="content" class="ck_editor" name="question_text" required>
               <%- (qus && qus[0].question_text) && setContent == 'true'  ? qus[0].question_text : '' %>
             </textarea>
           </div>
@@ -205,7 +198,7 @@
           <% } %>
 
           <div class="my-5">
-            <h3 class="text-center">Option of this question</h3>
+            <h4 class="text-center">Option of this question</h4>
             <hr>
             <div class="my-3 ck_editor_div">
               <h5>#option 1</h5>

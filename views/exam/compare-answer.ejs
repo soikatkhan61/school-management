@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    Admin Panel
+  </title>
+  <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/grid.css">
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link rel="stylesheet" href="/styles/custom_user.css">
+  <link rel="stylesheet" href="/styles/alert.css">
+</head>
+
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content container py-2">
+  <% if(data.length == 0){ %>
+  <p class="text-center">No data</p>
+  <% }else{ %>
+    <p class="p-2 border rounded-pill bg-primary text-center text-light">Results of <%= findExmData[0].name %></p>
+    <div class="my-2">
+        <% 
+            const myAnsArray = findExmData[0].my_ans.replace(/"/g, '').split(',').map(Number);
+            const realAnsArray = findExmData[0].real_ans.replace(/"/g, '').split(',').map(Number);
+
+        %>
+        <% for(let i=0;i<data.length;i++){ %>
+            <% let opt = data[i].question_option ?  JSON.parse(data[i].question_option) : '' %>
+           <div style="background-color: rgb(243, 246, 248);" class="py-3 px-2 border <%= myAnsArray[i] == realAnsArray[i] ? 'border-success' : 'border-danger'  %>  my-2 rounded">
+                <%- data[i].question_text %>
+                <div class="">
+                    <p class="mb-0">Correct ans: <%- opt[realAnsArray[i]] %></p>
+                    <p class="mb-0 " >My ans: 
+                        <span>
+                            <% if(myAnsArray[i] == realAnsArray[i]){ %>
+                                <i class="fas fa-check-double text-success"></i>
+                            <% }else{ %>
+                                <i class="fas fa-xmark text-danger"></i>
+                            <% } %>
+                        </span> 
+                        <%- opt[myAnsArray[i]] %></p>
+                </div>
+           </div>
+        <% } %>
+    </div>
+  <% } %>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+  <script>
+      CKEDITOR.replace('content', {
+          height: 700,
+          removeButtons: 'PasteFromWord',
+          
+      });
+  
+      if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
+          document.getElementById('ie8-warning').className = 'tip alert';
+      }
+  
+  </script>
+  
+  </body>
+  
+  </html>

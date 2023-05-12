@@ -93,13 +93,13 @@
                     <div class="my-4">
                         Correct answer
                         <div class="rounded border p-2 my-1 border border-success">
-                            <% if( data.question_answer === 1){ %>
+                            <% if( data.question_answer == 1){ %>
                                 <%- (data && opt[1]) ? opt[0] : '' %>
-                            <%}else if( data.question_answer === 2){ %>
+                            <%}else if( data.question_answer == 2){ %>
                                 <%- (data && opt[1]) ? opt[1] : '' %>
-                            <%}else if( data.question_answer === 3){ %>
+                            <%}else if( data.question_answer == 3){ %>
                                 <%- (data && opt[1]) ? opt[2] : '' %>
-                            <%}else if( data.question_answer === 4){ %>
+                            <%}else if( data.question_answer == 4){ %>
                                 <%- (data && opt[1]) ? opt[3] : '' %>
                             <% }%>
                         </div>

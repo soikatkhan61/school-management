@@ -170,7 +170,8 @@ exports.addQuestion = (req, res, next) => {
     }
 
 };
-exports.renderSavedQuesSet = (req, res, next) => {
+
+exports.renderSavedByClass = (req, res, next) => {
     let school_id
     if (req.user.userType === "admin") {
         school_id = req.user.id
@@ -179,9 +180,10 @@ exports.renderSavedQuesSet = (req, res, next) => {
     }
     let currentPage = parseInt(req.query.page) || 1
     let itemPerPage = 25
+    let class_id = req.params.class_id
     try {
         db.query(
-            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? order by id desc limit ?,?", [school_id, school_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage],
+            "SELECT COUNT(*) as count FROM q_set where school_id=? ;select * from q_set where q_set.school_id=? and q_set.class_id=? order by id desc limit ?,?", [school_id, school_id,class_id, ((itemPerPage * currentPage) - itemPerPage), itemPerPage],
             (e, data) => {
                 if (e) {
                     next(e);
@@ -193,6 +195,28 @@ exports.renderSavedQuesSet = (req, res, next) => {
                         flashMessage: Flash.getMessage(req),
                         q_set: data[1],
                         currentPage, itemPerPage, totalPage
+                    });
+                }
+            }
+        );
+    } catch (error) {
+        next(error);
+    }
+
+}
+
+exports.renderSavedQuesSet = (req, res, next) => {
+    try {
+        db.query(
+            "select * from classes",
+            (e, data) => {
+                if (e) {
+                    next(e);
+                } else {
+                    res.render(`combined/savedCombined`, {
+                        title: "Saved Question",
+                        flashMessage: Flash.getMessage(req),
+                        data
                     });
                 }
             }

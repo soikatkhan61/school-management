@@ -85,22 +85,22 @@
         </div>
 
         <div class="my-2 border p-3 rounded shadow-sm">
-            <div class="my-2 d-flex justify-content-between">
-                <p class="pb-0 mb-0" id="time_left">Remaining Time: <span class="fw-bold">--</span></p>  
+            <div class="my-2  d-md-flex justify-content-between">
+                <a href="/exam/results/participants?exam_id=<%= exam_id %>" class="border rounded-pill px-3 border-1 border-primary"><span class="">Particapant List</span></a>
                 <% if((data && data[0].status) && data[0].status == 1 ){ %>
-                    <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=0" class="btn btn-danger">STOP</a>
+                    <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=0" class="btn btn-danger btn-sm">STOP</a>
                     <p class="pb-0 mb-0">Status: <span class="fw-bold text-success">Runnig</span></p>
                 <% }else{ %>
-                    <a href="/exam/status-change?exam_id=<%=data && data[0].id %>&status=1" class="btn btn-success">START</a> 
-                    <p class="pb-0 mb-0">Status: <span class="fw-bold text-danger">END</span></p>
+                    <a href="/exam/status-change?exam_id=<%=data && data[0].id %>&status=1" class="btn btn-success btn-sm">START</a> 
+                    <p class="pb-0 mb-0">Status: <span class="fw-bold text-danger">OFF</span></p>
                 <% } %>
-                
+                <p class="pb-0 mb-0" id="time_left">Remaining Time: <span class="fw-bold">--</span></p>  
             </div>
-            <p class="pb-0 mb-0">Exam:<%= data && data[0].name !== null ? data[0].name : 'Null' %></p>
-            <p class="pb-0 mb-0">Exam Code: <%= data && data[0].code !== null ? data[0].code : 'Null' %></p>
-            <p class="pb-0 mb-0" id="start_time">Starting At: <%= data && data[0].start_time !== null ? data[0].start_time : 'Null' %></p>
-            <p class="pb-0 mb-0" id="end_time">Ending At: <%= data && data[0].end_time !== null ? data[0].end_time : 'Null' %></p>
-            <p class="text-center text-danger my-4" style="font-size: 30px;"><%= data.length == 0 ? 'No participants joined yet! Data will be available after join at least 1 participants' : '' %></p>
+            <p class="pb-0 mb-0">Exam:<%= data && data[0].name !== null ? data[0].name : '--' %></p>
+            <p class="pb-0 mb-0">Exam Code: <%= data && data[0].code !== null ? data[0].code : '--' %></p>
+            <p class="pb-0 mb-0" id="start_time">Starting At: <%= data && data[0].start_time !== null ? data[0].start_time : '--' %></p>
+            <p class="pb-0 mb-0" id="end_time">Ending At: <%= data && data[0].end_time !== null ? data[0].end_time : '--' %></p>
+            <p class="text-center text-danger my-4" style="font-size: 20px;"><%= data.length == 0 ? 'No participants joined yet! Data will be available after join at least 1 participants' : '' %></p>
             <script>
                 const startTimeElement = document.getElementById("start_time");
                 const endTimeElement = document.getElementById("end_time");

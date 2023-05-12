@@ -4,13 +4,16 @@
             <% if(data.length==0){ %>
                 <p class="text-center text-dark">No Questions Found</p>
                 <% }else{ %>
-                    <div class="table-responsive">
-                        <div class="py-2" >
+                    <div class="py-2 d-flex justify-content-between align-items-center">
+                       <div>
                             <p>Showing questions of </p>
                             Class:  <span class="fw-bold text-primary"><%= data[0].class_name %> </span><br>
                             Subject: <span class="fw-bold text-success"><%= data[0].subject_name %></span> <br>
                             Chapter: <span class="fw-bold text-danger"><%= data[0].chapter_name %></span> <br>
-                        </div>
+                       </div>
+                       <p class="display-6"><%= totalQus[0].count %></p>
+                    </div>
+                    <div class="table-responsive">
                         <table class="table">
                             <thead class="table-dark">
                                 <tr>

@@ -1,0 +1,63 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2">
+  <% if(data.length == 0){ %>
+  <p class="text-center">No data</p>
+  <% }else{ %>
+  <div class="table-responsive table-nowrap">
+    <table class="table align-middle mb-0 bg-white">
+        <thead class="bg-light">
+          <tr>
+            <th>Name</th>
+            <th>Submit</th>
+            <th>Position</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% let i=1 %>
+        <% for(let s of data){ %>
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <img
+                    src="<%= s.avater ? s.avater : '/images/user.png' %>"
+                    alt=""
+                    style="width: 45px; height: 45px"
+                    class="rounded-circle border p-1"
+                    />
+                <div class="ms-3">
+                  <p class="fw-bold mb-1"><%= s.name %></p>
+                </div>
+              </div>
+            </td>
+            <td>
+              <p class="fw-normal mb-1"><%= moment(s.submit_on) %> <a href="" data-mdb-toggle="tooltip" title="<%= s.submit_on %>"><i class="fas fa-circle-info px-1"></i></a> </p>
+            </td>
+            <td>
+              <span class="badge badge-success rounded-pill d-inline"><%= i %></span>
+              <% i++ %>
+            </td>
+            <td><%= s.score ? s.score : 'release' %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+  <%- include('../partials/footer.ejs') %>
+
+  </body>
+
+  </html>
