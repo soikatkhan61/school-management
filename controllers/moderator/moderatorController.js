@@ -114,20 +114,25 @@ exports.registerModeratorPost = async (req, res, next) => {
 
 exports.renderModeratorList = async (req, res, next) => {
     try {
-        let currentPage = parseInt(req.query.page) || 1;
-        let itemPerPage = 25;
-        let table_name = 'moderator'
-        db.query(`select count(*) as count  from ${table_name};select * from ${table_name} order by id desc limit ?,?`, [((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
+        db.query(`SELECT c.id AS moderator_id, c.name,c.email,c.avater,c.username, COUNT(q.id) AS total_questions
+        FROM moderator AS c
+        LEFT JOIN (
+          SELECT fk_author, id
+          FROM questions
+          UNION ALL
+          SELECT fk_author, id
+          FROM creative
+          UNION ALL
+          SELECT fk_author, id
+          FROM q_others
+        ) AS q ON c.id = q.fk_author
+        GROUP BY c.id, c.name;`, (e, data) => {
             if (e) {
                 return next(e)
             } else {
-                let totalUsers = data[0];
-                let totalPage = totalUsers[0].count / itemPerPage;
                 res.render('moderator/registerd-moderator', {
-                    data: data[1], flashMessage: Flash.getMessage(req),
-                    currentPage,
-                    itemPerPage,
-                    totalPage,
+                    data,
+                    flashMessage: Flash.getMessage(req),
                     title: "Registerd Moderator"
                 })
             }

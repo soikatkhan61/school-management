@@ -237,4 +237,6 @@ ALTER TABLE creative ADD CONSTRAINT FOREIGN KEY (fk_author) REFERENCES moderator
 
 ALTER TABLE q_others ADD COLUMN filter VARCHAR(300), ADD COLUMN year VARCHAR(4),ADD COLUMN fk_author int(11);
 ALTER TABLE q_others ADD CONSTRAINT FOREIGN KEY (fk_author) REFERENCES moderator(id);
-  
+
+--- completed ---
+

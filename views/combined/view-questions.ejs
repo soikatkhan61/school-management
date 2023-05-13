@@ -231,35 +231,38 @@
       let perPage = 25;
       let totalPages = 0;
 
-      let category = '';
+      let category;
       let year = '';
       let previousData = [];
 
 
-      //checkbox selec
-      var checkboxes = document.getElementsByClassName("checkbox");
-      var selectedCheckboxes = [];
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].addEventListener("change", function() {
-          selectedCheckboxes = [];
-          for (var j = 0; j < checkboxes.length; j++) {
-            var checkbox = checkboxes[j];
-            if (checkbox.checked) {
-              selectedCheckboxes.push(checkbox.value);
+      //checkbox select
+      function checkboxSelectIinit() {
+        console.log(category);
+        var checkboxes = document.getElementsByClassName("checkbox");
+        var selectedCheckboxes = [];
+        for (var i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].addEventListener("change", function() {
+            selectedCheckboxes = [];
+            for (var j = 0; j < checkboxes.length; j++) {
+              var checkbox = checkboxes[j];
+              if (checkbox.checked) {
+                selectedCheckboxes.push(checkbox.value);
+              }
             }
-          }
-          category = JSON.stringify(selectedCheckboxes)
-          console.log(category);
-          //fetchQus()
-        });
+            category = selectedCheckboxes.join(",");
+            console.log(category);
+            //loadFilterQus()
+          });
+        }
       }
+
 
       yearSelect.addEventListener('change', (event) => {
         year = event.target.value;
-        console.log(year);
         previousData = [];
         offset = 0;
-        //fetchMovies();
+        loadFilterQus()
       });
 
 
@@ -276,7 +279,7 @@
 
         //initialize the filter section
         if (localStorage.getItem('filter_data')) {
-          createFilterElement(localStorage.getItem('filter_data'))
+          createFilterElement(localStorage.getItem('filter_data'),category)
         } else {
           fetch("/combined-question/get-filter-data")
             .then(response => response.json())
@@ -284,20 +287,15 @@
               localStorage.setItem('filter_data', JSON.stringify(filter_data))
             })
         }
-
+        checkboxSelectIinit()
         ///fetchQus();
       })
 
 
       //fetch the questions
-      function fetchQus() {
+      function loadFilterQus() {
         let fetchURL = `/combined-question/view-questions?year=${year}&category=${category}&class_id=${class_id}&subject_id=${subject_id}&chapter=${chapter}&q_set=${q_set}&q_type=${q_type}`
-        let pushURL = `/combined-question/view-questions?year=${year}&category=${category}&class_id=${class_id}&subject_id=${subject_id}&chapter=${chapter}&q_set=${q_set}&q_type=${q_type}`
-        fetch(fetchURL)
-          .then(response => response.json())
-          .then(qus => {
-            console.log(qus);
-          })
+        window.location.href = fetchURL
       }
 
 
@@ -329,18 +327,26 @@
       }
 
       //some unitily functions
-      function createFilterElement(filter_data) {
+      function createFilterElement(filter_data,category) {
         const board = document.querySelector('.board');
         const uni = document.querySelector('.uni');
 
         const filterArray = JSON.parse(filter_data);
-        filterArray.forEach((item) => {
+        const categoryArray = category.split(',');
+        console.log(categoryArray);
+
+        filterArray.forEach((item,index) => {
           // Create the checkbox element
           const checkbox = document.createElement('input');
           checkbox.className = 'form-check-input checkbox';
           checkbox.name = 'filter';
           checkbox.type = 'checkbox';
           checkbox.value = item.id;
+          console.log(item.id);
+          if(categoryArray.includes(item.id.toString())) {
+            checkbox.checked = true;
+          }
+          
           checkbox.id = item.id;
 
           // Create the label element

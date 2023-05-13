@@ -60,7 +60,7 @@ exports.admininstrationLoginPost = async (req, res, next) => {
                                 flashMessage: Flash.getMessage(req),
                             });
                         } else {
-                            if(data[0].validity <= new Date()){
+                            if(new Date() <= data[0].validity ){
                                 let token = jwt.sign(
                                     {
                                         id: data[0].id,

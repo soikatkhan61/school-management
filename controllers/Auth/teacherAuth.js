@@ -69,7 +69,7 @@ exports.teacherLoginPost = async (req, res, next) => {
                                 if (e) {
                                     return next(e);
                                 } else {
-                                    if (result[0].validity <= new Date()) {
+                                    if (new Date()  <= result[0].validity) {
                                         let token = jwt.sign(
                                             {
                                                 id: data[0].id,

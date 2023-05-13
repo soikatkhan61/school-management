@@ -114,11 +114,10 @@ exports.viewQuestionGet = (req, res, next) => {
     } else {
         q_type = 'q_others'
     }
-    if (req.query.category) {
-        category = JSON.parse(req.query.category).map(Number);
-        category = category.join(',');
-        console.log(category);
-    }
+    
+    category = req.query.category
+    console.log(category);
+
 
     //contract the query
     let sql = `SELECT * FROM ${q_type}`;
@@ -137,7 +136,7 @@ exports.viewQuestionGet = (req, res, next) => {
     select * from ${q_type} where class_id=${class_id} and subject_id = ${subject_id} and chapter_id=${chapter} limit ${((itemPerPage * currentPage) - itemPerPage)} , ${itemPerPage};select questions,total_qus from q_set where id=${q_set};
     `
 
-    
+    console.log(req.query);
 
     try {
         db.query(`SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=? AND subject_id=? AND chapter_id=?;select * from ${q_type} where class_id=? and subject_id = ? and chapter_id=? limit ?,?;select questions,total_qus from q_set where id=?;select * from filter`, [class_id, subject_id, chapter, class_id, subject_id, chapter, ((itemPerPage * currentPage) - itemPerPage), itemPerPage, q_set], (e, data) => {
