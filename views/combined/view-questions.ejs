@@ -46,51 +46,22 @@
     <div class="d-flex justify-content-between">
       <div class="my-2 text-light">
         <button id="menu-button" class="btn border border-primary"><i class="fas fa-filter"></i> Filter</button>
-        <a class="text-light btn btn-primary" href="/combined-question/view-subject?class_id=<%= filter.class_id %>&subject=<%= filter.subject %>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>">Subject List</a>
+        <a class="text-light btn btn-primary" href="/combined-question/view-subject?class_id=<%= filter.class_id %>&subject=<%= filter.subject %>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>"> <i class="fas fa-arrow-left mx-1"></i> Subject List</a>
         <a class="text-light btn btn-success" target="_blank" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>"> <i class="fas fa-up-right-from-square mx-1"></i> Preview</a>
         <button class="btn ">Selected : <span id="total_select"> <%= total_selected ? total_selected : '0'  %> </span> / <%= q_set_ids[0].total_qus ? q_set_ids[0].total_qus : '0'  %></button>
       </div>
     </div>
 
     <nav id="side-nav" style="display: none;" class="p-3">
-
       <select name="year" id="year" class="py-2 px-4 mb-3 filter_category select-filter" style="width: 100%; outline: black;margin-top: 60px;">
         <option class="py-1 px-3" value="">Year</option>
-        <option class="py-1 px-3" value="2023">2023</option>
-        <option class="py-1 px-3" value="2022">2022</option>
-        <option class="py-1 px-3" value="2021">2021</option>
-        <option class="py-1 px-3" value="2020">2020</option>
-        <option class="py-1 px-3" value="2019">2019</option>
-        <option class="py-1 px-3" value="2018">2018</option>
-        <option class="py-1 px-3" value="2017">2017</option>
-        <option class="py-1 px-3" value="2016">2016</option>
-        <option class="py-1 px-3" value="2015">2015</option>
-        <option class="py-1 px-3" value="2014">2014</option>
-        <option class="py-1 px-3" value="2013">2013</option>
-        <option class="py-1 px-3" value="2012">2012</option>
-        <option class="py-1 px-3" value="2011">2011</option>
-        <option class="py-1 px-3" value="2010">2010</option>
-        <option class="py-1 px-3" value="2009">2009</option>
-        <option class="py-1 px-3" value="2008">2008</option>
-        <option class="py-1 px-3" value="2007">2007</option>
-        <option class="py-1 px-3" value="2006">2006</option>
-        <option class="py-1 px-3" value="2005">2005</option>
-        <option class="py-1 px-3" value="2004">2004</option>
-        <option class="py-1 px-3" value="2003">2003</option>
-        <option class="py-1 px-3" value="2002">2002</option>
-        <option class="py-1 px-3" value="2001">2001</option>
-        <option class="py-1 px-3" value="2000">2000</option>
-        <option class="py-1 px-3" value="1999">1999</option>
-        <option class="py-1 px-3" value="1998">1998</option>
-        <option class="py-1 px-3" value="1997">1997</option>
-        <option class="py-1 px-3" value="1996">1996</option>
-        <option class="py-1 px-3" value="1995">1995</option>
+        <% for(let i=2030;i>1995;i--){ %>
+        <option class="py-1 px-3" value="<%= i %>" <%= year && year == i ? 'selected' : '' %>><%= i %></option>
+        <% } %>
       </select>
 
-
-      <div class="board my-4 shadow-sm p-3 border rounded bg-light">
-        <p>Board</p>
-
+      <div class="board mb-4 shadow-sm p-3 border rounded bg-light">
+          <p>Board</p>
       </div>
 
       <div class="uni my-4 shadow-sm p-3 border rounded bg-light">
@@ -103,25 +74,28 @@
     <% if(questions.length == 0){ %>
     <p>no question</p>
     <% }else{ %>
-    <% let object = {} %>
-    <% let str = q_set_ids[0].questions %>
-    <% if(str !== null){ %>
-    <% let numString = '' %>
-    <% for (let i=0;i<str.length;i++){ %>
-    <% if(str[i] !== ',' && str[i] !== ' '){ %>
-    <% numString += str[i] %>
-    <% continue %>
-    <% }%>
-    <% if(numString !== ''){ %>
-    <% object[numString] = true %>
-    <% numString = '' %>
-    <% } %>
-    <% } %>
-    <% if(numString !== ''){ %>
-    <% object[numString] = true %>
-    <% numString = '' %>
-    <% } %>
-    <% } %>
+    <%
+    
+    let object = {} 
+    let str = q_set_ids[0].questions
+    if(str != null || str != undefined){
+      let numString = ''
+      for (let i=0;i<str.length;i++){
+        if(str[i] !== ',' && str[i] !== ' '){
+          numString += str[i]
+          continue
+        }
+        if(numString !== ''){
+          object[numString] = true
+          numString = ''
+        }
+      }
+      if(numString !== ''){
+        object[numString] = true
+        numString = ''
+      }
+    }
+    %>
     <% if(q_type == 'q_others'){ %>
     <div class="table-responsive table-nowrap ">
       <table class="table table-bordered">
@@ -194,13 +168,13 @@
       <nav aria-label="...">
         <ul class="pagination">
           <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
-            <a href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage-1 %>&q_type=<%= q_type %>" class="page-link">Previous</a>
+            <a href="/combined-question/view-questions?year=<%= year %>&category=<%= category%>&class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage-1 %>&q_type=<%= q_type %>" class="page-link">Previous</a>
           </li>
           <% for(let i=0; i< totalPage; i++) {%>
-          <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=i+1 %>&q_type=<%= q_type %>"><%= i+1 %> </a></li>
+          <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/combined-question/view-questions?year=<%= year %>&category=<%= category%>&class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=i+1 %>&q_type=<%= q_type %>"><%= i+1 %> </a></li>
           <% }%>
           <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>">
-            <a class="page-link" href="/combined-question/view-questions?class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage+1 %>&q_type=<%= q_type %>">Next</a>
+            <a class="page-link" href="/combined-question/view-questions?year=<%= year %>&category=<%= category%>&class_id=<%= questions[0].class_id %>&subject_id=<%= questions[0].subject_id %>&chapter=<%= questions[0].chapter_id %>&q_set=<%= filter.q_set %>&page=<%=currentPage+1 %>&q_type=<%= q_type %>">Next</a>
           </li>
         </ul>
       </nav>
@@ -208,97 +182,6 @@
     <% } %>
     <%- include('../partials/footer.ejs') %>
     <script>
-      const menuButton = document.querySelector('#menu-button');
-      const sideNav = document.querySelector('#side-nav');
-
-      menuButton.addEventListener('click', function() {
-        if (sideNav.style.display == 'none') {
-          sideNav.style.display = 'block'
-        } else if (sideNav.style.display == 'block') {
-          sideNav.style.display = 'none'
-        }
-      });
-
-      //filter start
-      const yearSelect = document.getElementById("year");
-      let searchParams = new URLSearchParams(window.location.search);
-      let categoryParam = searchParams.get('category') || '';
-      let yearParam = searchParams.get('year') || '';
-      let pageParam = searchParams.get('page') || '';
-      let perPageParam = searchParams.get('perPage') || '';
-
-      let page = 1;
-      let perPage = 25;
-      let totalPages = 0;
-
-      let category;
-      let year = '';
-      let previousData = [];
-
-
-      //checkbox select
-      function checkboxSelectIinit() {
-        console.log(category);
-        var checkboxes = document.getElementsByClassName("checkbox");
-        var selectedCheckboxes = [];
-        for (var i = 0; i < checkboxes.length; i++) {
-          checkboxes[i].addEventListener("change", function() {
-            selectedCheckboxes = [];
-            for (var j = 0; j < checkboxes.length; j++) {
-              var checkbox = checkboxes[j];
-              if (checkbox.checked) {
-                selectedCheckboxes.push(checkbox.value);
-              }
-            }
-            category = selectedCheckboxes.join(",");
-            console.log(category);
-            //loadFilterQus()
-          });
-        }
-      }
-
-
-      yearSelect.addEventListener('change', (event) => {
-        year = event.target.value;
-        previousData = [];
-        offset = 0;
-        loadFilterQus()
-      });
-
-
-      //initialize the page wirth necessary settings
-      window.addEventListener('load', function() {
-        let searchParams = new URLSearchParams(window.location.search);
-        category = searchParams.get('category') || '';
-        year = searchParams.get('year') || '';
-        class_id = searchParams.get('class_id') || '';
-        subject_id = searchParams.get('subject_id') || '';
-        chapter = searchParams.get('chapter') || '';
-        q_set = searchParams.get('q_set') || '';
-        q_type = searchParams.get('q_type') || '';
-
-        //initialize the filter section
-        if (localStorage.getItem('filter_data')) {
-          createFilterElement(localStorage.getItem('filter_data'),category)
-        } else {
-          fetch("/combined-question/get-filter-data")
-            .then(response => response.json())
-            .then(filter_data => {
-              localStorage.setItem('filter_data', JSON.stringify(filter_data))
-            })
-        }
-        checkboxSelectIinit()
-        ///fetchQus();
-      })
-
-
-      //fetch the questions
-      function loadFilterQus() {
-        let fetchURL = `/combined-question/view-questions?year=${year}&category=${category}&class_id=${class_id}&subject_id=${subject_id}&chapter=${chapter}&q_set=${q_set}&q_type=${q_type}`
-        window.location.href = fetchURL
-      }
-
-
       //add question to set
       let loading_spinner = document.getElementById('loading_spinner')
       let add_btn = document.getElementsByClassName('add_btn')
@@ -325,54 +208,8 @@
             })
         })
       }
-
-      //some unitily functions
-      function createFilterElement(filter_data,category) {
-        const board = document.querySelector('.board');
-        const uni = document.querySelector('.uni');
-
-        const filterArray = JSON.parse(filter_data);
-        const categoryArray = category.split(',');
-        console.log(categoryArray);
-
-        filterArray.forEach((item,index) => {
-          // Create the checkbox element
-          const checkbox = document.createElement('input');
-          checkbox.className = 'form-check-input checkbox';
-          checkbox.name = 'filter';
-          checkbox.type = 'checkbox';
-          checkbox.value = item.id;
-          console.log(item.id);
-          if(categoryArray.includes(item.id.toString())) {
-            checkbox.checked = true;
-          }
-          
-          checkbox.id = item.id;
-
-          // Create the label element
-          const label = document.createElement('label');
-          label.className = 'form-check-label';
-          label.htmlFor = item.id;
-          label.textContent = item.name;
-
-          // Create the div container for checkbox and label
-          const divContainer = document.createElement('div');
-          divContainer.className = 'form-check';
-
-          // Append checkbox and label to the div container
-          divContainer.appendChild(checkbox);
-          divContainer.appendChild(label);
-
-
-          if (item.type === 'board') {
-            // Append the div container to the main container
-            board.appendChild(divContainer);
-          } else {
-            uni.appendChild(divContainer);
-          }
-        });
-      }
     </script>
+    <script src="/scripts/generateCombined.js"></script>
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 </body>
 

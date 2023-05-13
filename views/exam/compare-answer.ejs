@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
-    Admin Panel
+    Answer Script
   </title>
   <link rel="shortcut icon" href="/images/logo-mb.png" type="image/png">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -48,7 +48,7 @@
            <div style="background-color: rgb(243, 246, 248);" class="py-3 px-2 border <%= myAnsArray[i] == realAnsArray[i] ? 'border-success' : 'border-danger'  %>  my-2 rounded">
                 <%- data[i].question_text %>
                 <div class="">
-                    <p class="mb-0">Correct ans: <%- opt[realAnsArray[i]] %></p>
+                    <p class="mb-0">Correct ans: <%- opt[realAnsArray[i]-1] %></p>
                     <p class="mb-0 " >My ans: 
                         <span>
                             <% if(myAnsArray[i] == realAnsArray[i]){ %>
@@ -57,26 +57,13 @@
                                 <i class="fas fa-xmark text-danger"></i>
                             <% } %>
                         </span> 
-                        <%- opt[myAnsArray[i]] %></p>
+                        <%- opt[myAnsArray[i]-1] %></p>
                 </div>
            </div>
         <% } %>
     </div>
   <% } %>
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-  <script>
-      CKEDITOR.replace('content', {
-          height: 700,
-          removeButtons: 'PasteFromWord',
-          
-      });
-  
-      if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
-          document.getElementById('ie8-warning').className = 'tip alert';
-      }
-  
-  </script>
-  
   </body>
   
   </html>
