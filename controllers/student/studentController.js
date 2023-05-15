@@ -78,7 +78,7 @@ exports.createStudentPost = async (req, res, next) => {
                 let totalStudent = data[0]
                 let studentLimit = data[1]
                 if( totalStudent[0].totalStudent <= studentLimit[0].student_limit ){
-                    db.query("select * from students where student_id=?",(e,studentExistence) => {
+                    db.query("select * from students where student_id=?",[student_id],(e,studentExistence) => {
                         if(e) return next(e)
                         if(studentExistence.length > 0){
                             return res.send("Already registered an account with this student_id")

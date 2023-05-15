@@ -127,7 +127,7 @@ exports.handleRegistration = async (req, res, next) => {
 
         }
         if (req.query.register == 'true') {
-            db.query("select * from schools where admin_email=?",(e,adminExistence) => {
+            db.query("select * from schools where admin_email=?",[admin_email],(e,adminExistence) => {
                 if(e) return next(e)
                 if(adminExistence.length > 0){
                     return res.send("Already registered with this admin email address")
