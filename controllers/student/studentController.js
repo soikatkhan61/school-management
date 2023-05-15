@@ -78,16 +78,23 @@ exports.createStudentPost = async (req, res, next) => {
                 let totalStudent = data[0]
                 let studentLimit = data[1]
                 if( totalStudent[0].totalStudent <= studentLimit[0].student_limit ){
-                    db.query("insert into students values(?,?,?,?,?,?,?,?,?,?,?,?,?)", [null, 'student', full_name, class_id, student_id, password, req.user.id, gender, dob, address, student_avater, null, null], (e, data) => {
-                        if (e) {
-                            return next(e)
-                        } else {
-                            if (data.affectedRows > 0) {
-                                req.flash('success', 'Register success')
-                            } else {
-                                req.flash('fail', 'Register failed')
-                            }
-                            return res.redirect(`/user/create-student?edit=true&id=${data.insertId}`)
+                    db.query("select * from students where student_id=?",(e,studentExistence) => {
+                        if(e) return next(e)
+                        if(studentExistence.length > 0){
+                            return res.send("Already registered an account with this student_id")
+                        }else{
+                            db.query("insert into students values(?,?,?,?,?,?,?,?,?,?,?,?,?)", [null, 'student', full_name, class_id, student_id, password, req.user.id, gender, dob, address, student_avater, null, null], (e, data) => {
+                                if (e) {
+                                    return next(e)
+                                } else {
+                                    if (data.affectedRows > 0) {
+                                        req.flash('success', 'Register success')
+                                    } else {
+                                        req.flash('fail', 'Register failed')
+                                    }
+                                    return res.redirect(`/user/create-student?edit=true&id=${data.insertId}`)
+                                }
+                            })
                         }
                     })
                 }else{
@@ -96,7 +103,6 @@ exports.createStudentPost = async (req, res, next) => {
                 }
             })  
         }
-
     } catch (error) {
         next(error)
     }

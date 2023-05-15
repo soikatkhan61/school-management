@@ -116,7 +116,6 @@ exports.viewQuestionGet = (req, res, next) => {
     }
     
     category = req.query.category
-    console.log(category);
 
 
     //contract the query
@@ -124,15 +123,13 @@ exports.viewQuestionGet = (req, res, next) => {
     let counterSql = ''
     let sqlParams = [];
     if (category) {
-        sql += ' AND filter IN(?) ';
-        counterSql += ` and filter IN(${category}) `;
-        sqlParams.push(category);
+        sql += ` AND filter in(${category}) `;
+        counterSql += ` and filter in(${category}) `;
     }
 
     if (year) {
-        sql += ' and year = ?';
+        sql += ` and year = ${year}` ;
         counterSql += ` and year = ${year}`;
-        sqlParams.push(year);
     }
 
     sql += ` limit ${((itemPerPage * currentPage) - itemPerPage)} , ${itemPerPage};SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=${class_id} AND subject_id=${subject_id} AND chapter_id=${chapter} ${counterSql};select questions,total_qus from q_set where id=${q_set};`
@@ -140,7 +137,7 @@ exports.viewQuestionGet = (req, res, next) => {
     console.log(sql);
     
     try {
-        db.query(sql,sqlParams, (e, data) => {
+        db.query(sql, (e, data) => {
             if (e) {
                 next(e)
             } else {

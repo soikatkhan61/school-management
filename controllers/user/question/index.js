@@ -315,9 +315,12 @@ exports.createQuestionPost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
+  console.log(filter.length);
+  filter = filter && filter.length <= 1 ? filter : filter.join(',')
+
   try {
     if (edit) {
-      db.query("update questions set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options), question_answer, q_id], (e, data) => {
+      db.query("update questions set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer,filter,year, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -330,7 +333,7 @@ exports.createQuestionPost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into questions values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer, JSON.stringify(filter), year, req.user.id], (e, data) => {
+      db.query("insert into questions values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer, filter, year, req.user.id], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -409,9 +412,12 @@ exports.creativePost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
+  console.log(req.body);
+  filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
+
   try {
     if (edit) {
-      db.query("update creative set question_text=?,question_option=?,question_answer=? where id = ?", [question_text, JSON.stringify(options), question_answer, q_id], (e, data) => {
+      db.query("update creative set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer,filter, year, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -424,7 +430,7 @@ exports.creativePost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into creative values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer, JSON.stringify(filter), year, req.user.id], (e, data) => {
+      db.query("insert into creative values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer,filter, year, req.user.id], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -499,10 +505,11 @@ exports.othersQuestionsPost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
-  console.log(req.body);
+  filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
+
   try {
     if (edit) {
-      db.query("update q_others set question_text=?,question_answer=? where id = ?", [question_text, question_answer, q_id], (e, data) => {
+      db.query("update q_others set question_text=?,question_answer=?,filter=?,year=? where id = ?", [question_text, question_answer,filter, year, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -515,7 +522,7 @@ exports.othersQuestionsPost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into q_others values(?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, question_answer, JSON.stringify(filter), year, req.user.id], (e, data) => {
+      db.query("insert into q_others values(?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, question_answer, filter, year, req.user.id], (e, data) => {
         if (e) {
           next(e)
         } else {

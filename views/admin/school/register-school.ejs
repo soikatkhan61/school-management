@@ -4,64 +4,71 @@
             <form action="/super-admin/register-school<%= data !='' ? '?id=' + data.id + '&save=true' : '?register=true' %>" method="post">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
-                        <h6 class="py-3">Infomation of the schools</h6>
-                        <div class="mb-2">
-                            <select name="status" class="py-2 px-4 mb-3"
-                                style="width: 100%; outline: black">
-                                <option class="py-2 px-5" value="none">Status</option>
-                                <option class="py-2 px-5" value="1" <%= data.status == '1' ? 'selected' : '' %>>Active</option>
-                                <option class="py-2 px-5" value="0" <%= data.status == '0'? 'selected' : '' %>>Inactive</option>
-                            </select>
+                        <div class="my-3 p-4 py-5 border border-2 rounded" style="background: #fff;">
+                            <p>Package Information</p>
+                            <div class="mb-2">
+                                <select name="status" class="py-2 px-4 mb-3"
+                                    style="width: 100%; outline: black">
+                                    <option class="py-2 px-5" value="none">Status</option>
+                                    <option class="py-2 px-5" value="1" <%= data.status == '1' ? 'selected' : '' %>>Active</option>
+                                    <option class="py-2 px-5" value="0" <%= data.status == '0'? 'selected' : '' %>>Inactive</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <select name="package" class="py-2 px-4 mb-3"
+                                    style="width: 100%; outline: black;text-transform: capitalize;" required>
+                                    <option class="py-2 px-5" value="">Package</option>
+                                    <% for(let p of pkg){ %>
+                                        <option class="py-2 px-5" <%= p.id  == data.package ? 'selected' : '' %> value="<%= p.id %>"> <%= p.package_name %> | Price <%= p.price %> TK</option>
+                                    <% } %>
+                                    
+                                </select>
+                            </div>
+                            <div class="form-outline">
+                                <input name="validity"  type="date" id="validity" class="form-control" required/>
+                                <label class="form-label" for="validity">Validity *</label>
+                            </div>
+                            <script>
+                                const validityInput = document.querySelector('#validity');
+                                const dateString = "<%= data.validity ? data.validity : '' %>";
+                                const date = new Date(dateString);
+                                const dateOnly = date.toLocaleDateString();
+                                const newDate = new Date(dateOnly);
+                                validityInput.value = newDate.toISOString().substring(0, 10);
+                            </script>
                         </div>
-                        <div class="mb-2">
-                            <select name="package" class="py-2 px-4 mb-3"
-                                style="width: 100%; outline: black;text-transform: capitalize;" required>
-                                <option class="py-2 px-5" value="">Package</option>
-                                <% for(let p of pkg){ %>
-                                    <option class="py-2 px-5" <%= p.id  == data.package ? 'selected' : '' %> value="<%= p.id %>"> <%= p.package_name %> | Price <%= p.price %> TK</option>
-                                <% } %>
-                                
-                            </select>
+                        <div class="my-3 p-4 py-5 border border-2 rounded" style="background: #fff;">
+                            <p>School Information</p>
+                            <div class="form-outline mb-4">
+                                <input name="school_name" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>
+                                <label class="form-label" for="form7Example13">School Name *</label>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <input name="school_address" value="<%= data.school_address ? data.school_address : '' %>" type="text" id="form7Example2" class="form-control" required/>
+                                <label class="form-label" for="form7Example2">School Address *</label>
+                            </div>
+    
+                            <div class="form-outline mb-4">
+                                <input name="school_email" value="<%= data.school_email ? data.school_email : '' %>" type="email" id="form7Example12" class="form-control" />
+                                <label class="form-label" for="form7Example12">School Email</label>
+                            </div>
+    
+                            <div class="form-outline mb-4">
+                                <input name="school_phone" value="<%= data.school_phone ? data.school_phone : '' %>" type="text" id="form7Example3" class="form-control" required/>
+                                <label class="form-label" for="form7Example3">School Phone *</label>
+                            </div>
+                            <div class="form-outline">
+                                <textarea name="school_info"  type="text" id="form7Example4" class="form-control" rows="4"><%= data.school_info ? data.school_info : '' %></textarea>
+                                <label class="form-label" for="form7Example4">School info</label>
+                            </div>
                         </div>
-                        <div class="form-outline mb-4">
-                            <input name="validity"  type="date" id="validity" class="form-control" required/>
-                            <label class="form-label" for="validity">Validity *</label>
-                        </div>
-                        <script>
-                            const validityInput = document.querySelector('#validity');
-                            const dateString = "<%= data.validity ? data.validity : '' %>";
-                            const date = new Date(dateString);
-                            const dateOnly = date.toLocaleDateString();
-                            const newDate = new Date(dateOnly);
-                            validityInput.value = newDate.toISOString().substring(0, 10);
-                        </script>
-
-                        <div class="form-outline mb-4">
-                            <input name="school_name" value="<%= data.school_name ? data.school_name : '' %>" type="text" id="form7Example14" class="form-control" required/>
-                            <label class="form-label" for="form7Example13">School Name *</label>
-                        </div>
-                        <div class="form-outline mb-4">
-                            <input name="school_address" value="<%= data.school_address ? data.school_address : '' %>" type="text" id="form7Example2" class="form-control" required/>
-                            <label class="form-label" for="form7Example2">School Address *</label>
-                        </div>
-
-                        <div class="form-outline mb-4">
-                            <input name="school_email" value="<%= data.school_email ? data.school_email : '' %>" type="email" id="form7Example12" class="form-control" />
-                            <label class="form-label" for="form7Example12">School Email</label>
-                        </div>
-
-                        <div class="form-outline mb-4">
-                            <input name="school_phone" value="<%= data.school_phone ? data.school_phone : '' %>" type="text" id="form7Example3" class="form-control" required/>
-                            <label class="form-label" for="form7Example3">School Phone *</label>
-                        </div>
-                        <div class="form-outline mb-4">
-                            <textarea name="school_info"  type="text" id="form7Example4" class="form-control" rows="4"><%= data.school_info ? data.school_info : '' %></textarea>
-                            <label class="form-label" for="form7Example4">School info</label>
-                        </div>
+                        
                     </div>
 
+                   
                     <div class="col-sm-12 col-md-6">
-                        <h6 class="py-3">Admin Info</h6>
+                        <div class="my-3 p-4 py-5 border border-2 rounded" style="background: #fff;">
+                            <p>Admin Info</p>
                         <div class="form-outline mb-4">
                             <input name="admin_name" value="<%= data.admin_name ? data.admin_name : '' %>" type="text" id="form7Examplx2" class="form-control" required/>
                             <label class="form-label" for="form7Examplx2">Admin Name *</label>
@@ -97,6 +104,7 @@
                         </div>
 
                         <button class="btn btn-<%= data ? 'warning' : 'primary' %>"><%= data ? 'Update' : 'Submit' %></button>
+                        </div>
                     </div>
                 </div>
             </form>

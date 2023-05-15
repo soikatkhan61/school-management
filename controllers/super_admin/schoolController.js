@@ -127,37 +127,45 @@ exports.handleRegistration = async (req, res, next) => {
 
         }
         if (req.query.register == 'true') {
-            db.query("insert into schools values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                [
-                    null,
-                    'admin',
-                    school_name,
-                    school_address,
-                    school_email,
-                    school_phone,
-                    school_info,
-                    admin_name,
-                    admin_blood_group,
-                    admin_address,
-                    admin_phone,
-                    admin_email,
-                    admin_password,
-                    admin_avater,
-                    status,
-                    package,
-                    new Date(),
-                    null
-                ], (e, result) => {
-                    if (e) {
-                        next(e)
-                    } else {
-                        if (!headerSent) {
-                            headerSent = true;
-                            req.flash('success','Registration Successfull')
-                            res.redirect('/super-admin/school')
+            db.query("select * from schools where admin_email=?",(e,adminExistence) => {
+                if(e) return next(e)
+                if(adminExistence.length > 0){
+                    return res.send("Already registered with this admin email address")
+                }else{
+                    db.query("insert into schools values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    [
+                        null,
+                        'admin',
+                        school_name,
+                        school_address,
+                        school_email,
+                        school_phone,
+                        school_info,
+                        admin_name,
+                        admin_blood_group,
+                        admin_address,
+                        admin_phone,
+                        admin_email,
+                        admin_password,
+                        admin_avater,
+                        status,
+                        package,
+                        new Date(),
+                        null
+                    ], (e, result) => {
+                        if (e) {
+                            next(e)
+                        } else {
+                            if (!headerSent) {
+                                headerSent = true;
+                                req.flash('success','Registration Successfull')
+                                res.redirect('/super-admin/school')
+                            }
                         }
-                    }
-                })
+                    })
+                }
+            })
+            
         }
 
 

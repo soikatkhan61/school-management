@@ -116,47 +116,24 @@
               <% if(!filter){ %>
                 <p>--</p>
               <% }else{ %>
+                <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
+                <% let index = 0 %>
                 <% for(let s of filter){ %>
                   <% if(s.type == 'board') {%>
                     <div class="form-check">
-                      <input class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                      <input <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
                       <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
                     </div>
                   <% }%>
+                  <% index++ %>
                 <% } %>
                 <% }%>
              <div class="mt-4">
               <select name="year" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
                   <option class="py-1 px-3" value="">Year</option>
-                  <option class="py-1 px-3" value="2023">2023</option>
-                  <option class="py-1 px-3" value="2022">2022</option>
-                  <option class="py-1 px-3" value="2021">2021</option>
-                  <option class="py-1 px-3" value="2020">2020</option>
-                  <option class="py-1 px-3" value="2019">2019</option>
-                  <option class="py-1 px-3" value="2018">2018</option>
-                  <option class="py-1 px-3" value="2017">2017</option>
-                  <option class="py-1 px-3" value="2016">2016</option>
-                  <option class="py-1 px-3" value="2015">2015</option>
-                  <option class="py-1 px-3" value="2014">2014</option>
-                  <option class="py-1 px-3" value="2013">2013</option>
-                  <option class="py-1 px-3" value="2012">2012</option>
-                  <option class="py-1 px-3" value="2011">2011</option>
-                  <option class="py-1 px-3" value="2010">2010</option>
-                  <option class="py-1 px-3" value="2009">2009</option>
-                  <option class="py-1 px-3" value="2008">2008</option>
-                  <option class="py-1 px-3" value="2007">2007</option>
-                  <option class="py-1 px-3" value="2006">2006</option>
-                  <option class="py-1 px-3" value="2005">2005</option>
-                  <option class="py-1 px-3" value="2004">2004</option>
-                  <option class="py-1 px-3" value="2003">2003</option>
-                  <option class="py-1 px-3" value="2002">2002</option>
-                  <option class="py-1 px-3" value="2001">2001</option>
-                  <option class="py-1 px-3" value="2000">2000</option>
-                  <option class="py-1 px-3" value="1999">1999</option>
-                  <option class="py-1 px-3" value="1998">1998</option>
-                  <option class="py-1 px-3" value="1997">1997</option>
-                  <option class="py-1 px-3" value="1996">1996</option>
-                  <option class="py-1 px-3" value="1995">1995</option>
+                  <% for(let i=2030;i>1995;i--){ %>
+                    <option class="py-1 px-3" value="<%= i %>" <%= qus && qus[0].year && qus[0].year == i ? 'selected' : '' %>><%= i %></option>
+                    <% } %>
               </select>
              </div>
             </div>
@@ -165,13 +142,16 @@
                 <% if(!filter){ %>
                   <p>--</p>
                 <% }else{ %>
+                  <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
+                  <% let index = 0 %>
                 <% for(let s of filter){ %>
                   <% if(s.type == 'uni') {%>
                     <div class="form-check">
-                      <input class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                      <input <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
                       <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
                     </div>
                   <% }%>
+                  <% index++ %>
                 <% } %>
                 <% }%>
             </div>
