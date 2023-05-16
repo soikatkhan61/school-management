@@ -315,9 +315,8 @@ exports.createQuestionPost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
-  console.log(filter.length);
-  filter = filter && filter.length <= 1 ? filter : filter.join(',')
-
+  console.log(filter);
+  filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
   try {
     if (edit) {
       db.query("update questions set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer,filter,year, q_id], (e, data) => {
@@ -619,7 +618,4 @@ exports.filterPost = (req, res, next) => {
     next(error)
   }
 };
-
-
-
 
