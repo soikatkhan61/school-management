@@ -315,8 +315,13 @@ exports.createQuestionPost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
-  console.log(filter);
-  filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
+  if(typeof filter === 'object' && filter !== undefined) {
+    filter = filter.join(',')
+  }
+    
+  //filter = filter != undefined ? filter.length <= 2 ? filter : filter.join(',') : ''
+  console.log( filter);
+ 
   try {
     if (edit) {
       db.query("update questions set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer,filter,year, q_id], (e, data) => {
@@ -411,8 +416,10 @@ exports.creativePost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
-  console.log(req.body);
-  filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
+  if(typeof filter === 'object' && filter !== undefined) {
+    filter = filter.join(',')
+  }
+  //filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
 
   try {
     if (edit) {
@@ -504,8 +511,10 @@ exports.othersQuestionsPost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
-  filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
-
+  //filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
+  if(typeof filter === 'object' && filter !== undefined) {
+    filter = filter.join(',')
+  }
   try {
     if (edit) {
       db.query("update q_others set question_text=?,question_answer=?,filter=?,year=? where id = ?", [question_text, question_answer,filter, year, q_id], (e, data) => {

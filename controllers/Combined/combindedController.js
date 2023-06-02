@@ -301,7 +301,7 @@ exports.renderviewSet = (req, res, next) => {
                                 name: data[0].name,
                                 q_formate: data[0].formate
                             }
-                            res.render(`combined/view_qset`, {
+                            return res.render(`combined/view_qset`, {
                                 title: "Preview Question",
                                 flashMessage: Flash.getMessage(req),
                                 data: results,
