@@ -154,7 +154,7 @@ exports.renderMyExam = (req, res, next) => {
             if (e) return next(e)
             if (data.length == 0) {
                 return res.render("exam/my-exam", {
-                    title: "Results of Exam JKHGS",
+                    title: "Results of Exam",
                     flashMessage: Flash.getMessage(req),
                     exams: "",
                     currentPage: '', itemPerPage: '', totalPage: '',
@@ -209,7 +209,7 @@ exports.joinExamPost = (req, res, next) => {
             if (e) return next(e)
             if (data.length == 0) return res.send("No data found")
             console.log(data[0].questions)
-            db.query(`select question_text,question_option from questions where id IN (${data[0].questions})`, (e, qus) => {
+            db.query(`SELECT q.id,q.question_text,q.question_option FROM questions q WHERE q.id IN (${data[0].questions}) ORDER BY FIELD(q.id, ${data[0].questions});`, (e, qus) => {
                 if (e) return next(e)
                 if (qus.length == 0) return res.send("no data")
                 console.log(qus);
@@ -246,7 +246,7 @@ exports.submitResponse = (req, res, next) => {
         db.query("select stu_id from exams_participants where exam_id = ? and stu_id=? and school_id", [req.body.code, req.user.student_id, req.user.school_id], (e, data) => {
             if (e) return next(e)
             if (data.length > 0) return res.send("Already Recorded!")
-            db.query("INSERT INTO exams_participants values(?,?,?,?,?,?,?,?,?)", [null, answer_str, null,  , req.body.code, Number(req.user.student_id), req.user.school_id, null, null], (e, data) => {
+            db.query("INSERT INTO exams_participants values(?,?,?,?,?,?,?,?,?)", [null, answer_str, null, , req.body.code, Number(req.user.student_id), req.user.school_id, null, null], (e, data) => {
                 if (e) return next(e)
                 if (data.affectedRows > 0) {
                     return res.redirect(`/exam/submit?status=true&token=${data.insertId}`)
@@ -291,9 +291,9 @@ exports.renderStudentResult = (req, res, next) => {
                     if (ans.length == 0 || ans[0].answers == null) return res.send("not found")
                     let qus_ans_arr = JSON.parse(data[0].answers).split(',')
                     let marks = 0
-                    console.log("submit "+ qus_ans_arr);
-                    console.log("real "+ ans[0].answers.split(','));
-                    
+                    console.log("submit " + qus_ans_arr);
+                    console.log("real " + ans[0].answers.split(','));
+
                     let correct = ans[0].answers.split(',').map((m, index) => {
                         if (m == qus_ans_arr[index]) {
                             return marks++
@@ -322,7 +322,7 @@ exports.renderStudentResult = (req, res, next) => {
 
 exports.renderStudentAllResult = (req, res, next) => {
     try {
-        db.query("select exams_participants.*,exams.name,exams.id as exam_id from exams_participants join exams on exams_participants.exam_id = exams.id where exams_participants.stu_id = ? and exams_participants.school_id=? order by exams_participants.id desc" , [req.user.student_id, req.user.school_id], (e, exams) => {
+        db.query("select exams_participants.*,exams.name,exams.id as exam_id from exams_participants join exams on exams_participants.exam_id = exams.id where exams_participants.stu_id = ? and exams_participants.school_id=? order by exams_participants.id desc", [req.user.student_id, req.user.school_id], (e, exams) => {
             if (e) return next(e)
             return res.render("exam/all-results", {
                 title: "Submit Status",
@@ -337,7 +337,7 @@ exports.renderStudentAllResult = (req, res, next) => {
 
 exports.renderExamParticipats = (req, res, next) => {
     try {
-        db.query("select exams_participants.submit_on,exams_participants.score,students.name,students.avater from exams_participants join students on exams_participants.stu_id = students.student_id where exams_participants.school_id=? and exam_id=? order by exams_participants.score and exams_participants.submit_on", [req.user.school_id,req.query.exam_id], (e, data) => {
+        db.query("select exams_participants.submit_on,exams_participants.score,students.name,students.avater from exams_participants join students on exams_participants.stu_id = students.student_id where exams_participants.school_id=? and exam_id=? order by exams_participants.score and exams_participants.submit_on", [req.user.school_id, req.query.exam_id], (e, data) => {
             if (e) return next(e)
             console.log(data);
             return res.render("exam/participants", {
@@ -353,10 +353,10 @@ exports.renderExamParticipats = (req, res, next) => {
 
 exports.compareMyAnswerList = (req, res, next) => {
     try {
-        db.query("select exams_participants.answers as my_ans,exams_participants.exam_id,exams.q_set_id,exams.name,q_set.questions,q_set.answers as real_ans from exams_participants join exams on exams_participants.exam_id = exams.id join q_set on exams.q_set_id = q_set.id where exams_participants.stu_id=? and exams_participants.id = ?", [req.user.student_id,req.query.exam_id], (e, findExmData) => {
+        db.query("select exams_participants.answers as my_ans,exams_participants.exam_id,exams.q_set_id,exams.name,q_set.questions,q_set.answers as real_ans from exams_participants join exams on exams_participants.exam_id = exams.id join q_set on exams.q_set_id = q_set.id where exams_participants.stu_id=? and exams_participants.id = ?", [req.user.student_id, req.query.exam_id], (e, findExmData) => {
             if (e) return next(e)
-            if(findExmData.length){
-                db.query(`select * from questions where id in(${findExmData[0].questions})`,(e, data) => {
+            if (findExmData.length) {
+                db.query(`select * from questions where id in(${findExmData[0].questions})`, (e, data) => {
                     if (e) return next(e)
                     console.log(JSON.parse(findExmData[0].my_ans));
                     console.log(findExmData[0].real_ans);
@@ -367,10 +367,10 @@ exports.compareMyAnswerList = (req, res, next) => {
                         findExmData
                     });
                 })
-            }else{
+            } else {
                 res.send("no data")
             }
-            
+
         })
     } catch (error) {
         next(error)

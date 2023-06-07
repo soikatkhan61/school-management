@@ -1,6 +1,4 @@
 const db = require("../../config/db.config");
-const { validationResult } = require("express-validator");
-const errorFormatter = require("../../utils/validationErrorFormatter");
 const Flash = require("../../utils/Flash");
 
 exports.renderCombined = (req, res, next) => {
@@ -196,7 +194,6 @@ exports.addQuestion = (req, res, next) => {
     }
 
 };
-
 exports.renderSavedByClass = (req, res, next) => {
     let school_id
     if (req.user.userType === "admin") {
@@ -230,7 +227,6 @@ exports.renderSavedByClass = (req, res, next) => {
     }
 
 }
-
 exports.renderSavedQuesSet = (req, res, next) => {
     try {
         db.query(
@@ -252,7 +248,6 @@ exports.renderSavedQuesSet = (req, res, next) => {
     }
 
 };
-
 exports.getFilterData = (req, res, next) => {
     try {
         db.query(
@@ -270,7 +265,6 @@ exports.getFilterData = (req, res, next) => {
     }
 
 };
-
 exports.renderviewSet = (req, res, next) => {
     let qset_id = req.query.q_set_id
     try {
@@ -319,15 +313,10 @@ exports.renderviewSet = (req, res, next) => {
     }
 
 };
-
 exports.renderAnswer = (req, res, next) => {
     let { q_set_id, q_type, q_ids, name, total_mark, total_qus } = req.query
-    // if(q_type == 'mcq'){
-    //     q_type = 'questions'
-    // }
     try {
         if (q_set_id && q_type == 'mcq') {
-            console.log("q_set_id and q_type=mcq");
             db.query("select * from q_set where id = ?", [q_set_id], async (e, q_set_data) => {
                 if (e) return next(e)
                 if (q_set_data) {
@@ -337,7 +326,6 @@ exports.renderAnswer = (req, res, next) => {
                 }
             })
         } else if (q_set_id && q_type == 'creative') {
-            console.log("q_set_id and q_type=creative");
             db.query("select * from q_set where id = ?", [q_set_id], async (e, q_set_data) => {
                 if (e) return next(e)
                 if (q_set_data) {
@@ -347,7 +335,6 @@ exports.renderAnswer = (req, res, next) => {
                 }
             })
         } else if (q_type == 'q_others') {
-            console.log("q_type=q_others");
             db.query("select * from q_set where id = ?", [q_set_id], async (e, q_set_data) => {
                 if (e) return next(e)
                 if (q_set_data) {
@@ -357,11 +344,9 @@ exports.renderAnswer = (req, res, next) => {
                 }
             })
         } else if (q_ids && q_type && name) {
-            console.log("q_ids && q_type && name");
             async function start_extract_question() {
                 let answers = ''
                 let data = await extract_questions_data(q_ids, q_type)
-                ///console.log(data);
                 let obj = {
                     name,
                     total_mark,
@@ -371,7 +356,6 @@ exports.renderAnswer = (req, res, next) => {
             }
             start_extract_question()
         }
-
 
         function sendResponse(data, obj, answers) {
             return res.render(`combined/view-answer`, {
@@ -388,7 +372,6 @@ exports.renderAnswer = (req, res, next) => {
                 query = `SELECT question_text,question_option,question_answer FROM ${table} WHERE id IN (${questionIds})`;
             }
             const data = await generateResults(query);
-            console.log(data);
             if (data.length) {
                 return data
             } else {

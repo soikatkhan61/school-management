@@ -41,7 +41,6 @@
         <% 
             const myAnsArray = findExmData[0].my_ans.replace(/"/g, '').split(',').map(Number);
             const realAnsArray = findExmData[0].real_ans.replace(/"/g, '').split(',').map(Number);
-
         %>
         <% for(let i=0;i<data.length;i++){ %>
             <% let opt = data[i].question_option ?  JSON.parse(data[i].question_option) : '' %>
