@@ -73,16 +73,16 @@ exports.createStudentPost = async (req, res, next) => {
                 })
             })
         } else {
-            db.query("SELECT count(*) as totalStudent from students where school_id = ?;SELECT packages.student_limit from schools  join packages on schools.package = packages.id where schools.id = ? ",[req.user.id,req.user.id],(e,data)=>{
-                if(e) return next(e)
+            db.query("SELECT count(*) as totalStudent from students where school_id = ?;SELECT packages.student_limit from schools  join packages on schools.package = packages.id where schools.id = ? ", [req.user.id, req.user.id], (e, data) => {
+                if (e) return next(e)
                 let totalStudent = data[0]
                 let studentLimit = data[1]
-                if( totalStudent[0].totalStudent <= studentLimit[0].student_limit ){
-                    db.query("select * from students where student_id=?",[student_id],(e,studentExistence) => {
-                        if(e) return next(e)
-                        if(studentExistence.length > 0){
+                if (totalStudent[0].totalStudent <= studentLimit[0].student_limit) {
+                    db.query("select * from students where student_id=?", [student_id], (e, studentExistence) => {
+                        if (e) return next(e)
+                        if (studentExistence.length > 0) {
                             return res.send("Already registered an account with this student_id")
-                        }else{
+                        } else {
                             db.query("insert into students values(?,?,?,?,?,?,?,?,?,?,?,?,?)", [null, 'student', full_name, class_id, student_id, password, req.user.id, gender, dob, address, student_avater, null, null], (e, data) => {
                                 if (e) {
                                     return next(e)
@@ -97,11 +97,11 @@ exports.createStudentPost = async (req, res, next) => {
                             })
                         }
                     })
-                }else{
+                } else {
                     req.flash('fail', 'You have reached the limit of student!')
                     return res.redirect(`/user/create-student`)
                 }
-            })  
+            })
         }
     } catch (error) {
         next(error)
@@ -109,23 +109,44 @@ exports.createStudentPost = async (req, res, next) => {
 
 };
 
+exports.renderStudentOfClass = async (req, res, next) => {
+    console.log('data');
+    try {
+        db.query('SELECT DISTINCT class_id, class_name FROM students INNER JOIN classes ON students.class_id = classes.id;', (e, data) => {
+            if (e) {
+                return next(e)
+            } else {
+                return res.render('student/studentByClass', {
+                    data, flashMessage: Flash.getMessage(req),
+                    title: "Class"
+                })
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 exports.renderRegisteredStudent = async (req, res, next) => {
     try {
         let currentPage = parseInt(req.query.page) || 1;
         let itemPerPage = 25;
         let table_name = 'students'
+        let class_id = req.params.class_id
         db.query(`select count(*) as count  from ${table_name};select students.*,classes.class_name from ${table_name}  join classes on classes.id = students.class_id where students.school_id=${req.user.id} order by students.id desc limit ?,?`, [((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
             if (e) {
                 return next(e)
             } else {
                 let totalUsers = data[0];
                 let totalPage = totalUsers[0].count / itemPerPage;
+                console.log(data[1]);
                 res.render('student/registerd-student', {
                     data: data[1], flashMessage: Flash.getMessage(req),
                     currentPage,
                     itemPerPage,
                     totalPage,
-                    title: "Registerd Students"
+                    title: "Registerd Students",
+                    class_id
                 })
             }
         })

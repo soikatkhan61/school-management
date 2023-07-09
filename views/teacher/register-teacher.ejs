@@ -1,7 +1,8 @@
 <%- include('../user/user_partials/header.ejs') %>
 
 <div class="container p-4" style="min-height: 100vh;">
-  <h5 class="my-2 text-primary py-2 border text-center" style="background-color: rgb(186, 214, 255,0.4);">Teacher Registration</h5>
+  <h5 class="my-2 text-primary py-2 border text-center" style="background-color: rgb(186, 214, 255,0.4);">Teacher
+    Registration</h5>
   <div class="row">
     <div class="col-6 col-sm-12">
       <form action="/teacher/register-teacher?edit=<%= data ? true : false %>&id=<%= data ? data.id : '' %>" method="post" enctype="multipart/form-data">
@@ -27,16 +28,62 @@
           <label class="form-label" for="username">Username</label>
         </div>
 
-        <div class="form-outline">
+        <div class="form-outline mb-4">
           <input value="<%= data && data.password ? data.password : ''%>" type="password" id="password" maxlength="30" name="password" class="form-control" required />
           <label class="form-label" for="username">password</label>
         </div>
-        <span class="text-danger fst-italic"><%= data && data.password ? "This Password in secure hashed formate" : ''%></span>
+        <span class="text-danger fst-italic">
+          <%= data && data.password ? "This Password in secure hashed formate" : '' %>
+        </span>
 
-        <!-- Number input -->
-        <div class="form-outline my-4">
+
+        <div class="form-outline mb-4">
           <textarea type="text" id="form6Example6" maxlength="340" name="address" class="form-control"><%= data && data.address ? data.address : ''%></textarea>
           <label class="form-label" for="form6Example6">Adress</label>
+        </div>
+
+        <div class="mb-4 border border-primary rounded p-2">
+          <p id="permsn_btn" class="text-center py-1" style="background-color: #eee;cursor: pointer;">Subject Permission <span><i class='bx bxs-chevrons-down'></i></span></p>
+          <div class="d-none" id="permsn_list">
+            <% if(classes.length){ %>
+            <div class="row">
+              <% let subject_data = subjects %>
+              <% let teacher_subject_permission = data  && data.subject_permission ? data.subject_permission.length <= 1 ? data.subject_permission : data.subject_permission.split(',') : ''  %>
+              <% for(let c of classes){ %>
+              <div class="col-sm-12 col-md-6">
+                <div class="py-2 border rounded">
+                  <p class="text-center border-bottom pb-1"><%= c.class_name %></p>
+                  <div class="px-2">
+                    <% if(subject_data.length){ %>
+                    <% for(let s of subject_data){ %>
+                    <% if(s.class_id == c.id){ %>
+                    <div>
+                      <input type="checkbox" id="<%= s.id %>"<%= typeof (teacher_subject_permission == 'string') && teacher_subject_permission == s.id ? 'checked' : teacher_subject_permission.includes(`${s.id}`)  ? 'checked' : '' %> value="<%= s.id %>" name="subject_permission">
+                      <label for="<%= s.id %>"><%=  s.subject_name %></label>
+                    </div>
+                    <% subject_data = subject_data.filter(obj => obj.id != s.id); %>
+                    <% } %>
+                    <% } %>
+                    <%  } %>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+            </div>
+            <% } %>
+          </div>
+          <script>
+            let permsn_btn = document.getElementById('permsn_btn');
+            let permsn_list = document.getElementById('permsn_list');
+            permsn_btn.addEventListener('click', function(e) {
+              e.preventDefault();
+              if (permsn_list.classList.contains('d-none')) {
+                permsn_list.classList.remove('d-none');
+              } else {
+                permsn_list.classList.add('d-none');
+              }
+            })
+          </script>
         </div>
     </div>
     <div class="col-6 col-sm-12">
@@ -71,12 +118,12 @@
           });
         </script>
       </div>
-
     </div>
-    <!-- Submit button -->
-    <button type="submit" class="btn btn-<%= data ? 'warning' : 'primary' %> btn-block mb-4"> <%= data ? 'Update Profile' : 'Register Teacher' %></button>
+
+    <button type="submit" class="mx-3 btn btn-<%= data ? 'warning' : 'primary' %> btn-block mb-4">
+      <%= data ? 'Update Profile' : 'Register Teacher' %>
+    </button>
     </form>
   </div>
-
 </div>
 <%- include('../user/user_partials/footer.ejs') %>

@@ -11,15 +11,33 @@
 <div id="loading-spinner" style="display:none;">
   <img src="/images/spinner.gif" alt="Loading...">
 </div>
-<div class="main-content py-2" style="background-color: #eee;min-height: 100vh;">
-    <div class="p-4" style="background-color: #fff;">
-        <h3 class="display-6 text-success fw-bold text-center">Congratulations!!</h3>
-        <h3 class="py-2 border rounded text-center my-4">Your Score: <%= score %></h3>
-        <p>Remember, success is not just about achieving high scores - it's also about the effort you put in and the progress you make along the way. Keep up the good work!</p>
+<div class="main-content container d-flex justify-content-center">
+  <div class="border rounded" style="background-color: #fff;min-width: 350px;max-width: 500px;">
+    <div class="rounded-top py-3" style="background-color:#051E34 ;">
+      <h3 class="text-light text-center">
+        <% if((result_data[0].score/result_data[0].total_mark) >= 80){ %>
+          Exellent !
+        <%} else if((result_data[0].score/result_data[0].total_mark) >= 60){ %>
+          Good !
+        <%} if((result_data[0].score/result_data[0].total_mark) >= 40){ %>
+          Nice Try
+        <%} if((result_data[0].score/result_data[0].total_mark) < 40){ %>
+          Poor 
+        <% } %>
+      </h3>
     </div>
+    <div class="p-4">
+      <p class="border rounded-pill my-2 py-2 px-4 text-center" style="font-size: 20px;"><%= result_data[0].name %></p>
+      <div class="my-5 d-flex justify-content-center">
+        <div class="d-flex justify-content-center align-items-center text-light" style="font-size: 40px;background-color: #051E34;height: 100px;width: 100px;border-radius: 50%;"><%= result_data[0].score %></div>
+      </div>
+      <p class="text-center">Out of <%= result_data[0].total_mark %></p>
+    </div>
+      <a href="/exam/compare-answers?exam_id=<%= exam_id %>" class="border mb-0 py-3 text-center d-flex align-items-center justify-content-center">Answer Sheet <i class='mx-2 bx bx-right-arrow-alt'></i></a>
   </div>
-  <%- include('../partials/footer.ejs') %>
+</div>
+<%- include('../partials/footer.ejs') %>
 
-  </body>
+</body>
 
-  </html>
+</html>

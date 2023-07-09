@@ -102,7 +102,7 @@ exports.viewChapterGet = (req, res, next) => {
 
 };
 exports.viewQuestionGet = (req, res, next) => {
-    let { class_id, subject_id, chapter, q_set, q_type,year,category } = req.query
+    let { class_id, subject_id, chapter, q_set, q_type, year, category } = req.query
     let currentPage = parseInt(req.query.page) || 1
     let itemPerPage = 25
     if (q_type == 'mcq' || q_type == 'questions') {
@@ -112,7 +112,7 @@ exports.viewQuestionGet = (req, res, next) => {
     } else {
         q_type = 'q_others'
     }
-    
+
     category = req.query.category
 
 
@@ -126,14 +126,14 @@ exports.viewQuestionGet = (req, res, next) => {
     }
 
     if (year) {
-        sql += ` and year = ${year}` ;
+        sql += ` and year = ${year}`;
         counterSql += ` and year = ${year}`;
     }
 
     sql += ` limit ${((itemPerPage * currentPage) - itemPerPage)} , ${itemPerPage};SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=${class_id} AND subject_id=${subject_id} AND chapter_id=${chapter} ${counterSql};select questions,total_qus from q_set where id=${q_set};`
 
     console.log(sql);
-    
+
     try {
         db.query(sql, (e, data) => {
             if (e) {
@@ -145,7 +145,7 @@ exports.viewQuestionGet = (req, res, next) => {
                     q_set,
                     q_type
                 }
-                
+
                 let totalDoc = data[1]
                 let totalPage = Math.ceil(totalDoc[0].count / itemPerPage)
                 let q_set_ids = data[2]
@@ -256,7 +256,7 @@ exports.getFilterData = (req, res, next) => {
                 if (e) {
                     next(e);
                 } else {
-                   res.send(data)
+                    res.send(data)
                 }
             }
         );
@@ -282,7 +282,7 @@ exports.renderviewSet = (req, res, next) => {
                     } else {
                         table = 'q_others'
                     }
-                    const query = `SELECT * FROM ${table} WHERE id IN (?)`;
+                    const query = `SELECT * FROM ${table} WHERE id IN (?) ORDER BY FIELD(${table}.id, ${questionIds});`;
                     db.query(query, [questionIds], (error, results) => {
                         if (error) {
                             return next(error);
@@ -367,9 +367,9 @@ exports.renderAnswer = (req, res, next) => {
         async function extract_questions_data(questionIds, table) {
             let options, query
             if (table == 'q_others') {
-                query = `SELECT question_text,question_answer FROM ${table} WHERE id IN (?)`;
+                query = `SELECT question_text,question_answer FROM ${table} WHERE id IN (?) ORDER BY FIELD(${table}.id, ${questionIds});`;
             } else {
-                query = `SELECT question_text,question_option,question_answer FROM ${table} WHERE id IN (${questionIds})`;
+                query = `SELECT question_text,question_option,question_answer FROM ${table} WHERE id IN (${questionIds}) ORDER BY FIELD(${table}.id, ${questionIds});`;
             }
             const data = await generateResults(query);
             if (data.length) {

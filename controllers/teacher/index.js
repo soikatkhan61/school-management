@@ -17,14 +17,20 @@ exports.reanderCreateTeacher = async (req, res, next) => {
     let { edit, id } = req.query
     try {
         if (edit && id) {
-            db.query("select * from teachers where id = ? limit 1;", [id], (e, data) => {
+            db.query("select * from teachers where id = ? limit 1;select * from classes;select * from subject_list", [id], (e, data) => {
                 if (e) return next(e)
-                return res.render('teacher/register-teacher', { flashMessage: Flash.getMessage(req), title: 'Teacher', data: data[0] })
+                let teacherInfo = data[0]
+                return res.render('teacher/register-teacher', { flashMessage: Flash.getMessage(req), title: 'Teacher', data: teacherInfo[0], classes: data[1], subjects: data[2] })
             })
         } else {
-            return res.render('teacher/register-teacher', { flashMessage: Flash.getMessage(req), title: 'Teacher',data: '' })
+            db.query("select * from classes;select * from subject_list", (e, subject_data) => {
+                if (e) return next(e)
+                console.log(subject_data);
+                return res.render('teacher/register-teacher', { flashMessage: Flash.getMessage(req), title: 'Teacher', data: '', classes: subject_data[0], subjects: subject_data[1] })
+            })
+
         }
-    }catch (error) {
+    } catch (error) {
         next(error)
     }
 };
@@ -37,56 +43,62 @@ exports.registerTeacherPost = async (req, res, next) => {
             password,
             address,
             teacher_avater,
+            subject_permission
         } = req.body
         let { edit, id } = req.query
-
+        console.log(subject_permission);
+        if (typeof subject_permission === 'object' && subject_permission != undefined) {
+            subject_permission = subject_permission.join(',')
+        } else if(subject_permission === undefined) {
+            subject_permission = ''
+        }
+        console.log(subject_permission);
         let full_name = name
         let sql
         if (req.file) {
             teacher_avater = `/uploads/${req.file.filename}`
-            if(password.length <= 30){
+            if (password.length <= 30) {
                 password = await bcrypt.hash(password, 11);
-                sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',password='${password}',address='${address}',avater='${teacher_avater}' where id=${id}`
-            }else{
-                sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',address='${address}',avater='${teacher_avater}' where id=${id}`
+                sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',password='${password}',address='${address}',avater='${teacher_avater}',subject_permission='${subject_permission}' where id=${id}`
+            } else {
+                sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',address='${address}',avater='${teacher_avater}',subject_permission='${subject_permission}' where id=${id}`
             }
-           
-        }else{
-            if(password.length <= 30){
+
+        } else {
+            if (password.length <= 30) {
                 password = await bcrypt.hash(password, 11);
-                sql = sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',password='${password}',address='${address}' where id=${id}`
-            }else{
-                sql = sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',address='${address}' where id=${id}`
+                sql = sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',password='${password}',address='${address}',subject_permission='${subject_permission}' where id=${id}`
+            } else {
+                sql = sql = `update teachers set name='${full_name}',username='${username}',phone='${phone}',email='${email}',address='${address}',subject_permission='${subject_permission}' where id=${id}`
             }
-           
         }
         if (edit && id) {
-            db.query("select avater from teachers where id = ? limit 1",[id],(e,data)=>{
-                if(e) return next(e)
-                if(req.file && data[0].avater){
-                    fs.unlink(`public${data[0].avater}`, function(err) {
-                        if(err && err.code == 'ENOENT') {
+            db.query("select avater from teachers where id = ? limit 1", [id], (e, data) => {
+                if (e) return next(e)
+                if (req.file && data[0].avater) {
+                    fs.unlink(`public${data[0].avater}`, function (err) {
+                        if (err && err.code == 'ENOENT') {
                             return res.send("error something")
                         }
                     });
                 }
-                db.query(sql,(e,data)=>{
-                    if(e) return next(e)
-                    if(data.affectedRows > 0){
-                        req.flash('success',"update success!")
-                    }else{
-                        req.flash('fail',"update failed!")
+                db.query(sql, (e, data) => {
+                    if (e) return next(e)
+                    if (data.affectedRows > 0) {
+                        req.flash('success', "update success!")
+                    } else {
+                        req.flash('fail', "update failed!")
                     }
                     return res.redirect(`/teacher/register-teacher?edit=true&id=${id}`)
                 })
             })
         } else {
-            db.query("SELECT count(*) as totalTeacher from teachers where school_id = ?;SELECT schools.package,packages.teacher_limit from schools  join packages on schools.package = packages.id where schools.id = ? ",[req.user.id,req.user.id],(e,data)=>{
-                if(e) return next(e)
+            db.query("SELECT count(*) as totalTeacher from teachers where school_id = ?;SELECT schools.package,packages.teacher_limit from schools  join packages on schools.package = packages.id where schools.id = ? ", [req.user.id, req.user.id], (e, data) => {
+                if (e) return next(e)
                 let totalTeacher = data[0]
                 let teacherLimit = data[1]
-                if( totalTeacher[0].totalTeacher <= teacherLimit[0].teacher_limit ){
-                    db.query("select * from teachers where username = ? and school_id = ?",[username,req.user.id], (e, data) => {
+                if (totalTeacher[0].totalTeacher <= teacherLimit[0].teacher_limit) {
+                    db.query("select * from teachers where username = ? and school_id = ?", [username, req.user.id], (e, data) => {
                         if (e) {
                             return next(e)
                         } else {
@@ -95,7 +107,7 @@ exports.registerTeacherPost = async (req, res, next) => {
                                 req.flash('fail', 'User Name already exists')
                                 return res.redirect(`/teacher/register-teacher`)
                             } else {
-                                db.query("insert into teachers values(?,?,?,?,?,?,?,?,?,?)", [null, 'teacher', name, username,email, address,phone, password, req.user.id,teacher_avater], (e, data) => {
+                                db.query("insert into teachers values(?,?,?,?,?,?,?,?,?,?,?)", [null, 'teacher', name, username, email, address, phone, password, req.user.id, teacher_avater, subject_permission], (e, data) => {
                                     if (e) {
                                         return next(e)
                                     } else {
@@ -110,9 +122,9 @@ exports.registerTeacherPost = async (req, res, next) => {
                             }
                         }
                     })
-                     
-                }else{
-                    req.flash('fail',"Teacher limit exceeded ! Update Package")
+
+                } else {
+                    req.flash('fail', "Teacher limit exceeded ! Update Package")
                     return res.redirect(`/teacher/register-teacher`)
                 }
             })

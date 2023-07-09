@@ -66,13 +66,13 @@
             <nav aria-label="...">
                 <ul class="pagination">
                   <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>"  >
-                    <a  href="/user/registerd-student?page=<%=currentPage-1 %>" class="page-link" >Previous</a>
+                    <a  href="/user/registerd-student/<%=class_id%>?page=<%=currentPage-1 %>" class="page-link" >Previous</a>
                   </li>
                   <% for(let i=0; i< totalPage; i++) {%> 
-                    <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/user/registerd-student?page=<%=i+1 %>"><%= i+1 %> </a></li>
+                    <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/user/registerd-student/<%=class_id%>?page=<%=i+1 %>"><%= i+1 %> </a></li>
                   <% }%> 
                   <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>"  >
-                    <a class="page-link" href="/user/registerd-student?page=<%=currentPage+1 %>">Next</a>
+                    <a class="page-link" href="/user/registerd-student/<%=class_id%>?page=<%=currentPage+1 %>">Next</a>
                   </li>
                 </ul>
               </nav>

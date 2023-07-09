@@ -11,49 +11,57 @@
 <div id="loading-spinner" style="display:none;">
   <img src="/images/spinner.gif" alt="Loading...">
 </div>
-<div class="main-content px-4 container py-4">
-  <div class="p-4 py-5 rounded shadow-sm border" style="max-width: max-content;">
-    <form action="/combined-question" method="post">
-      <p>School Name: <input type="text"  class="fw-bold px-2" name="school_name" value="<%= school[0].school_name %>"></p>
-      <div class="form-outline mb-4">
-        <input name="name" type="text" id="form2Example2" class="form-control" required />
-        <label class="form-label" for="form2Example2">Question Name</label>
+<div style="background-color: #ddeefc; min-height: 100vh;">
+  <div class="main-content px-4 container py-5">
+    <div class="p-4 py-5 rounded shadow-sm border" style="background-color: #FEFEFE;max-width: max-content;box-shadow: 0 30px 60px 0 rgba(90, 116, 148, 0.4);max-width: 500px;">
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 text-success">Select Questions</h6>
+        <span class="border px-3 py-1 rounded-pill border-primary " style="font-size: 14px;"><%= user.userType == 'admin' ? user.admin_name : user.username %></span>
       </div>
+      <form action="/combined-question" method="post">
+        <div class="form-outline mb-4">
+          <input name="school_name" value="<%= school[0].school_name %>" maxlength="100" type="text" id="form2Example22" class="form-control" required />
+          <label class="form-label" for="form2Example22">School Name</label>
+        </div>
+        <div class="form-outline mb-4">
+          <input name="name" type="text" id="form2Example2" minlength="3" maxlength="100" class="form-control" required />
+          <label class="form-label" for="form2Example2">Question Name</label>
+        </div>
 
-      <select name="class_id" id="class_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black" required>
-        <option class="py-2 px-5" value="" selected>Class</option>
-        <% for(let c of classes){ %>
-        <option class="py-2 px-5" value="<%= c.id %>">
-          <%= c.class_name %>
-        </option>
-        <% } %>
-      </select>
-      <select name="subject" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black" required>
-        <option class="py-2 px-5" value="" selected>Subject</option>
-      </select>
-      <select name="q_formate" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black" required>
-        <option class="py-2 px-5" value="" selected>Question Formate</option>
-        <option class="py-2 px-5" value="mcq">MCQ</option>
-        <option class="py-2 px-5" value="creative">Creative</option>
-        <option class="py-2 px-5" value="q_others">Others</option>
-      </select>
-      <input type="hidden" value="1" name="school_id">
+        <select name="class_id" id="class_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black" required>
+          <option class="py-2 px-5" value="" selected>Class</option>
+          <% for(let c of classes){ %>
+          <option class="py-2 px-5" value="<%= c.id %>">
+            <%= c.class_name %>
+          </option>
+          <% } %>
+        </select>
+        <select name="subject" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black" required>
+          <option class="py-2 px-5" value="" selected>Subject</option>
+        </select>
+        <select name="q_formate" id="subject_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black" required>
+          <option class="py-2 px-5" value="" selected>Question Formate</option>
+          <option class="py-2 px-5" value="mcq">MCQ</option>
+          <option class="py-2 px-5" value="creative">Creative</option>
+          <option class="py-2 px-5" value="q_others">Others</option>
+        </select>
+        <input type="hidden" value="1" name="school_id">
 
-      <div class="form-outline mb-4">
-        <input name="total_mark" type="number" id="form2Example1" class="form-control"  min="1" required />
-        <label class="form-label" for="form2Example1">Total Mark</label>
-      </div>
+        <div class="form-outline mb-4">
+          <input name="total_mark" type="number" id="form2Example1" class="form-control" max="200" min="1" required />
+          <label class="form-label" for="form2Example1">Total Mark</label>
+        </div>
 
-      <div class="form-outline mb-4">
-        <input name="total_qus" type="number" id="form2Example1" class="form-control" max="200" min="1"  required />
-        <label class="form-label" for="form2Example1">Total Question</label>
-      </div>
-      <!-- Submit button -->
-      <button type="submit" class="btn btn-primary btn-block">View Question</button>
-    </form>
+        <div class="form-outline mb-4">
+          <input name="total_qus" type="number" id="form2Example1" class="form-control" max="200" min="1" required />
+          <label class="form-label" for="form2Example1">Total Question</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">View Question</button>
+      </form>
+    </div>
   </div>
-
 </div>
+
 <script>
   const class_select = document.getElementById('class_select');
   const subject_select = document.getElementById('subject_select');

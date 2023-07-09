@@ -7,10 +7,9 @@ const {
 } = require('../middleware/authMiddleware')
 
 
-const {dashboardGetController,adminDashboardRender} = require("../controllers/user/dashboardController")
 const {renderAllQuestions,renderCreateQuestion,renderAllClass,createClassPost,renderAllSubject,getSubjectByClass,getSubject,createSubjectPost,createChaptePost,getChapterBySubjectAndClass,getChapter,createQuestionPost,renderSeeQuestion,renderSingleQuestionView,renderCreateOthersQuestion,othersQuestionsPost,renderCreateFilter,filterPost,renderCreative,creativePost} = require("../controllers/user/question")
 
-const {renderCreateStudnet,createStudentPost,renderRegisteredStudent} = require("../controllers/student/studentController")
+const {renderCreateStudnet,createStudentPost,renderRegisteredStudent,renderStudentOfClass} = require("../controllers/student/studentController")
 
 
 
@@ -42,7 +41,8 @@ router.get("/get-chapter",getChapter)
 
 router.get("/create-student",isAuthenticated,requireRole('admin'),renderCreateStudnet)
 router.post("/create-student",isAuthenticated,requireRole('admin'),upload.single('student_avater'),createStudentPost)
-router.get("/registerd-student",isAuthenticated,requireRole('admin'),renderRegisteredStudent)
+router.get("/student-by-class",isAuthenticated,requireRole('admin'),renderStudentOfClass)
+router.get("/registerd-student/:class_id",isAuthenticated,requireRole('admin'),renderRegisteredStudent)
 
 
 module.exports = router

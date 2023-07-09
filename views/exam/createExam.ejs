@@ -18,7 +18,7 @@
                 <div>
                     <div class="border border-gray card  p-4">
                         <div class="mb-2">
-                            <p class="mb-0 d-flex justify-content-between">This exams is creating by <span class="fw-bold border rounded-pill px-3 border-primary"><%= user.username %></span></p>
+                            <p class="mb-0 d-flex justify-content-between" style="font-size: 14px;">This exams is creating by <span class="fw-bold border rounded-pill px-2 border-primary" > <%= user.userType == 'admin' ? user.admin_name : user.username %></span></p>
                             <p class="mb-0">
                                 <input type="text" name="teacher" value="<%= user.id %>" hidden>
                                 <input type="text" name="school_id" value="<%= user.school_id %>" hidden>

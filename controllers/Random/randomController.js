@@ -15,7 +15,7 @@ exports.renderRandom = (req, res, next) => {
         next(e)
       } else {
         res.render("random", {
-          title: "Combined",
+          title: "Smart Random Question Generator",
           flashMessage: Flash.getMessage(req),
           classes: data[0],
           school:data[1]

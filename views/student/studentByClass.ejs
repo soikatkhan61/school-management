@@ -1,0 +1,13 @@
+<%- include('../user/user_partials/header.ejs') %>
+<div class="container py-3">
+    <div>
+        <ul class="list-group list-group-light ">
+            <%for(let s of data){%>
+              <a href="/user/registerd-student/<%= s.class_id %>" class="list-group-item text-primary border px-4 d-flex justify-content-between">
+                <span><%= s.class_name  %></span>
+              </a>
+            <%}%>
+          </ul>
+    </div>
+</div>
+<%- include('../user/user_partials/footer.ejs') %>

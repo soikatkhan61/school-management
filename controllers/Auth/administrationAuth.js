@@ -60,7 +60,7 @@ exports.admininstrationLoginPost = async (req, res, next) => {
                                 flashMessage: Flash.getMessage(req),
                             });
                         } else {
-                            if(new Date() <= data[0].validity ){
+                            if (new Date() <= data[0].validity) {
                                 let token = jwt.sign(
                                     {
                                         id: data[0].id,
@@ -80,10 +80,10 @@ exports.admininstrationLoginPost = async (req, res, next) => {
                                     }
                                     req.flash("success", "Successfully Logged In");
                                     res.redirect('/administration')
-    
+
                                 });
-                            }else{
-                                return res.render("utils/expired",{flashMessage:''})
+                            } else {
+                                return res.render("utils/expired", { flashMessage: '' })
                             }
                         }
                     });

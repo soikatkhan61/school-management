@@ -515,6 +515,8 @@ exports.othersQuestionsPost = (req, res, next) => {
   if(typeof filter === 'object' && filter !== undefined) {
     filter = filter.join(',')
   }
+  console.log(req.body.filter);
+  
   try {
     if (edit) {
       db.query("update q_others set question_text=?,question_answer=?,filter=?,year=? where id = ?", [question_text, question_answer,filter, year, q_id], (e, data) => {

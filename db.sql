@@ -240,3 +240,5 @@ ALTER TABLE q_others ADD CONSTRAINT FOREIGN KEY (fk_author) REFERENCES moderator
 
 --- completed ---
 
+alter table teachers ADD COLUMN subject_permission varchar(1000)
+

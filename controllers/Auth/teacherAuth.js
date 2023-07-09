@@ -69,7 +69,7 @@ exports.teacherLoginPost = async (req, res, next) => {
                                 if (e) {
                                     return next(e);
                                 } else {
-                                    if (new Date()  <= result[0].validity) {
+                                    if (new Date() <= result[0].validity) {
                                         let token = jwt.sign(
                                             {
                                                 id: data[0].id,
@@ -94,7 +94,7 @@ exports.teacherLoginPost = async (req, res, next) => {
 
                                         });
                                     } else {
-                                        return res.render("utils/expired",{flashMessage:''})
+                                        return res.render("utils/expired", { flashMessage: '' })
                                     }
 
                                 }
