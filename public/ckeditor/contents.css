@@ -221,13 +221,13 @@ h1,h2,h3{
 
 .angry-grid {
    display: grid; 
-
    grid-template-rows: 1fr 1fr;
    grid-template-columns: 1fr 1fr;
-   
    gap: 0px;
    height: 100%;
-
 }
   
+.ck-editor__editable {
+    font-family: 'bangla', Arial, sans-serif;
+}
 

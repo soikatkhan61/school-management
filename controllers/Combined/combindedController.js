@@ -55,9 +55,9 @@ exports.viewSubject = (req, res, next) => {
 
 };
 exports.viewSubjectGet = (req, res, next) => {
-    let { class_id, q_set, q_type } = req.query
+    let { class_id, subject,q_set, q_type } = req.query
     try {
-        db.query("select * from subject_list where class_id=?", [class_id], (e, data) => {
+        db.query("select * from subject_list where class_id=? and id=?", [class_id,subject], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -119,7 +119,6 @@ exports.viewQuestionGet = (req, res, next) => {
     //contract the query
     let sql = `SELECT * FROM ${q_type} where class_id=${class_id} and subject_id = ${subject_id} and chapter_id=${chapter}`;
     let counterSql = ''
-    let sqlParams = [];
     if (category) {
         sql += ` AND filter in(${category}) `;
         counterSql += ` and filter in(${category}) `;
@@ -171,7 +170,6 @@ exports.viewQuestionGet = (req, res, next) => {
 };
 exports.addQuestion = (req, res, next) => {
     let { q_id, q_set, a_id } = req.query;
-    console.log(req.query);
     try {
         db.query(
             "UPDATE q_set SET questions = IF(FIND_IN_SET(?, questions), questions, CONCAT_WS(',', questions, ?)), answers = IF(FIND_IN_SET(?, questions),  IF(answers IS NULL, ?, CONCAT_WS(',', answers, ?)), answers) WHERE id = ?;",
@@ -180,7 +178,6 @@ exports.addQuestion = (req, res, next) => {
                 if (e) {
                     next(e);
                 } else {
-                    console.log(data);
                     if (data.changedRows == 1) {
                         res.send({ status: 200 })
                     } else if (data.changedRows == 0) {

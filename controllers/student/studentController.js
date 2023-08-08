@@ -133,7 +133,7 @@ exports.renderRegisteredStudent = async (req, res, next) => {
         let itemPerPage = 25;
         let table_name = 'students'
         let class_id = req.params.class_id
-        db.query(`select count(*) as count  from ${table_name};select students.*,classes.class_name from ${table_name}  join classes on classes.id = students.class_id where students.school_id=${req.user.id} order by students.id desc limit ?,?`, [((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
+        db.query(`select count(*) as count  from ${table_name};select students.*,classes.class_name from ${table_name}  join classes on classes.id = students.class_id where students.school_id=${req.user.id} and classes.id=${class_id} order by students.id desc limit ?,?`, [((itemPerPage * currentPage) - itemPerPage), itemPerPage], (e, data) => {
             if (e) {
                 return next(e)
             } else {

@@ -63,6 +63,9 @@
 </div>
 
 <script>
+  let permission = '<%=user.subject_permission %>'
+  let userPermissonList = permission.split(',')
+  console.log(userPermissonList);
   const class_select = document.getElementById('class_select');
   const subject_select = document.getElementById('subject_select');
   const loading_spinner = document.getElementById('loading-spinner');
@@ -89,10 +92,12 @@
     getSelectDiv.appendChild(option);
     getSelectDiv.appendChild(optionAll);
     for (let i = 0; i < data.length; i++) {
-      const option = document.createElement('option');
-      option.value = `${data[i].id}`;
-      option.innerHTML = `${data[i].subject_name}`;
-      getSelectDiv.appendChild(option);
+      if (userPermissonList.includes(`${data[i].id}`)) {
+        const option = document.createElement('option');
+        option.value = `${data[i].id}`;
+        option.innerHTML = `${data[i].subject_name}`;
+        getSelectDiv.appendChild(option);
+      }
     }
   }
 </script>

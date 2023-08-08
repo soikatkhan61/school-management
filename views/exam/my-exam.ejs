@@ -15,48 +15,45 @@
   <% if(exams.length == 0){ %>
   <p class="text-center">No Exams</p>
   <% }else{ %>
-  <div class="table-responsive table-nowrap">
-    <table class="table">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">SL</th>
-          <th scope="col">Name</th>
-          <th scope="col">Code</th>
-          <th scope="col">Helds</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for(let i=0; i<exams.length; i++){ %>
-        <tr>
-          <td><%= i+1 %></td>
-          <td><%= exams[i].name %></td>
-          <td><%= exams[i].code %></td>
-          <td>
-            <div>
-                <p class="mb-0"><%= exams[i].start_time %></p>
-                <p class="mb-0"><%= exams[i].end_time %></p>
-            </div>
-          </td>
-          <td>
-            <% 
+  <div class="row">
+    <% for(let i=0; i<exams.length; i++){ %>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+      <div class="m-1 border rounded border-primary p-2">
+        <div class="row align-items-center">
+          <p class="col-2 text-center mb-0"><%= i+1 %></p>
+          <h6 class="col-8 text-center mb-0"><%= exams[i].name %></h6>
+        </div>
+        <hr>
+          <% let st_time = new Date(exams[i].start_time); %>
+          <% let et_time = new Date(exams[i].end_time); %> 
+          <center>
+            <span class="text-center px-3 py-2  rounded border border-primary"><%= st_time.toLocaleDateString('en-US', { weekday: 'long' });
+              %></span>
+          </center>
+          <div class="mt-3">
+            <p class="text-center mb-0">Start: <%= st_time.toLocaleTimeString('en-US', { timeStyle: 'short' }) %> </p>
+            <p class="text-center">End: <%= et_time.toLocaleTimeString('en-US', { timeStyle: 'short' }) %> </p>
+          </div>
+          
+
+        <% 
                 const start_time = new Date(exams[i].start_time);
                 const end_time = new Date(exams[i].end_time);
                 const isExamOngoing = start_time.getTime() <= Date.now() && end_time.getTime() >= Date.now();
                 let examEligible =  isExamOngoing || exams[i].status == 1 ? true : false
              %>
-            <% if(examEligible){ %>
-                <a class="btn btn-success btn-sm" href="/exam/join?exam_id=<%= exams[i].id %>"><span class="mx-1">Join</span> </a>
-            <% }else{ %>
-                <button  disabled class="btn btn-sm">Expired</button>
-            <% }%>
-          </td>
-        </tr>
-        <% } %>
-        <% } %>
-      </tbody>
-    </table>
+        <% if(examEligible){ %>
+        <a class="btn btn-success btn-block mt-2 mb-1" href="/exam/join?exam_id=<%= exams[i].id %>"><span class="mx-1">Join</span> </a>
+        <% }else{ %>
+        <button disabled class="btn btn-block mt-2 mb-1">Expired</button>
+        <% }%>
+      </div>
+    </div>
+    <% } %>
   </div>
+    
+<% } %>
+
   <div class="d-flex justify-content-center py-5">
     <nav aria-label="...">
       <ul class="pagination">

@@ -12,18 +12,19 @@
   <!-- GOOGLE FONT -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <meta name="robots" content="noindex, nofollow">
-
+  <link rel="stylesheet" href="/styles/font.css">
   <script src="/ckeditor/ckeditor.js"></script>
   <style>
     @font-face {
-    font-family: ban;
-    src: url("/fonts/SolaimanLipiNormal.woff2");
-  }
-  @media only screen and (min-width: 600px) {
-  #main {
-    padding: 0px 200px
-  }
-}
+      font-family: ban;
+      src: url("/fonts/SolaimanLipiNormal.woff2");
+    }
+
+    @media only screen and (min-width: 600px) {
+      #main {
+        padding: 0px 200px
+      }
+    }
   </style>
 </head>
 
@@ -213,7 +214,10 @@
            <% } %>
         </textarea>
 
+    <!-- <div id="printableArea">
 
+        </div>
+        <input type="button" onclick="printDiv('printableArea')" value="print a div!" /> -->
   </div>
 
 
@@ -240,7 +244,7 @@
         },
         {
           name: 'insert',
-          items: ['Table','Image', 'HorizontalRule', 'PageBreak', ]
+          items: ['Table', 'Image', 'HorizontalRule', 'PageBreak', ]
         },
         {
           name: 'styles',
@@ -267,6 +271,24 @@
     if (CKEDITOR.env.ie && CKEDITOR.env.version == 8) {
       document.getElementById('ie8-warning').className = 'tip alert';
     }
+
+    // let editor = CKEDITOR.instances.content
+    // console.log(editor.getData());
+
+
+
+    // function printDiv(divName) {
+    //   let printableArea = document.getElementById('printableArea')
+    //   printableArea.innerHTML = editor.getData()
+    //  var printContents = printableArea.innerHTML;
+    //  var originalContents = document.body.innerHTML;
+
+    //  document.body.innerHTML = printContents;
+
+    //  window.print();
+
+    //  document.body.innerHTML = originalContents;
+    // }
   </script>
 
 </body>

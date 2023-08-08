@@ -12,9 +12,9 @@
   <!-- GOOGLE FONT -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <meta name="robots" content="noindex, nofollow">
-
+  <link rel="stylesheet" href="/styles/font.css">
   <script src="/ckeditor/ckeditor.js"></script>
-
+ 
 </head>
 
 <body>
@@ -35,7 +35,7 @@
         waring_text.style.display = 'none';
       });
     </script>
-    <textarea id="content">
+    <textarea id="content" style="font-family: bangla!important;">
             <% if(obj.q_formate == 'questions'){ %>
               <div style="margin: 20px 0;">
                 <div style="text-align: center;margin: 6px 0;">
@@ -53,7 +53,7 @@
                 ">
                   <p></p>
                   <p></p>
-                  <p style="text-align: center;"><%= obj.name %></p>
+                  <p style="text-align: center;font-weight: bold;font-style: italic;"><%= obj.name %></p>
                   <p></p>
                   <p style="text-align: end;">বিষয় কোডঃ</p>
                 </div>
@@ -62,7 +62,7 @@
                   <p>সময়ঃ <%= obj.total_qus %> মিনিট</p>
                   <p>পুর্নমাণ: <%= obj.total_mark %></p>
                 </div>
-                <div style="text-align: center;margin-top: 5px;">
+                <div style="text-align: center;margin-top: 5px;font-family: bangla!important;">
                  [ দ্রষ্টব্যঃ  সরবরাহকৃত নৈর্ব্যত্তিক অভীক্ষার উত্তরপত্রে প্রশ্নের ক্রমিক নম্বরের বিপরীতে প্রদত্ত বর্ণসম্বলিত বৃত্ত সমুহ হতে সঠিক উত্তরের বৃত্তটি বল পয়েন্ট কলম দারা সম্পুর্ণ ভরাট কর । প্রতিটি প্রশ্নের মান ১ ]
                 </div>
              </div>
