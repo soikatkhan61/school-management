@@ -24,24 +24,23 @@
           <h6 class="col-8 text-center mb-0"><%= exams[i].name %></h6>
         </div>
         <hr>
-          <% let st_time = new Date(exams[i].start_time); %>
-          <% let et_time = new Date(exams[i].end_time); %> 
-          <center>
-            <span class="text-center px-3 py-2  rounded border border-primary"><%= st_time.toLocaleDateString('en-US', { weekday: 'long' });
+        <% let st_time = new Date(exams[i].start_time); %>
+        <% let et_time = new Date(exams[i].end_time); %>
+        <center>
+          <span class="text-center px-3 py-2  rounded border border-primary"><%= st_time.toLocaleDateString('en-US', { weekday: 'long' });
               %></span>
-          </center>
-          <div class="mt-3">
-            <p class="text-center mb-0">Start: <%= st_time.toLocaleTimeString('en-US', { timeStyle: 'short' }) %> </p>
-            <p class="text-center">End: <%= et_time.toLocaleTimeString('en-US', { timeStyle: 'short' }) %> </p>
-          </div>
-          
+        </center>
+        <div class="mt-3">
+          <p class="text-center mb-0">Start: <%= st_time.toLocaleTimeString('en-US', { timeStyle: 'short' }) %> </p>
+          <p class="text-center">End: <%= et_time.toLocaleTimeString('en-US', { timeStyle: 'short' }) %> </p>
+        </div>
 
         <% 
-                const start_time = new Date(exams[i].start_time);
-                const end_time = new Date(exams[i].end_time);
-                const isExamOngoing = start_time.getTime() <= Date.now() && end_time.getTime() >= Date.now();
-                let examEligible =  isExamOngoing || exams[i].status == 1 ? true : false
-             %>
+            const start_time = new Date(exams[i].start_time);
+            const end_time = new Date(exams[i].end_time);
+            const isExamOngoing = start_time.getTime() <= Date.now() && end_time.getTime() >= Date.now();
+            let examEligible =  isExamOngoing || exams[i].status == 1 ? true : false
+        %>
         <% if(examEligible){ %>
         <a class="btn btn-success btn-block mt-2 mb-1" href="/exam/join?exam_id=<%= exams[i].id %>"><span class="mx-1">Join</span> </a>
         <% }else{ %>
@@ -51,20 +50,20 @@
     </div>
     <% } %>
   </div>
-    
-<% } %>
+
+  <% } %>
 
   <div class="d-flex justify-content-center py-5">
     <nav aria-label="...">
       <ul class="pagination">
         <li class="page-item <%= currentPage == 1 ? 'disabled' : '' %>">
-          <a href="/exam/view?page=<%=currentPage-1 %>" class="page-link">Previous</a>
+          <a href="/exam/my-exam?page=<%=currentPage-1 %>" class="page-link">Previous</a>
         </li>
         <% for(let i=0; i< totalPage; i++) {%>
-        <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/exam/view?page=<%=i+1 %>"><%= i+1 %> </a></li>
+        <li class="page-item  <%= currentPage == i+1 ? "active" : "" %> "><a class="page-link" href="/exam/my-exam?page=<%=i+1 %>"><%= i+1 %> </a></li>
         <% }%>
         <li class="page-item <%= currentPage >= totalPage ? 'disabled' : '' %>">
-          <a class="page-link" href="/exam/view?page=<%=currentPage+1 %>">Next</a>
+          <a class="page-link" href="/exam/my-exam?page=<%=currentPage+1 %>">Next</a>
         </li>
       </ul>
     </nav>

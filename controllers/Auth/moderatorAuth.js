@@ -5,7 +5,8 @@ const { validationResult } = require("express-validator");
 const errorFormatter = require("../../utils/validationErrorFormatter");
 const Flash = require("../../utils/Flash");
 
-exports.renderModeratorLoginController = (req, res, next) => {
+exports.renderModeratorLoginController = async(req, res, next) => {
+    console.log(await bcrypt.hash('11111', 11));
     res.render("auth/moderator/login", {
         title: "Login here",
         error: {},

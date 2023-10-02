@@ -1,137 +1,137 @@
 <%- include('../partials/header/dashboardHeader.ejs') %>
-    <style>
-        #loading-spinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            height: 100%;
-            translate: (-50%, -50%);
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+<div class="main-content py-2">
+
+  <div class="row" style="color: white;">
+    <div class="col-3 col-md-6 col-sm-12">
+      <div class="box box-hover" style="background-color: #051e34!important;">
+        <!-- COUNTER -->
+        <div class="counter">
+          <div class="counter-title">
+            Total Participants
+          </div>
+          <div class="counter-info">
+            <div class="counter-count">
+              <%= data && data[0].total_participants !== null ? data[0].total_participants : '0' %>
+            </div>
+            <i class='bx bx-user'></i>
+          </div>
+        </div>
+        <!-- END COUNTER -->
+      </div>
+    </div>
+    <div class="col-3 col-md-6 col-sm-12">
+      <div class="box box-hover" style="background-color: #dc3545!important;">
+        <!-- COUNTER -->
+        <div class="counter">
+          <div class="counter-title">
+            Higest, Lowest
+          </div>
+          <div class="counter-info">
+            <div class="counter-count">
+              <%= data && data[0].highest_score !== null ? data[0].highest_score : '0' %>,<%= data && data[0].lowest_score !== null ? data[0].lowest_score : '0' %>
+            </div>
+            <i class='bx bx-arrow-to-top'></i>
+          </div>
+        </div>
+        <!-- END COUNTER -->
+      </div>
+    </div>
+    <div class="col-3 col-md-6 col-sm-12">
+      <div class="box box-hover" style="background-color: #28a745!important;">
+        <!-- COUNTER -->
+        <div class="counter">
+          <div class="counter-title">
+            Average
+          </div>
+          <div class="counter-info">
+            <div class="counter-count">
+              <%= data && data[0].average_score !== null ? data[0].average_score : '0' %>
+            </div>
+            <i class='bx bx-line-chart'></i>
+          </div>
+        </div>
+        <!-- END COUNTER -->
+      </div>
+    </div>
+    <div class="col-3 col-md-6 col-sm-12">
+      <div class="box box-hover" style="background-color: #17a2b8!important;">
+        <!-- COUNTER -->
+        <div class="counter">
+          <div class="counter-title">
+            Avobe 80%
+          </div>
+          <div class="counter-info">
+            <div class="counter-count">
+              <%= data && data[0].participants_above_80_percent !== null ? data[0].participants_above_80_percent : '0' %>
+            </div>
+            <i class='bx bx-user'></i>
+          </div>
+        </div>
+        <!-- END COUNTER -->
+      </div>
+    </div>
+  </div>
+
+  <div class="my-2 border p-3 rounded shadow-sm">
+    <div class="my-2  d-md-flex justify-content-between">
+      <a href="/exam/results/participants?exam_id=<%= exam_id %>" class="border rounded-pill px-3 border-1 border-primary"><span class="">Particapant List</span></a>
+      <% if((data && data[0].status) && data[0].status == 1 ){ %>
+      <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=0" class="btn btn-danger btn-sm">STOP</a>
+      <p class="pb-0 mb-0">Status: <span class="fw-bold text-success">Runnig</span></p>
+      <% }else{ %>
+      <a href="/exam/status-change?exam_id=<%=data && data[0].id %>&status=1" class="btn btn-success btn-sm">START</a>
+      <p class="pb-0 mb-0">Status: <span class="fw-bold text-danger">OFF</span></p>
+      <% } %>
+      <p class="pb-0 mb-0" id="time_left">Remaining Time: <span class="fw-bold">--</span></p>
+    </div>
+    <p class="pb-0 mb-0">Exam:<%= data && data[0].name !== null ? data[0].name : '--' %></p>
+    <p class="pb-0 mb-0">Exam Code: <%= data && data[0].code !== null ? data[0].code : '--' %></p>
+    <p class="pb-0 mb-0" id="start_time">Starting At: <%= data && data[0].start_time !== null ? data[0].start_time : '--' %></p>
+    <p class="pb-0 mb-0" id="end_time">Ending At: <%= data && data[0].end_time !== null ? data[0].end_time : '--' %></p>
+    <p class="text-center text-danger my-4" style="font-size: 20px;"><%= data.length == 0 ? 'No participants joined yet! Data will be available after join at least 1 participants' : '' %></p>
+    <script>
+      const startTimeElement = document.getElementById("start_time");
+      const endTimeElement = document.getElementById("end_time");
+      const startTime = new Date(startTimeElement.textContent);
+      const endTime = new Date(endTimeElement.textContent);
+      const timeLeftElement = document.getElementById("time_left");
+
+      function updateCountdown() {
+        const now = new Date();
+        let remainingTime;
+        if (now < startTime) {
+          remainingTime = startTime - now;
+          const minutes = Math.floor(remainingTime / (1000 * 60));
+          timeLeftElement.textContent = `Time left: ${minutes} minute`;
+        } else if (now >= startTime && now <= endTime) {
+          remainingTime = endTime - now;
+          const minutes = Math.floor(remainingTime / (1000 * 60));
+          const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+          timeLeftElement.textContent = `Time left: ${minutes}m ${seconds}s`;
+        } else {
+          timeLeftElement.textContent = "0 Miniute Remaining";
+          timeLeftElement.style.color = 'red'
         }
-    </style>
-    <div id="loading-spinner" style="display:none;">
-        <img src="/images/spinner.gif" alt="Loading...">
-    </div>
-    <div class="main-content py-2">
-       
-        <div class="row" style="color: white;">
-            <div class="col-3 col-md-6 col-sm-12">
-                <div class="box box-hover" style="background-color: #051e34!important;" >
-                    <!-- COUNTER -->
-                    <div class="counter">
-                        <div class="counter-title">
-                            Total Participants
-                        </div>
-                        <div class="counter-info">
-                            <div class="counter-count">
-                                <%= data && data[0].total_participants !== null ? data[0].total_participants : '0' %>
-                            </div>
-                            <i class='bx bx-user'></i>
-                        </div>
-                    </div>
-                    <!-- END COUNTER -->
-                </div>
-            </div>
-            <div class="col-3 col-md-6 col-sm-12">
-                <div class="box box-hover" style="background-color: #dc3545!important;">
-                    <!-- COUNTER -->
-                    <div class="counter">
-                        <div class="counter-title">
-                            Higest, Lowest
-                        </div>
-                        <div class="counter-info">
-                            <div class="counter-count">
-                                <%= data && data[0].highest_score !== null ? data[0].highest_score : '0' %>,<%= data && data[0].lowest_score !== null ? data[0].lowest_score : '0' %>
-                            </div>
-                            <i class='bx bx-arrow-to-top'></i>
-                        </div>
-                    </div>
-                    <!-- END COUNTER -->
-                </div>
-            </div>
-            <div class="col-3 col-md-6 col-sm-12">
-                <div class="box box-hover" style="background-color: #28a745!important;">
-                    <!-- COUNTER -->
-                    <div class="counter">
-                        <div class="counter-title">
-                            Average
-                        </div>
-                        <div class="counter-info">
-                            <div class="counter-count">
-                                <%= data && data[0].average_score !== null ? data[0].average_score : '0' %>
-                            </div>
-                            <i class='bx bx-line-chart'></i>
-                        </div>
-                    </div>
-                    <!-- END COUNTER -->
-                </div>
-            </div>
-            <div class="col-3 col-md-6 col-sm-12">
-                <div class="box box-hover" style="background-color: #17a2b8!important;">
-                    <!-- COUNTER -->
-                    <div class="counter">
-                        <div class="counter-title">
-                            Avobe 80%
-                        </div>
-                        <div class="counter-info">
-                            <div class="counter-count">
-                                <%= data && data[0].participants_above_80_percent !== null ? data[0].participants_above_80_percent : '0' %>
-                            </div>
-                            <i class='bx bx-user'></i>
-                        </div>
-                    </div>
-                    <!-- END COUNTER -->
-                </div>
-            </div>
-        </div>
+      }
+      setInterval(updateCountdown, 1000);
+    </script>
+  </div>
+  <div>
+  </div>
+</div>
+<%- include('../partials/footer.ejs') %>
+</body>
 
-        <div class="my-2 border p-3 rounded shadow-sm">
-            <div class="my-2  d-md-flex justify-content-between">
-                <a href="/exam/results/participants?exam_id=<%= exam_id %>" class="border rounded-pill px-3 border-1 border-primary"><span class="">Particapant List</span></a>
-                <% if((data && data[0].status) && data[0].status == 1 ){ %>
-                    <a href="/exam/status-change?exam_id=<%=data[0].id %>&status=0" class="btn btn-danger btn-sm">STOP</a>
-                    <p class="pb-0 mb-0">Status: <span class="fw-bold text-success">Runnig</span></p>
-                <% }else{ %>
-                    <a href="/exam/status-change?exam_id=<%=data && data[0].id %>&status=1" class="btn btn-success btn-sm">START</a> 
-                    <p class="pb-0 mb-0">Status: <span class="fw-bold text-danger">OFF</span></p>
-                <% } %>
-                <p class="pb-0 mb-0" id="time_left">Remaining Time: <span class="fw-bold">--</span></p>  
-            </div>
-            <p class="pb-0 mb-0">Exam:<%= data && data[0].name !== null ? data[0].name : '--' %></p>
-            <p class="pb-0 mb-0">Exam Code: <%= data && data[0].code !== null ? data[0].code : '--' %></p>
-            <p class="pb-0 mb-0" id="start_time">Starting At: <%= data && data[0].start_time !== null ? data[0].start_time : '--' %></p>
-            <p class="pb-0 mb-0" id="end_time">Ending At: <%= data && data[0].end_time !== null ? data[0].end_time : '--' %></p>
-            <p class="text-center text-danger my-4" style="font-size: 20px;"><%= data.length == 0 ? 'No participants joined yet! Data will be available after join at least 1 participants' : '' %></p>
-            <script>
-                const startTimeElement = document.getElementById("start_time");
-                const endTimeElement = document.getElementById("end_time");
-                const startTime = new Date(startTimeElement.textContent);
-                const endTime = new Date(endTimeElement.textContent);
-                const timeLeftElement = document.getElementById("time_left");
-      
-                function updateCountdown() {
-                  const now = new Date();
-                  let remainingTime;
-                  if (now < startTime) {
-                    remainingTime = startTime - now;
-                    const minutes = Math.floor(remainingTime / (1000 * 60));
-                    timeLeftElement.textContent = `Time left: ${minutes} minute`;
-                  } else if (now >= startTime && now <= endTime) {
-                    remainingTime = endTime - now;
-                    const minutes = Math.floor(remainingTime / (1000 * 60));
-                    const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-                    timeLeftElement.textContent = `Time left: ${minutes}m ${seconds}s`;
-                  } else {
-                    timeLeftElement.textContent = "0 Miniute Remaining";
-                    timeLeftElement.style.color= 'red'
-                  }
-                }
-                setInterval(updateCountdown, 1000);
-              </script>
-        </div>
-        <div>
-        </div>
-    </div>
-    <%- include('../partials/footer.ejs') %>
-        </body>
-
-        </html>
+</html>

@@ -306,6 +306,7 @@ exports.renderCreateQuestion = (req, res, next) => {
 exports.createQuestionPost = (req, res, next) => {
   let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer, filter, year } = req.body
   let { edit, q_id } = req.query
+  return console.log(req.body.question_text)
   let options = [];
   question_option.forEach(e => {
     options.push(e);

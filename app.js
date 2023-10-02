@@ -56,7 +56,7 @@ app.use((error,req,res,next) =>{
 
 
 //create server
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 5000
 app.listen(PORT,()=>{
     console.log("SERVER IS RUNINNG ON PORT "+PORT)
 })

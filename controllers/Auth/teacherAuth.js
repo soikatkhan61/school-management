@@ -6,6 +6,7 @@ const errorFormatter = require("../../utils/validationErrorFormatter");
 const Flash = require("../../utils/Flash");
 
 exports.renderTeacherLoginController = (req, res, next) => {
+    console.log(req.sessionID);
     res.render("auth/teacher/login", {
         title: "Login here",
         error: {},
@@ -17,6 +18,7 @@ exports.renderTeacherLoginController = (req, res, next) => {
 exports.teacherLoginPost = async (req, res, next) => {
     let { username, password } = req.body;
     console.log(req.body);
+    console.log(req.sessionID);
 
     let errors = validationResult(req).formatWith(errorFormatter);
 

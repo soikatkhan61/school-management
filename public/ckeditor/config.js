@@ -10,3 +10,4 @@ CKEDITOR.editorConfig = function( config ) {
 	config.extraPlugins = 'mathjax';
     config.mathJaxLib = '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML';
 };
+

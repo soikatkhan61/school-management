@@ -14,15 +14,16 @@
 <div class="main-content container d-flex justify-content-center">
   <div class="border rounded" style="background-color: #fff;min-width: 350px;max-width: 500px;">
     <div class="rounded-top py-3" style="background-color:#051E34 ;">
+
       <h3 class="text-light text-center">
-        <% if((result_data[0].score/result_data[0].total_mark) >= 80){ %>
-          Exellent !
-        <%} else if((result_data[0].score/result_data[0].total_mark) >= 60){ %>
-          Good !
-        <%} if((result_data[0].score/result_data[0].total_mark) >= 40){ %>
-          Nice Try
-        <%} if((result_data[0].score/result_data[0].total_mark) < 40){ %>
-          Poor 
+        <% if((result_data[0].score/result_data[0].total_mark) >= 0.8 ){ %>
+        Exellent !
+        <%} else if((result_data[0].score/result_data[0].total_mark) >= 0.6 ){ %>
+        Good !
+        <%}else if((result_data[0].score/result_data[0].total_mark) >= 0.4 ){ %>
+        Nice Try
+        <%} else { %>
+        Poor
         <% } %>
       </h3>
     </div>
@@ -33,7 +34,7 @@
       </div>
       <p class="text-center">Out of <%= result_data[0].total_mark %></p>
     </div>
-      <a href="/exam/compare-answers?exam_id=<%= exam_id %>" class="border mb-0 py-3 text-center d-flex align-items-center justify-content-center">Answer Sheet <i class='mx-2 bx bx-right-arrow-alt'></i></a>
+    <a href="/exam/compare-answers?exam_id=<%= exam_id %>" class="border mb-0 py-3 text-center d-flex align-items-center justify-content-center">Answer Sheet <i class='mx-2 bx bx-right-arrow-alt'></i></a>
   </div>
 </div>
 <%- include('../partials/footer.ejs') %>

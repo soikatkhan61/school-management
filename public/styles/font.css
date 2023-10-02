@@ -2,3 +2,12 @@
     font-family: bangla;
     src: url(../fonts/SolaimanLipiNormal.woff2);
 }
+
+@font-face {
+    font-family: ban;
+    src: url(../fonts/SolaimanLipiNormal.woff2);
+}
+
+body {
+    font-family: ban;
+}

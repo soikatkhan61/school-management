@@ -55,9 +55,9 @@ exports.viewSubject = (req, res, next) => {
 
 };
 exports.viewSubjectGet = (req, res, next) => {
-    let { class_id, subject,q_set, q_type } = req.query
+    let { class_id, subject, q_set, q_type } = req.query
     try {
-        db.query("select * from subject_list where class_id=? and id=?", [class_id,subject], (e, data) => {
+        db.query("select * from subject_list where class_id=? and id=?", [class_id, subject], (e, data) => {
             if (e) {
                 next(e)
             } else {
@@ -264,6 +264,7 @@ exports.getFilterData = (req, res, next) => {
 };
 exports.renderviewSet = (req, res, next) => {
     let qset_id = req.query.q_set_id
+    if (!parseInt(qset_id)) return res.send("Invalid Token")
     try {
         db.query('select q_set.*,schools.school_name from q_set join schools on q_set.school_id = schools.id WHERE q_set.id = ? limit 1', [qset_id], (e, data) => {
             if (e) {

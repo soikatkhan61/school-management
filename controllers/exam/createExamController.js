@@ -151,6 +151,7 @@ exports.examStatusChange = (req, res, next) => {
 exports.renderMyExam = (req, res, next) => {
     let currentPage = parseInt(req.query.page) || 1
     let itemPerPage = 25
+    console.log(req.user.class_id);
     try {
         db.query("select count(*) as count from exams where class = ? and school_id=?;select * from exams where class=? and school_id=? order by id desc", [req.user.class_id, req.user.school_id, req.user.class_id, req.user.school_id], (e, data) => {
             if (e) return next(e)
@@ -164,7 +165,7 @@ exports.renderMyExam = (req, res, next) => {
             }
             let totalMessage = data[0]
             let totalPage = Math.ceil(totalMessage[0].count / itemPerPage)
-            let exam = data[1]
+
 
             res.render("exam/my-exam", {
                 title: "My exams",
@@ -288,9 +289,9 @@ exports.renderStudentResult = (req, res, next) => {
     try {
         let { token } = req.query
         if (token == undefined || token == null) return res.send("Unauthorized access!")
-        db.query("select exam_id,score,answers from exams_participants where id=? and school_id=? and stu_id = ?", [token, req.user.school_id, req.user.student_id], (e, data) => {
+        db.query("select exam_id,score,answers from exams_participants where exam_id=? and school_id=? and stu_id = ?", [token, req.user.school_id, req.user.student_id], (e, data) => {
             if (e) return next(e)
-            if (data[0].score) {
+            if (data[0] && data[0].score) {
                 fetchScoreData(token)
             } else {
                 db.query("select q_set.answers,exams.q_set_id FROM exams JOIN q_set on q_set.id = exams.q_set_id WHERE exams.id = ? limit 1", [data[0].exam_id], (e, ans) => {
@@ -305,7 +306,7 @@ exports.renderStudentResult = (req, res, next) => {
                         }
                         return marks
                     })
-                    db.query("update exams_participants set score=? where id=? and school_id=? and stu_id = ?", [marks, token, req.user.school_id, req.user.student_id], (e, update) => {
+                    db.query("update exams_participants set score=? where exam_id=? and school_id=? and stu_id = ?", [marks, token, req.user.school_id, req.user.student_id], (e, update) => {
                         if (e) return next(e)
                         if (update.affectedRows == 0) return res.send("error")
                         fetchScoreData(token)
@@ -316,9 +317,9 @@ exports.renderStudentResult = (req, res, next) => {
         })
 
         async function fetchScoreData(token) {
-            db.query("select exams_participants.score, q_set.total_mark,q_set.name from exams_participants join exams on exams_participants.exam_id = exams.id join q_set on q_set.id = exams.q_set_id WHERE exams_participants.stu_id = 20230853 and exams_participants.id = 183 ", [req.user.student_id, token], (e, data) => {
+            db.query("select exams_participants.score, q_set.total_mark,q_set.name from exams_participants join exams on exams_participants.exam_id = exams.id join q_set on q_set.id = exams.q_set_id WHERE exams_participants.stu_id = ? and exams_participants.exam_id = ? ", [req.user.student_id, token], (e, data) => {
                 if (e) return next(e)
-                console.log(data);
+                
                 return res.render("exam/score", {
                     title: "Submit Status",
                     flashMessage: Flash.getMessage(req),
