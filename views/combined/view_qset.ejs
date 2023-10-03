@@ -62,7 +62,7 @@
                 <div style="
                  font-size: 14px;
                  display: grid; 
-                grid-template-columns:1fr 1fr 3fr 1fr 1fr; 
+                grid-template-columns:1fr  3fr 1fr ; 
                 grid-template-rows: 1fr; 
                 gap: 0px 0px; 
                 grid-template-areas: 
@@ -70,10 +70,8 @@
                 justify-content: center; 
                 ">
                   <p></p>
-                  <p></p>
                   <p style="text-align: center;"><%= obj.name %></p>
-                  <p></p>
-                  <p style="text-align: end;">বিষয় কোডঃ</p>
+                  <p style="text-align: start;">বিষয় কোডঃ</p>
                 </div>
                 <div style="text-align: center;">বিষয়: --- </div>
                 <div style="display: flex;justify-content: space-between;">
@@ -97,7 +95,7 @@
                     <% let opt = JSON.parse(data[i].question_option) %>
                       <div style=" display: flex!important;align-items: start;margin: 5px 0;">
                         <span><%= i+1 < 10 ? convertToBangla('0'+(i+1)) + ". " : convertToBangla(i+1) + ". "  %></span> 
-                        <div style="margin-left: 0px;"><%- data[i].question_text %></div>
+                        <div style="margin-left: 0px;" class="bold_text"><%- data[i].question_text %></div>
                       </div>
                       <div style="margin-left:30px;">
                         <div style="display: grid; 
@@ -121,7 +119,7 @@
                     <% let opt = JSON.parse(data[i].question_option) %>
                       <div style=" display: flex!important;align-items: start!important;margin: 5px 0;">
                         <p><%= i+1 < 10 ? convertToBangla('0'+(i+1)) + ". " : convertToBangla(i+1) + ". "  %></p> 
-                        <div style="margin-left: 0px;"><%- data[i].question_text %></div>
+                        <div style="margin-left: 0px;" class="bold_text"><%- data[i].question_text %></div>
                       </div>
                       <div style="margin-left:30px;">
                         <div style="display: grid; 
@@ -148,7 +146,7 @@
                  <div style="
                  font-size: 14px;
                  display: grid; 
-                grid-template-columns:1fr 1fr 3fr 1fr 1fr; 
+                grid-template-columns:1fr  3fr  1fr; 
                 grid-template-rows: 1fr; 
                 gap: 0px 0px; 
                 grid-template-areas: 
@@ -156,10 +154,8 @@
                 justify-content: center; 
                 ">
                   <p></p>
-                  <p></p>
                   <p style="text-align: center;"><%= obj.name %></p>
-                  <p></p>
-                  <p style="text-align: end;">বিষয় কোডঃ</p>
+                  <p>বিষয় কোডঃ</p>
                 </div>
                 <div style="text-align: center;">বিষয়: --- </div>
                  <div style="display: flex;justify-content: space-between;">
@@ -174,7 +170,7 @@
                     <% let opt = JSON.parse(data[i].question_option) %>
                       <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
                         <p><%= i+1 < 10 ? convertToBangla('0'+(i+1)) + ". " : convertToBangla(i+1) + ". "  %></p> 
-                        <div style="margin-left: 20px;"><%- data[i].question_text %></div>
+                        <div style="margin-left: 5px;"><%- data[i].question_text %></div>
                       </div>
                       <div style="margin-left:40px;">
                         <div>
@@ -207,7 +203,7 @@
                 <div style="
                 font-size: 14px;
                 display: grid; 
-               grid-template-columns:1fr 1fr 3fr 1fr 1fr; 
+               grid-template-columns:1fr  3fr 1fr ; 
                grid-template-rows: 1fr; 
                gap: 0px 0px; 
                grid-template-areas: 
@@ -215,10 +211,8 @@
                justify-content: center; 
                ">
                  <p></p>
-                 <p></p>
                  <p style="text-align: center;"><%= obj.name %></p>
-                 <p></p>
-                 <p style="text-align: end;">বিষয় কোডঃ</p>
+                 <p>বিষয় কোডঃ</p>
                </div>
                <div style="text-align: center;">বিষয়: --- </div>
                 <div style="display: flex;justify-content: space-between;">
@@ -231,7 +225,7 @@
              </div>
               <% for(let i=0; i<data.length; i++){ %>
                   <div style=" display: flex!important;align-items: start;font-weight: 400;font-size: 15px;margin: 5px 0;">
-                    <p><%= i+1 < 10 ? convertToBangla('0'+(i+1)) + ". " : convertToBangla(i+1) + ". "  %></p> . <p style="margin-left: 20px;"><%- data[i].question_text %></p>
+                    <p><%= i+1 < 10 ? convertToBangla('0'+(i+1)) + ". " : convertToBangla(i+1) + ". "  %></p> . <p style="margin-left: 5px;"><%- data[i].question_text %></p>
                   </div>            
                 <% } %>
             <% } %>

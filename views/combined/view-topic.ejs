@@ -1,0 +1,57 @@
+<%- include('../partials/header/dashboardHeader.ejs') %>
+<style>
+  #loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    translate: (-50%, -50%);
+  }
+
+  #back:hover {
+    background: black;
+    color: white;
+  }
+
+  #Preview:hover {
+    background: green;
+    color: white;
+  }
+</style>
+<div id="loading-spinner" style="display:none;">
+  <img src="/images/spinner.gif" alt="Loading...">
+</div>
+
+<div class="main-content py-2 container py-4">
+  <div class="my-2 b py-2 rounded d-flex  justify-content-center" style="background-color: #f1f5f9;">
+
+    <a id="back" class="border py-1 px-2 rounded border-primary" href="/combined-question/view-chapter?class_id=<%= filter.class_id  %>&subject=<%= filter.subject_id  %>&q_set=<%= filter.q_set  %>&q_type=<%= filter.q_type  %>"> <span> Back </a>
+
+    <a id="Preview" class="border py-1 px-2 rounded border-primary mx-2" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>">Question Preview</a>
+  </div>
+
+  <% if(topic.length == 0){ %>
+  <h2 class="text-center">No data</h2>
+  <ul class="list-group list-group-light">
+  <a href="/combined-question/view-questions?class_id=<%= filter.class_id %>&subject_id=<%= filter.subject_id%>&chapter=<%= filter.chapter_id%>&topic_id=-1&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>" class="list-group-item text-primary border px-2">Any Topics</a>
+  </ul>
+
+  <% }else{ %>
+  <p class="bg-primary text-white py-2 text-center text-lg rounded">Select topic</p>
+  <ul class="list-group list-group-light">
+
+        <a href="/combined-question/view-questions?class_id=<%= filter.class_id %>&subject_id=<%= filter.subject_id%>&chapter=<%= filter.chapter_id%>&topic_id=-1&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>" class="list-group-item text-primary border px-2">Any Topics</a>
+
+        <%for(let s of topic){%>
+
+        <a href="/combined-question/view-questions?class_id=<%= filter.class_id %>&subject_id=<%= filter.subject_id%>&chapter=<%= filter.chapter_id%>&topic_id=<%= s.id%>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>" class="list-group-item text-primary border px-2"><%= s.topic_name  %></a>
+
+        <%}%>
+    </ul>
+       <% } %>
+</div>
+<%- include('../partials/footer.ejs') %>
+
+</body>
+
+</html>

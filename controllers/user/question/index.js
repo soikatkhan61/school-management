@@ -1,5 +1,4 @@
 const db = require("../../../config/db.config");
-const fs = require("fs");
 const Flash = require("../../../utils/Flash");
 
 
@@ -30,7 +29,6 @@ exports.renderAllClass = (req, res, next) => {
 exports.createClassPost = (req, res, next) => {
   try {
     let { class_name, desc, editId } = req.body;
-    console.log(req.body);
     if (editId) {
       db.query("update classes set class_name=? , class_description = ? where id =?", [class_name, desc, editId], (e, data) => {
         if (e) {
@@ -78,13 +76,15 @@ exports.renderAllSubject = (req, res, next) => {
   ) AS q ON c.id = q.class_id
   GROUP BY c.id, c.class_name;
   `, (e, data) => {
-  if (e) {
-    next(e)
-  } else {
-    res.render("user/admin/question/subject", { data, title: "Subjects", flashMessage: Flash.getMessage(req) })
-  }
-});
+    if (e) {
+      next(e)
+    } else {
+      res.render("user/admin/question/subject", { data, title: "Subjects", flashMessage: Flash.getMessage(req) })
+    }
+  });
 };
+
+
 exports.getSubjectByClass = (req, res, next) => {
   let class_id = req.query.class_id
   db.query("select classes.class_name,classes.id as class_id,subject_list.* from subject_list join classes on  subject_list.class_id=classes.id where class_id=?", [class_id], (e, data) => {
@@ -156,6 +156,7 @@ exports.getChapter = (req, res, next) => {
     }
   });
 };
+
 exports.createChaptePost = (req, res, next) => {
   let { class_id, subject_id, chapter_name, chapter_id } = req.body
   try {
@@ -217,6 +218,68 @@ exports.getChapterBySubjectAndClass = (req, res, next) => {
   }
 };
 
+exports.createTopicPost = (req, res, next) => {
+  let { class_id, subject_id, chapter_id, topic_name, topic_id } = req.body
+  try {
+    if (topic_id) {
+      db.query("update topic set topic_name=? where id =?", [topic_name, topic_id], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows > 0) {
+            req.flash("success", "Update success")
+          } else {
+            req.flash("fail", "Update failed")
+          }
+          res.redirect(`/user/admin/questions/subject/topics?subject_id=${subject_id}&class_id=${class_id}&chapter_id=${chapter_id}`)
+        }
+      })
+    } else {
+      db.query("insert into topic values(?,?,?,?,?)", [null, class_id, subject_id, chapter_id, topic_name], (e, data) => {
+        if (e) {
+          next(e)
+        } else {
+          if (data.affectedRows > 0) {
+            req.flash("success", "create success")
+          } else {
+            req.flash("fail", "create failed")
+          }
+          res.redirect(`/user/admin/questions/subject/topics?subject_id=${subject_id}&class_id=${class_id}&chapter_id=${chapter_id}`)
+        }
+      });
+    }
+
+  } catch (error) {
+    next(error)
+  }
+};
+
+
+exports.renderTopics = (req, res, next) => {
+  try {
+    let { class_id, subject_id, chapter_id } = req.query;
+    db.query("select topic.*, classes.class_name,classes.id as class_id,subject_list.subject_name, subject_list.id as subject_id,chapter.id as chapter_id ,chapter.chapter_name from topic join classes on classes.id= topic.class_id join subject_list on topic.subject_id = subject_list.id  join chapter on chapter.id = topic.chapter_id WHERE  topic.class_id = ?  and topic.subject_id = ?   and topic.chapter_id = ?", [class_id, subject_id, chapter_id], (e, data) => {
+      if (e) {
+        next(e)
+      } else {
+        if (data.length == 0) {
+          db.query("select classes.id as class_id,classes.class_name,subject_list.id as subject_id,subject_list.subject_name,chapter.chapter_name,chapter.id as chapter_id from classes,subject_list,chapter where classes.id=? and subject_list.id =? and chapter.id=?", [class_id, subject_id, chapter_id], (e, data) => {
+            if (e) {
+              next(e)
+            } else {
+              res.render("user/admin/question/topics", { data, topic_listing: false, title: "Topics", flashMessage: Flash.getMessage(req) })
+            }
+          })
+        } else {
+          res.render("user/admin/question/topics", { data, title: "Topics", topic_listing: true, flashMessage: Flash.getMessage(req) })
+        }
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+
 exports.renderSeeQuestion = (req, res, next) => {
   let { class_id, subject_id, chapter_id, q_type } = req.query
   let currentPage = parseInt(req.query.page) || 1
@@ -229,7 +292,7 @@ exports.renderSeeQuestion = (req, res, next) => {
       } else {
         let totalQus = data[0]
         let totalPage = Math.ceil(totalQus[0].count / itemPerPage)
-        res.render("user/admin/question/see-questions", { data: data[1], title: "See Question", flashMessage: Flash.getMessage(req), currentPage, itemPerPage, totalPage, q_type,totalQus })
+        res.render("user/admin/question/see-questions", { data: data[1], title: "See Question", flashMessage: Flash.getMessage(req), currentPage, itemPerPage, totalPage, q_type, totalQus })
       }
     })
   } catch (error) {
@@ -306,7 +369,6 @@ exports.renderCreateQuestion = (req, res, next) => {
 exports.createQuestionPost = (req, res, next) => {
   let { class_id, subject_id, chapter_id, class_name, subject_name, chapter_name, question_text, question_option, question_answer, filter, year } = req.body
   let { edit, q_id } = req.query
-  return console.log(req.body.question_text)
   let options = [];
   question_option.forEach(e => {
     options.push(e);
@@ -316,16 +378,16 @@ exports.createQuestionPost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
-  if(typeof filter === 'object' && filter !== undefined) {
+  if (typeof filter === 'object' && filter !== undefined) {
     filter = filter.join(',')
   }
-    
+
   //filter = filter != undefined ? filter.length <= 2 ? filter : filter.join(',') : ''
-  console.log( filter);
- 
+  console.log(filter);
+
   try {
     if (edit) {
-      db.query("update questions set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer,filter,year, q_id], (e, data) => {
+      db.query("update questions set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer, filter, year, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -417,14 +479,14 @@ exports.creativePost = (req, res, next) => {
     subject_name: subject_name,
     chapter_name: chapter_name
   }
-  if(typeof filter === 'object' && filter !== undefined) {
+  if (typeof filter === 'object' && filter !== undefined) {
     filter = filter.join(',')
   }
   //filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
 
   try {
     if (edit) {
-      db.query("update creative set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer,filter, year, q_id], (e, data) => {
+      db.query("update creative set question_text=?,question_option=?,question_answer=?,filter=?,year=? where id = ?", [question_text, JSON.stringify(options), question_answer, filter, year, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {
@@ -437,7 +499,7 @@ exports.creativePost = (req, res, next) => {
         }
       })
     } else {
-      db.query("insert into creative values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer,filter, year, req.user.id], (e, data) => {
+      db.query("insert into creative values(?,?,?,?,?,?,?,?,?,?)", [null, class_id, subject_id, chapter_id, question_text, JSON.stringify(options), question_answer, filter, year, req.user.id], (e, data) => {
         if (e) {
           next(e)
         } else {
@@ -513,14 +575,14 @@ exports.othersQuestionsPost = (req, res, next) => {
     chapter_name: chapter_name
   }
   //filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
-  if(typeof filter === 'object' && filter !== undefined) {
+  if (typeof filter === 'object' && filter !== undefined) {
     filter = filter.join(',')
   }
   console.log(req.body.filter);
-  
+
   try {
     if (edit) {
-      db.query("update q_others set question_text=?,question_answer=?,filter=?,year=? where id = ?", [question_text, question_answer,filter, year, q_id], (e, data) => {
+      db.query("update q_others set question_text=?,question_answer=?,filter=?,year=? where id = ?", [question_text, question_answer, filter, year, q_id], (e, data) => {
         if (e) {
           return next(e)
         } else {

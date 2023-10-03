@@ -242,3 +242,21 @@ ALTER TABLE q_others ADD CONSTRAINT FOREIGN KEY (fk_author) REFERENCES moderator
 
 alter table teachers ADD COLUMN subject_permission varchar(1000)
 
+-- 03-10-23--
+
+CREATE TABLE IF NOT EXISTS topic (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id INT,
+  subject_id INT,
+  chapter_id INT,
+  topic_name VARCHAR(255) NOT NULL,
+  FOREIGN KEY (subject_id) REFERENCES subject_list(id),
+  FOREIGN KEY (class_id) REFERENCES classes(id),
+  FOREIGN KEY (chapter_id) REFERENCES chapter(id)
+);
+
+ALTER TABLE questions ADD COLUMN topic_id INT(3) AFTER year;
+ALTER TABLE creative ADD COLUMN topic_id INT(3) AFTER year;
+ALTER TABLE q_others ADD COLUMN topic_id INT(3) AFTER year;
+
+

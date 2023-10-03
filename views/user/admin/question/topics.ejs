@@ -1,13 +1,19 @@
+<%- include('../../user_partials/footer.ejs') %>
+</body>
+
+</html>
+
+
 <%- include('../../user_partials/header.ejs') %>
 <div class="modal top fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true" data-mdb-backdrop="static" data-mdb-keyboard="true">
   <div class="modal-dialog  ">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModal2Label">Chapter</h5>
+        <h5 class="modal-title" id="exampleModal2Label">Topic</h5>
         <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/user/admin/questions/create-chapter" method="post">
+        <form action="/user/admin/questions/create-topic" method="post">
 
           <!-- Text input -->
           <div class="mb-2">
@@ -21,13 +27,18 @@
               <option class="py-2 px-5" value="<%= data[0].subject_id %>" selected><%= data[0].subject_name %></option>
             </select>
           </div>
+          <div class="mb-2">
+            <select name="chapter_id" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
+              <option class="py-2 px-5" value="<%= data[0].chapter_id %>" selected><%= data[0].chapter_name %></option>
+            </select>
+          </div>
 
           <!-- Text input -->
           <div class="form-outline mb-4">
-            <input type="text" id="chapterNameM" class="form-control" name="chapter_name" required />
-            <label class="form-label" for="chapterNameM">Chapter Name *</label>
+            <input type="text" id="topicNameM" class="form-control" name="topic_name" required />
+            <label class="form-label" for="topicNameM">Topic *</label>
           </div>
-          <input type="text" id="chapter_id" name="chapter_id" hidden>
+          <input type="text" id="topic_id" name="topic_id" hidden>
 
       </div>
       <div class="modal-footer">
@@ -43,38 +54,37 @@
 <div class="main-content" style="background: #eee;min-height: 90vh;">
 
   <div class="bg-light rounded p-4" style="padding-top: 26px;background-color: #fff;">
-    <% if(data.length > 0 && chapter_listing ){ %>
+    <% if(data.length > 0 && topic_listing ){ %>
     <div class="py-2">
-      <p>Showing Chapter of </p>
-      Class: <span class="fw-bold text-primary"><%= data[0].class_name %> </span><br>
-      Subject: <span class="fw-bold text-success"><%= data[0].subject_name %></span> <br>
+      <p>টপিক প্রদর্শন</p>
+      শ্রেণি: <span><%= data[0].class_name %> </span><br>
+      বিষয়: <span><%= data[0].subject_name %></span> <br>
+      অধ্যায়: <span><%= data[0].chapter_name %></span> <br>
       <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
-        Create Chapter
+        Add New Topic
       </button>
     </div>
     <div class="table-responsive">
       <table class="table">
         <thead class="table-dark">
           <tr>
-            <th scope="col">Chapter</th>
-            <th scope="col">Action</th>
-            <th scope="col">Question</th>
+            <th scope="col">টপিকের নাম</th>
+            <th scope="col"> একশন </th>
+            <th scope="col">প্রশ্ন দেখুন</th>
           </tr>
         </thead>
         <tbody>
           <% for(let s of data){%>
           <tr>
-            <input type="text" value="<%= s.id %>" class="chapter_ids" hidden>
-            <td class="chapterName"><%= s.chapter_name %></td>
+            <input type="text" value="<%= s.id %>" class="topic_ids" hidden>
+            <td class="topicName"><%= s.topic_name %></td>
             <td>
-              <button class=" border editBtn btn-sm" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">Edit</button>
-              <a class="btn-link" href="/user/admin/questions/subject/topics?subject_id=<%= s.subject_id %>&class_id=<%= s.class_id %>&chapter_id=<%= s.id %>">Topics</a>
+              <span class="editBtn text-primary" style="cursor: pointer;" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">Edit</span>
             </td>
-            
             <td class="d-flex">
-              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.id %>&q_type=creative" class="btn btn-sm btn-dark mx-2">Creative</a>
-              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.id %>&q_type=questions" class="btn btn-sm border mx-2">MCQ</a>
-              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.id %>&q_type=q_others" class="btn btn-sm btn-dark border mx-2">Others</a>
+              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>&q_type=creative" class="btn btn-sm btn-dark mx-2">Creative</a>
+              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>&q_type=questions" class="btn btn-sm border mx-2">MCQ</a>
+              <a href="/user/admin/questions/see-question?class_id=<%= s.class_id %>&subject_id=<%= s.subject_id %>&chapter_id=<%= s.chapter_id %>&q_type=q_others" class="btn btn-sm btn-dark border mx-2">Others</a>
             </td>
 
           </tr>
@@ -84,9 +94,9 @@
     </div>
 
     <% }else{ %>
-    <p class="text-center text-dark">No Chapter Found</p>
+    <p class="text-center text-dark">No Topics Found</p>
     <button type="button" class="btn btn-success btn-sm my-1" data-mdb-toggle="modal" data-mdb-target="#exampleModal2">
-      Create Chapter
+      Add New Topic
     </button>
     <% } %>
   </div>
@@ -94,17 +104,18 @@
 
 <script>
   let editBtn = document.getElementsByClassName('editBtn')
-  let chapterName = document.getElementsByClassName('chapterName')
-  let chapterNameM = document.getElementById('chapterNameM')
+  let topicName = document.getElementsByClassName('topicName')
+  let topicNameM = document.getElementById('topicNameM')
 
-  let chapter_id = document.getElementById('chapter_id')
-  let chapter_ids = document.getElementsByClassName('chapter_ids')
+  let topic_id = document.getElementById('topic_id')
+  let topic_ids = document.getElementsByClassName('topic_ids')
   let actionModalButton = document.getElementById('actionModalButton')
 
   for (let i = 0; i < editBtn.length; i++) {
     editBtn[i].addEventListener('click', (e) => {
-      chapterNameM.value = chapterName[i].textContent.trim()
-      chapter_id.value = chapter_ids[i].value
+      console.log("hi");
+      topicNameM.value = topicName[i].textContent.trim()
+      topic_id.value = topic_ids[i].value
       actionModalButton.innerText = 'Update'
       actionModalButton.classList.add('btn-warning')
     })

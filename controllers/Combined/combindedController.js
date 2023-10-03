@@ -101,8 +101,36 @@ exports.viewChapterGet = (req, res, next) => {
     }
 
 };
+
+exports.viewTopicGet = (req, res, next) => {
+    let { class_id, subject_id, chapter_id, q_set, q_type } = req.query
+    console.log(req.query);
+    try {
+        db.query("select * from topic where class_id=? and subject_id=? and chapter_id=?", [class_id, subject_id, chapter_id], (e, data) => {
+            if (e) {
+                next(e)
+            } else {
+                let filter = {
+                    class_id,
+                    subject_id,
+                    chapter_id,
+                    q_set,
+                    q_type
+                }
+                console.log(data);
+                return res.render(`combined/view-topic`, {
+                    title: "view topics", flashMessage: Flash.getMessage(req),
+                    topic: data, filter
+                })
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+
+};
 exports.viewQuestionGet = (req, res, next) => {
-    let { class_id, subject_id, chapter, q_set, q_type, year, category } = req.query
+    let { class_id, subject_id, chapter, topic_id, q_set, q_type, year, category } = req.query
     let currentPage = parseInt(req.query.page) || 1
     let itemPerPage = 25
     if (q_type == 'mcq' || q_type == 'questions') {
@@ -123,15 +151,16 @@ exports.viewQuestionGet = (req, res, next) => {
         sql += ` AND filter in(${category}) `;
         counterSql += ` and filter in(${category}) `;
     }
-
+    if (topic_id > 0) {
+        sql += ` and topic_id = ${topic_id}`;
+        counterSql += ` and topic_id = ${topic_id}`;
+    }
     if (year) {
         sql += ` and year = ${year}`;
         counterSql += ` and year = ${year}`;
     }
 
     sql += ` limit ${((itemPerPage * currentPage) - itemPerPage)} , ${itemPerPage};SELECT COUNT(*) as count FROM ${q_type} WHERE class_id=${class_id} AND subject_id=${subject_id} AND chapter_id=${chapter} ${counterSql};select questions,total_qus from q_set where id=${q_set};`
-
-    console.log(sql);
 
     try {
         db.query(sql, (e, data) => {
@@ -141,6 +170,8 @@ exports.viewQuestionGet = (req, res, next) => {
                 let filter = {
                     class_id,
                     subject_id,
+                    topic_id,
+                    chapter,
                     q_set,
                     q_type
                 }
@@ -260,7 +291,6 @@ exports.getFilterData = (req, res, next) => {
     } catch (error) {
         next(error);
     }
-
 };
 exports.renderviewSet = (req, res, next) => {
     let qset_id = req.query.q_set_id

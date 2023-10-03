@@ -12,13 +12,14 @@
   <img src="/images/spinner.gif" alt="Loading...">
 </div>
 <div class="main-content py-2 container py-4">
-  <div class="my-2 text-light">
-    <a class="text-light btn btn-success" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>">Question Preview</a>
+
+  <div class="my-2 b py-2 rounded d-flex  justify-content-center" style="background-color: #f1f5f9;">
+    <a id="Preview" class="border py-1 px-2 rounded border-primary mx-2" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>">Question Preview</a>
   </div>
   <% if(subject.length == 0){ %>
   <p>No data</p>
   <% }else{ %>
-  <p>Subject List</p>
+  <p class="bg-primary text-white py-2 text-center text-lg rounded">Select Subject</p>
   <ul class="list-group list-group-light">
     <%for(let s of subject){%>
     <a href="/combined-question/view-chapter?class_id=<%= filter.class_id %>&subject=<%= s.id %>&chapter=<%=filter.chapter%>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>" class="list-group-item text-primary border px-2"><%= s.subject_name  %></a>

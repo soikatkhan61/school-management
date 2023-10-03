@@ -116,8 +116,8 @@ span[lang] {
 	font-style: italic;
 }
 
-span{
-	margin-right:5px ;
+span {
+	margin-right: 5px;
 }
 
 figure {
@@ -230,4 +230,8 @@ h3 {
 
 .ck-editor__editable {
 	font-family: 'bangla', Arial, sans-serif;
+}
+
+.bold_text {
+	font-family: 'ban_bold', Arial, sans-serif;
 }

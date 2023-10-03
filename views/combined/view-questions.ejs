@@ -43,10 +43,11 @@
     <img src="/images/spinner.gif" alt="Loading...">
   </div>
   <div class="main-content py-2 container-fluid py-4">
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-center mb-2">
       <div class="my-2 text-light">
         <button id="menu-button" class="btn border border-primary"><i class="fas fa-filter"></i> Filter</button>
-        <a class="text-light btn btn-primary" href="/combined-question/view-subject?class_id=<%= filter.class_id %>&subject=<%= filter.subject %>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>"> <i class="fas fa-arrow-left mx-1"></i> Subject List</a>
+        <a class="text-light btn btn-primary" href="/combined-question/view-topic?class_id=<%= filter.class_id %>&subject_id=<%= filter.subject_id %>&chapter_id=<%= filter.chapter %>&q_set=<%= filter.q_set %>&q_type=<%= filter.q_type %>"> <i class="fas fa-arrow-left mx-1"></i> Topic </a>
+
         <a class="text-light btn btn-success" target="_blank" href="/combined-question/view-set?q_set_id=<%= filter.q_set  %>"> <i class="fas fa-up-right-from-square mx-1"></i> Preview</a>
         <button class="btn ">Selected : <span id="total_select"> <%= total_selected ? total_selected : '0'  %> </span> / <%= q_set_ids[0].total_qus ? q_set_ids[0].total_qus : '0'  %></button>
       </div>
@@ -61,7 +62,7 @@
       </select>
 
       <div class="board mb-4 shadow-sm p-3 border rounded bg-light">
-          <p>Board</p>
+        <p>Board</p>
       </div>
 
       <div class="uni my-4 shadow-sm p-3 border rounded bg-light">
@@ -128,7 +129,7 @@
     <% }else{%>
     <div class="table-responsive table-nowrap ">
       <table class="table table-bordered">
-        <thead class="table-dark ">
+        <thead style="background-color: #f1f5f9;">
           <tr>
             <th scope="col">SL</th>
             <th scope="col">Action</th>
@@ -180,10 +181,7 @@
       </nav>
     </div>
     <% } %>
-    <script
-    type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.js"
-    ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.js"></script>
     <script>
       //add question to set
       let loading_spinner = document.getElementById('loading_spinner')

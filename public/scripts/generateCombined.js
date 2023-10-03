@@ -21,11 +21,9 @@ window.addEventListener('load', function () {
     q_set = searchParams.get('q_set') || '';
     q_type = searchParams.get('q_type') || '';
 
-    if(category || year){
+    if (category || year) {
         sideNav.style.display = 'block'
     }
-
-    
 
     //initialize the filter section
     if (localStorage.getItem('filter_data')) {
@@ -38,7 +36,7 @@ window.addEventListener('load', function () {
                 createFilterElement(localStorage.getItem('filter_data'), category)
             })
     }
-    
+
     checkboxSelectIinit()
 })
 
@@ -62,7 +60,6 @@ let previousData = [];
 
 //checkbox select
 function checkboxSelectIinit() {
-    console.log(category);
     var checkboxes = document.getElementsByClassName("checkbox");
     var selectedCheckboxes = [];
     for (var i = 0; i < checkboxes.length; i++) {
@@ -75,7 +72,6 @@ function checkboxSelectIinit() {
                 }
             }
             category = selectedCheckboxes.join(",");
-            console.log(category);
             loadFilterQus()
         });
     }
