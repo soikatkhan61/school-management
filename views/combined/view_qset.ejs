@@ -174,24 +174,51 @@
                       </div>
                       <div style="margin-left:40px;">
                         <div>
-                        <div  style="display: flex;justify-content: space-between;">
-                           <div>ক. <%- opt[0] %></div>
-                           <div>(১)</div>
-                        </div>
-                        <div  style="display: flex;justify-content: space-between;">
-                          <div>খ.<%- opt[1] %></div>
-                          <div>(২)</div>
-                       </div> 
-                       <div  style="display: flex;justify-content: space-between;">
-                          <div>গ. <%- opt[2] %></div>
-                          <div>(৩)</div>
-                        </div> 
-                        <% if(opt[3]){ %>
-                          <div  style="display: flex;justify-content: space-between;">
-                            <div>ঘ. <%- opt[3] %></div>
-                            <div>(৪)</div>
+                          <% if(opt[0]){ %>
+                            <div  style="display: flex;justify-content: space-between;">
+                              <div>ক. <%- opt[0] %></div>
+                              <div>(১)</div>
                            </div>
-                        <% } %>
+                          <% } %>
+
+                          <% if(opt[1]){ %>
+                            <div  style="display: flex;justify-content: space-between;">
+                              <div>খ.<%- opt[1] %></div>
+                              <div>(২)</div>
+                           </div> 
+                            <% } %>
+
+                          <% if(opt[2]){ %>
+                            <div  style="display: flex;justify-content: space-between;">
+                              <div>গ. <%- opt[2] %></div>
+                              <div>(৩)</div>
+                            </div> 
+                              <% } %>
+
+                              <% if(opt[3]){ %>
+                                <div  style="display: flex;justify-content: space-between;">
+                                  <div>ঘ. <%- opt[3] %></div>
+                                  <div>(৪)</div>
+                                 </div>
+                              <% } %>
+
+                          <% if(opt[4]){ %>
+                            <div  style="display: flex;justify-content: space-between;">
+                              <div>ঙ. <%- opt[4] %></div>
+                              <div>(৪)</div>
+                             </div>
+                          <% } %>
+
+                          <% if(opt[5]){ %>
+                            <div  style="display: flex;justify-content: space-between;">
+                              <div>চ. <%- opt[5] %></div>
+                              <div>(৪)</div>
+                             </div>
+                          <% } %>
+                       
+                        
+                     
+                        
                       </div>
                       </div>              
                     <% } %>

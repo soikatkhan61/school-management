@@ -94,15 +94,27 @@
                   <% }%>
                 </select>
               </div>
+
               <div class="mb-2">
                 <select name="chapter_id" id="chapter_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
                   <% if(obj.chapter_id){ %>
-                  <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name :obj.chapter_id %></option>
+                  <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name : obj.chapter_id %></option>
                   <% }else{ %>
                   <option class="py-2 px-5" value="">Select Chapter</option>
                   <% }%>
                 </select>
               </div>
+
+              <div class="mb-2">
+                <select name="topic_id" id="topic_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
+                  <% if(obj.topic_id){ %>
+                  <option class="py-2 px-5" value="<%= obj.topic_id %>" selected> <%= savedInfo.topic_name ? savedInfo.topic_name : obj.topic_id %></option>
+                  <% }else{ %>
+                  <option class="py-2 px-5" value="">Select Topic</option>
+                  <% }%>
+                </select>
+              </div>
+
               <% if(obj.class_id){ %>
               <a href="/user/admin/questions/creative" class="btn btn-sm btn-danger my-1">Reset</a>
               <% } %>
@@ -112,49 +124,49 @@
               <hr>
               <p>Board</p>
               <% if(!filter){ %>
-                <p>--</p>
+              <p>--</p>
               <% }else{ %>
-                <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
-                <% let index = 0 %>
-                <% for(let s of filter){ %>
-                  <% if(s.type == 'board') {%>
-                    <div class="form-check">
-                      <input class="form-check-input" <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
-                      <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
-                    </div>
-                  <% }%>
-                  <% index++ %>
-                <% } %>
-                <% }%>
+              <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
+              <% let index = 0 %>
+              <% for(let s of filter){ %>
+              <% if(s.type == 'board') {%>
+              <div class="form-check">
+                <input class="form-check-input" <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
+              </div>
+              <% }%>
+              <% index++ %>
+              <% } %>
+              <% }%>
 
-             <div class="mt-4">
-              <select name="year" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
+              <div class="mt-4">
+                <select name="year" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
                   <option class="py-1 px-3" value="">Year</option>
                   <% for(let i=2030;i>1995;i--){ %>
-                    <option class="py-1 px-3" value="<%= i %>" <%= qus && qus[0].year && qus[0].year == i ? 'selected' : '' %>><%= i %></option>
-                    <% } %>
-              </select>
-             </div>
+                  <option class="py-1 px-3" value="<%= i %>" <%= qus && qus[0].year && qus[0].year == i ? 'selected' : '' %>><%= i %></option>
+                  <% } %>
+                </select>
+              </div>
 
             </div>
 
             <div class="my-4 shadow-sm p-3 border rounded">
               <p>Univeristy</p>
               <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
-                <% if(!filter){ %>
-                  <p>--</p>
-                <% }else{ %>
-                <% let index = 0 %>
-                <% for(let s of filter){ %>
-                  <% if(s.type == 'uni') {%>
-                    <div class="form-check">
-                      <input class="form-check-input" <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
-                      <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
-                    </div>
-                  <% }%>
-                  <% index++ %>
-                <% } %>
-                <% }%>
+              <% if(!filter){ %>
+              <p>--</p>
+              <% }else{ %>
+              <% let index = 0 %>
+              <% for(let s of filter){ %>
+              <% if(s.type == 'uni') {%>
+              <div class="form-check">
+                <input class="form-check-input" <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
+              </div>
+              <% }%>
+              <% index++ %>
+              <% } %>
+              <% }%>
             </div>
           </div>
         </div>
@@ -168,52 +180,75 @@
           <% } %>
           <div class="my-5">
             <hr>
-            <div class="my-3">
-              <h5>জ্ঞান মুলক</h5>
-              <textarea id="opt1" name="question_option">
-                <%- (qus && opt[0]) &&  setContent   == 'true' ? opt[0] : '' %>
-              </textarea>
-            </div>
+            <div class="d-md-flex">
+              <div class="w-100 px-md-2">
+                <div class="my-3">
+                  <h5>ক</h5>
+                  <textarea id="opt1" name="question_option">
+                    <%- (qus && opt[0]) &&  setContent   == 'true' ? opt[0] : '' %>
+                  </textarea>
+                </div>
 
-            <div class="my-3">
-              <h5> অনুধাবন মুলক </h5>
-              <textarea id="opt2" name="question_option">
-                <%- (qus && opt[1]) &&  setContent   == 'true' ? opt[1] : '' %>
-              </textarea>
-            </div>
+                <div class="my-3">
+                  <h5>খ </h5>
+                  <textarea id="opt2" name="question_option">
+                    <%- (qus && opt[1]) &&  setContent   == 'true' ? opt[1] : '' %>
+                  </textarea>
+                </div>
 
-            <div class="my-3">
-              <h5>প্রয়োগ</h5>
-              <textarea id="opt3" name="question_option">
-                <%- (qus && opt[2]) &&  setContent   == 'true' ? opt[2] : '' %>
-              </textarea>
-            </div>
+                <div class="my-3">
+                  <h5>গ</h5>
+                  <textarea id="opt3" name="question_option">
+                    <%- (qus && opt[2]) &&  setContent   == 'true' ? opt[2] : '' %>
+                  </textarea>
+                </div>
+              </div>
 
-            <div class="my-3">
-              <h5> উচ্চতর দক্ষতা </h5>
-              <textarea id="opt4" name="question_option">
-                <%- (qus && opt[3]) &&  setContent   == 'true' ? opt[3] : '' %>
-              </textarea>
+              <div class="w-100 px-md-2">
+                <div class="my-3">
+                  <h5> ঘ </h5>
+                  <textarea id="opt4" name="question_option">
+                    <%- (qus && opt[3]) &&  setContent   == 'true' ? opt[3] : '' %>
+                  </textarea>
+                </div>
+                <div class="my-3">
+                  <h5> ঙ </h5>
+                  <textarea id="opt5" name="question_option">
+                    <%- (qus && opt[4]) &&  setContent   == 'true' ? opt[4] : '' %>
+                  </textarea>
+                </div>
+                <div class="my-3">
+                  <h5> চ </h5>
+                  <textarea id="opt6" name="question_option">
+                    <%- (qus && opt[5]) &&  setContent   == 'true' ? opt[5] : '' %>
+                  </textarea>
+                </div>
+
+
+              </div>
+
+
+
             </div>
 
             <div class="my-3 mt-5">
               <h5> Answer </h5>
               <textarea id="question_answer" name="question_answer">
-                <%- (qus && opt[3]) &&  setContent   == 'true' ? opt[3] : '' %>
-              </textarea>
+              <%- (qus && qus[0].question_answer) &&  setContent   == 'true' ? qus[0].question_answer : '' %>
+            </textarea>
             </div>
 
+            <button type="submit" class="btn btn-<%= qus && setContent == 'true' ? 'warning' : 'primary' %> btn-block my-4"><%= qus && setContent == 'true' ? 'Update' : 'Create' %></button>
           </div>
-          <button type="submit" class="btn btn-<%= qus && setContent == 'true' ? 'warning' : 'primary' %> btn-block my-4"><%= qus && setContent == 'true' ? 'Update' : 'Create' %></button>
         </div>
-      </div>
 
 
-      <div class="d-none">
-        <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>" hidden>
-        <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
-        <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
-      </div>
+        <div class="d-none">
+          <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>" hidden>
+          <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
+          <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
+          <input type="text" name="topic_name" id="topic_name" value="<%= savedInfo.topic_name ? savedInfo.topic_name : '' %>" hidden>
+        </div>
 
 
     </form>
@@ -225,7 +260,6 @@
 
   <script>
     CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
-
 
     CKEDITOR.replace('content', {
       extraPlugins: 'mathjax,filebrowser',
@@ -342,6 +376,34 @@
       extraPlugins: 'mathjax',
       mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
     });
+    CKEDITOR.replace('opt5', {
+      height: 80,
+      toolbar: [{
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+      ],
+      extraPlugins: 'mathjax',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+    });
+    CKEDITOR.replace('opt6', {
+      height: 80,
+      toolbar: [{
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike']
+        },
+        {
+          name: 'math',
+          items: ['Mathjax']
+        }
+      ],
+      extraPlugins: 'mathjax',
+      mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default',
+    });
     CKEDITOR.replace('question_answer', {
       height: 200,
       toolbar: [{
@@ -361,11 +423,15 @@
     const class_select = document.getElementById('class_select');
     const subject_select = document.getElementById('subject_select');
     const chapter_select = document.getElementById('chapter_select');
+    const topic_select = document.getElementById('topic_select');
     const class_name = document.getElementById('class_name');
     const subject_name = document.getElementById('subject_name');
     const chapter_name = document.getElementById('chapter_name');
+    const topic_name = document.getElementById('topic_name');
     const loading_spinner = document.getElementById('loading-spinner');
     let classes
+    let subject_id
+
     class_select.addEventListener('change', async (event) => {
       loading_spinner.style.display = 'block'
       const selectedOption = event.target.options[event.target.selectedIndex];
@@ -380,6 +446,7 @@
       })
       subject_select.innerHTML = ''
       chapter_select.innerHTML = ''
+      topic_select.innerHTML = ''
 
       const option = document.createElement('option');
       option.value = ''
@@ -402,12 +469,14 @@
       if (className) {
         subject_name.value = className
       }
-      var chapter = event.target.value;
-      let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
+      subject_id = event.target.value;
+      let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${subject_id}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
       })
       chapter_select.innerHTML = ''
+      topic_select.innerHTML = ''
+
       const option = document.createElement('option');
       option.value = ''
       option.innerHTML = 'Select Chapter'
@@ -420,11 +489,39 @@
         chapter_select.appendChild(option);
       }
     });
+
     chapter_select.addEventListener('change', async (event) => {
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
       if (className) {
         chapter_name.value = className
+      }
+      var chapter_id = event.target.value;
+      let topics = await fetch(`/user/get-topic?class_id=${classes}&subject_id=${subject_id}&chapter_id=${chapter_id}`).then(res => res.json()).then(data => {
+        loading_spinner.style.display = 'none'
+        return data
+      })
+
+      topic_select.innerHTML = ''
+      const option = document.createElement('option');
+      option.value = ''
+      option.innerHTML = 'Select Topic'
+      topic_select.appendChild(option);
+      for (let i = 0; i < topics.length; i++) {
+        console.log("t");
+        const option = document.createElement('option');
+        option.value = `${topics[i].id}`;
+        option.setAttribute('data-name', topics[i].topic_name);
+        option.innerHTML = `${topics[i].topic_name}`;
+        topic_select.appendChild(option);
+      }
+    })
+
+    topic_select.addEventListener('change', async (event) => {
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const className = selectedOption.getAttribute('data-name');
+      if (className) {
+        topic_name.value = className
       }
     })
   </script>
