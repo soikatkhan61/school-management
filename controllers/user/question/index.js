@@ -485,9 +485,11 @@ exports.renderCreateQuestion = (req, res, next) => {
     class_id,
     subject_id,
     chapter_id,
+    topic_id,
     class_name,
     subject_name,
     chapter_name,
+    topic_name,
     question_id,
     q_type,
     setContent,
@@ -501,11 +503,13 @@ exports.renderCreateQuestion = (req, res, next) => {
         class_id,
         subject_id,
         chapter_id,
+        topic_id
       };
       savedInfo = {
         class_name: class_name,
         subject_name: subject_name,
         chapter_name: chapter_name,
+        topic_name: topic_name
       };
       db.query(
         `select * from ${q_type} where class_id=${class_id} and subject_id=${subject_id} and chapter_id=${chapter_id} and id=${question_id} limit 1`,
@@ -558,9 +562,11 @@ exports.createQuestionPost = (req, res, next) => {
     class_id,
     subject_id,
     chapter_id,
+    topic_id,
     class_name,
     subject_name,
     chapter_name,
+    topic_name,
     question_text,
     question_option,
     question_answer,
@@ -576,13 +582,13 @@ exports.createQuestionPost = (req, res, next) => {
     class_name: class_name,
     subject_name: subject_name,
     chapter_name: chapter_name,
+    topic_name: topic_name,
   };
   if (typeof filter === "object" && filter !== undefined) {
     filter = filter.join(",");
   }
 
   //filter = filter != undefined ? filter.length <= 2 ? filter : filter.join(',') : ''
-  console.log(filter);
 
   try {
     if (edit) {
@@ -606,14 +612,14 @@ exports.createQuestionPost = (req, res, next) => {
               req.flash("fail", "Error!");
             }
             return res.redirect(
-              `/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${q_id}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=questions`
+              `/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&topic_id=${topic_id}&question_id=${q_id}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&topic_name=${savedInfo.topic_name}&setContent=true&q_type=questions`
             );
           }
         }
       );
     } else {
       db.query(
-        "insert into questions values(?,?,?,?,?,?,?,?,?,?)",
+        "insert into questions values(?,?,?,?,?,?,?,?,?,?,?)",
         [
           null,
           class_id,
@@ -624,6 +630,7 @@ exports.createQuestionPost = (req, res, next) => {
           question_answer,
           filter,
           year,
+          topic_id,
           req.user.id,
         ],
         (e, data) => {
@@ -636,7 +643,7 @@ exports.createQuestionPost = (req, res, next) => {
               req.flash("fail", "Error!");
             }
             res.redirect(
-              `/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=false&q_type=questions`
+              `/user/admin/create-question?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&topic_id=${topic_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&topic_name=${savedInfo.topic_name}&setContent=false&q_type=questions`
             );
           }
         }
@@ -829,9 +836,11 @@ exports.renderCreateOthersQuestion = (req, res, next) => {
     class_id,
     subject_id,
     chapter_id,
+    topic_id,
     class_name,
     subject_name,
     chapter_name,
+    topic_name,
     question_id,
     q_type,
     setContent,
@@ -845,11 +854,13 @@ exports.renderCreateOthersQuestion = (req, res, next) => {
         class_id,
         subject_id,
         chapter_id,
+        topic_id,
       };
       savedInfo = {
         class_name: class_name,
         subject_name: subject_name,
         chapter_name: chapter_name,
+        topic_name: topic_name,
       };
       db.query(
         `select * from ${q_type} where class_id=${class_id} and subject_id=${subject_id} and chapter_id=${chapter_id} and id=${question_id} limit 1`,
@@ -869,11 +880,13 @@ exports.renderCreateOthersQuestion = (req, res, next) => {
         class_id: "",
         subject_id: "",
         chapter_id: "",
+        topic_id: "",
       };
       savedInfo = {
         class_name: "",
         subject_name: "",
         chapter_name: "",
+        topic_name: "",
       };
     }
     db.query("select * from classes;select * from filter", (e, data) => {
@@ -901,9 +914,11 @@ exports.othersQuestionsPost = (req, res, next) => {
     class_id,
     subject_id,
     chapter_id,
+    topic_id,
     class_name,
     subject_name,
     chapter_name,
+    topic_name,
     question_text,
     question_answer,
     filter,
@@ -914,12 +929,12 @@ exports.othersQuestionsPost = (req, res, next) => {
     class_name: class_name,
     subject_name: subject_name,
     chapter_name: chapter_name,
+    topic_name: topic_name,
   };
   //filter = filter != undefined ? filter.length <= 1 ? filter : filter.join(',') : ''
   if (typeof filter === "object" && filter !== undefined) {
     filter = filter.join(",");
   }
-  console.log(req.body.filter);
 
   try {
     if (edit) {
@@ -936,14 +951,14 @@ exports.othersQuestionsPost = (req, res, next) => {
               req.flash("fail", "Error!");
             }
             return res.redirect(
-              `/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${q_id}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=true&q_type=q_others`
+              `/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&topic_id=${topic_id}&question_id=${q_id}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&topic_name=${savedInfo.topic_name}&setContent=true&q_type=q_others`
             );
           }
         }
       );
     } else {
       db.query(
-        "insert into q_others values(?,?,?,?,?,?,?,?,?)",
+        "insert into q_others values(?,?,?,?,?,?,?,?,?,?)",
         [
           null,
           class_id,
@@ -953,6 +968,7 @@ exports.othersQuestionsPost = (req, res, next) => {
           question_answer,
           filter,
           year,
+          topic_id,
           req.user.id,
         ],
         (e, data) => {
@@ -965,7 +981,7 @@ exports.othersQuestionsPost = (req, res, next) => {
               req.flash("fail", "Error!");
             }
             return res.redirect(
-              `/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&setContent=false&q_type=q_others`
+              `/user/admin/questions/others?class_id=${class_id}&subject_id=${subject_id}&chapter_id=${chapter_id}&topic_id=${topic_id}&question_id=${data.insertId}&class_name=${savedInfo.class_name}&subject_name=${savedInfo.subject_name}&chapter_name=${savedInfo.chapter_name}&topic_name=${savedInfo.topic_name}&setContent=false&q_type=q_others`
             );
           }
         }

@@ -85,11 +85,7 @@
                   <% }%>
                 </select>
               </div>
-              <div class="d-none">
-                <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>" hidden>
-                <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
-                <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
-              </div>
+
               <div class="">
                 <select name="subject_id" id="subject_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
                   <% if(obj.subject_id ){ %>
@@ -99,7 +95,7 @@
                   <% }%>
                 </select>
               </div>
-              <div>
+              <div class="mb-3">
                 <select name="chapter_id" id="chapter_select" class="py-2 px-4" required style="width: 100%; outline: black">
                   <% if(obj.chapter_id){ %>
                   <option class="py-2 px-5" value="<%= obj.chapter_id %>" selected><%= savedInfo.chapter_name ? savedInfo.chapter_name :obj.chapter_id %></option>
@@ -108,11 +104,27 @@
                   <% }%>
                 </select>
               </div>
+
+              <div class="mb-2">
+                <select name="topic_id" id="topic_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
+                  <% if(obj.topic_id){ %>
+                  <option class="py-2 px-5" value="<%= obj.topic_id %>" selected> <%= savedInfo.topic_name ? savedInfo.topic_name : obj.topic_id %></option>
+                  <% }else{ %>
+                  <option class="py-2 px-5" value="">Select Topic</option>
+                  <% }%>
+                </select>
+              </div>
               <% if(obj.class_id){ %>
               <a href="/user/admin/create-question" class="btn btn-sm btn-danger mt-2">Reset</a>
               <% } %>
             </div>
+            <div class="d-none">
+              <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>" hidden>
+              <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
+              <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
+              <input type="text" name="topic_name" id="topic_name" value="<%= savedInfo.topic_name ? savedInfo.topic_name : '' %>" hidden>
 
+            </div>
             <div class="my-4 shadow-sm p-3 border rounded">
               <p class="text-center">Additional Information</p>
               <hr>
@@ -375,25 +387,32 @@
     const class_select = document.getElementById('class_select');
     const subject_select = document.getElementById('subject_select');
     const chapter_select = document.getElementById('chapter_select');
+    const topic_select = document.getElementById('topic_select');
+
     const class_name = document.getElementById('class_name');
     const subject_name = document.getElementById('subject_name');
     const chapter_name = document.getElementById('chapter_name');
+    const topic_name = document.getElementById('topic_name');
+
     const loading_spinner = document.getElementById('loading-spinner');
     let classes
+    let subject_id
+
     class_select.addEventListener('change', async (event) => {
       loading_spinner.style.display = 'block'
-      classes = event.target.value;
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
       if (className) {
         class_name.value = className
       }
+      classes = event.target.value;
       let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
       })
       subject_select.innerHTML = ''
       chapter_select.innerHTML = ''
+      topic_select.innerHTML = ''
 
       const option = document.createElement('option');
       option.value = ''
@@ -401,6 +420,7 @@
       subject_select.appendChild(option);
 
       for (let i = 0; i < episod.length; i++) {
+        console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
         option.setAttribute('data-name', episod[i].subject_name);
@@ -415,13 +435,14 @@
       if (className) {
         subject_name.value = className
       }
-      var chapter = event.target.value;
-      console.log("feting...");
-      let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
+      subject_id = event.target.value;
+      let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${subject_id}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
       })
       chapter_select.innerHTML = ''
+      topic_select.innerHTML = ''
+
       const option = document.createElement('option');
       option.value = ''
       option.innerHTML = 'Select Chapter'
@@ -434,11 +455,40 @@
         chapter_select.appendChild(option);
       }
     });
+
     chapter_select.addEventListener('change', async (event) => {
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
       if (className) {
         chapter_name.value = className
+      }
+      var chapter_id = event.target.value;
+      let topics = await fetch(`/user/get-topic?class_id=${classes}&subject_id=${subject_id}&chapter_id=${chapter_id}`).then(res => res.json()).then(data => {
+        loading_spinner.style.display = 'none'
+        return data
+      })
+
+      topic_select.innerHTML = ''
+      const option = document.createElement('option');
+      option.value = ''
+      option.innerHTML = 'Select Topic'
+      topic_select.appendChild(option);
+      for (let i = 0; i < topics.length; i++) {
+        console.log("t");
+        const option = document.createElement('option');
+        option.value = `${topics[i].id}`;
+        option.setAttribute('data-name', topics[i].topic_name);
+        option.innerHTML = `${topics[i].topic_name}`;
+        topic_select.appendChild(option);
+      }
+    })
+
+
+    topic_select.addEventListener('change', async (event) => {
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const className = selectedOption.getAttribute('data-name');
+      if (className) {
+        topic_name.value = className
       }
     })
   </script>

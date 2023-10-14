@@ -65,12 +65,12 @@
       <div class="mb-5 p-2 rounded sticky-top d-flex justify-content-end" style="background-color: rgba(219, 219, 219, 0.5);">
         <button type="submit" class="btn btn-primary btn-sm my-1">Publish</button>
       </div>
-      
+
       <div class="row">
         <div class="col-sm-12 col-md-3">
           <div class="sticky-top">
             <div class="mb-2 shadow-sm p-3 border <%= obj.class_id && 'border-success border-2' %> rounded">
-            <p class="text-center">Class Information</p>
+              <p class="text-center">Class Information</p>
               <div class="mb-2">
                 <select name="class_id" id="class_select" class="py-2 px-4 mb-3" required style="width: 100%; outline: black">
                   <% if(obj.class_id ){ %>
@@ -104,56 +104,65 @@
                   <% }%>
                 </select>
               </div>
+              <div class="mb-2">
+                <select name="topic_id" id="topic_select" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
+                  <% if(obj.topic_id){ %>
+                  <option class="py-2 px-5" value="<%= obj.topic_id %>" selected> <%= savedInfo.topic_name ? savedInfo.topic_name : obj.topic_id %></option>
+                  <% }else{ %>
+                  <option class="py-2 px-5" value="">Select Topic</option>
+                  <% }%>
+                </select>
+              </div>
               <% if(obj.class_id){ %>
               <a href="/user/admin/questions/creative" class="btn btn-sm btn-danger">Reset</a>
               <% } %>
             </div>
-  
+
             <div class="my-4 shadow-sm p-3 border rounded">
               <p class="text-center">Additional Information</p>
               <hr>
               <p>Board</p>
               <% if(!filter){ %>
-                <p>--</p>
+              <p>--</p>
               <% }else{ %>
-                <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
-                <% let index = 0 %>
-                <% for(let s of filter){ %>
-                  <% if(s.type == 'board') {%>
-                    <div class="form-check">
-                      <input <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
-                      <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
-                    </div>
-                  <% }%>
-                  <% index++ %>
-                <% } %>
-                <% }%>
-             <div class="mt-4">
-              <select name="year" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
+              <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
+              <% let index = 0 %>
+              <% for(let s of filter){ %>
+              <% if(s.type == 'board') {%>
+              <div class="form-check">
+                <input <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
+              </div>
+              <% }%>
+              <% index++ %>
+              <% } %>
+              <% }%>
+              <div class="mt-4">
+                <select name="year" class="py-2 px-4 mb-3" style="width: 100%; outline: black">
                   <option class="py-1 px-3" value="">Year</option>
                   <% for(let i=2030;i>1995;i--){ %>
-                    <option class="py-1 px-3" value="<%= i %>" <%= qus && qus[0].year && qus[0].year == i ? 'selected' : '' %>><%= i %></option>
-                    <% } %>
-              </select>
-             </div>
+                  <option class="py-1 px-3" value="<%= i %>" <%= qus && qus[0].year && qus[0].year == i ? 'selected' : '' %>><%= i %></option>
+                  <% } %>
+                </select>
+              </div>
             </div>
             <div class="my-4 shadow-sm p-3 border rounded">
               <p>Univeristy</p>
-                <% if(!filter){ %>
-                  <p>--</p>
-                <% }else{ %>
-                  <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
-                  <% let index = 0 %>
-                <% for(let s of filter){ %>
-                  <% if(s.type == 'uni') {%>
-                    <div class="form-check">
-                      <input <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
-                      <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
-                    </div>
-                  <% }%>
-                  <% index++ %>
-                <% } %>
-                <% }%>
+              <% if(!filter){ %>
+              <p>--</p>
+              <% }else{ %>
+              <% let filter_opt = qus  && qus[0].filter ? qus[0].filter.length <= 1 ? qus[0].filter : qus[0].filter.split(',') : ''  %>
+              <% let index = 0 %>
+              <% for(let s of filter){ %>
+              <% if(s.type == 'uni') {%>
+              <div class="form-check">
+                <input <%= typeof (filter_opt == 'string') && filter_opt == index+1 ? 'checked' : filter_opt.includes(`${index+1}`)  ? 'checked' : '' %> class="form-check-input" name="filter" type="checkbox" value="<%= s.id %>" id="<%= s.id %>" />
+                <label class="form-check-label" for="<%= s.id %>"><%= s.name %></label>
+              </div>
+              <% }%>
+              <% index++ %>
+              <% } %>
+              <% }%>
             </div>
           </div>
         </div>
@@ -161,7 +170,7 @@
           <textarea id="content" name="question_text">
             <%- (qus && qus[0].question_text) && setContent == 'true'  ? qus[0].question_text : '' %>
           </textarea>
-    
+
           <div class="my-5">
             <hr>
             <div class="my-3">
@@ -171,18 +180,19 @@
               </textarea>
             </div>
           </div>
-    
+
           <button type="submit" class="btn btn-<%= qus && setContent == 'true' ? 'warning' : 'primary' %> btn-block my-4"><%= qus && setContent == 'true' ? 'Update' : 'Create' %></button>
         </div>
       </div>
 
-      
+
       <div class="d-none">
         <input type="text" name="class_name" id="class_name" value="<%= savedInfo.class_name ? savedInfo.class_name : '' %>" hidden>
         <input type="text" name="subject_name" id="subject_name" value="<%= savedInfo.subject_name ? savedInfo.subject_name : ''%>" hidden>
         <input type="text" name="chapter_name" id="chapter_name" value="<%= savedInfo.chapter_name ? savedInfo.chapter_name : '' %>" hidden>
+        <input type="text" name="topic_name" id="topic_name" value="<%= savedInfo.topic_name ? savedInfo.topic_name : '' %>" hidden>
       </div>
-      
+
     </form>
   </div>
 
@@ -273,8 +283,12 @@
     const class_select = document.getElementById('class_select');
     const subject_select = document.getElementById('subject_select');
     const chapter_select = document.getElementById('chapter_select');
+    const topic_select = document.getElementById('topic_select');
+
     const loading_spinner = document.getElementById('loading-spinner');
     let classes
+    let subject_id
+
     class_select.addEventListener('change', async (event) => {
       loading_spinner.style.display = 'block'
       const selectedOption = event.target.options[event.target.selectedIndex];
@@ -283,14 +297,13 @@
         class_name.value = className
       }
       classes = event.target.value;
-      console.log(selectedOption);
-      console.log("feting...");
       let episod = await fetch(`/user/get-subject?class_id=${classes}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
       })
       subject_select.innerHTML = ''
       chapter_select.innerHTML = ''
+      topic_select.innerHTML = ''
 
       const option = document.createElement('option');
       option.value = ''
@@ -298,6 +311,7 @@
       subject_select.appendChild(option);
 
       for (let i = 0; i < episod.length; i++) {
+        console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
         option.setAttribute('data-name', episod[i].subject_name);
@@ -312,19 +326,19 @@
       if (className) {
         subject_name.value = className
       }
-      var chapter = event.target.value;
-      console.log("feting...");
-      let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${chapter}`).then(res => res.json()).then(data => {
+      subject_id = event.target.value;
+      let episod = await fetch(`/user/get-chapter?class_id=${classes}&subject_id=${subject_id}`).then(res => res.json()).then(data => {
         loading_spinner.style.display = 'none'
         return data
       })
       chapter_select.innerHTML = ''
+      topic_select.innerHTML = ''
+
       const option = document.createElement('option');
       option.value = ''
       option.innerHTML = 'Select Chapter'
       chapter_select.appendChild(option);
       for (let i = 0; i < episod.length; i++) {
-        console.log(i);
         const option = document.createElement('option');
         option.value = `${episod[i].id}`;
         option.setAttribute('data-name', episod[i].chapter_name);
@@ -332,11 +346,38 @@
         chapter_select.appendChild(option);
       }
     });
+
     chapter_select.addEventListener('change', async (event) => {
       const selectedOption = event.target.options[event.target.selectedIndex];
       const className = selectedOption.getAttribute('data-name');
       if (className) {
         chapter_name.value = className
+      }
+      var chapter_id = event.target.value;
+      let topics = await fetch(`/user/get-topic?class_id=${classes}&subject_id=${subject_id}&chapter_id=${chapter_id}`).then(res => res.json()).then(data => {
+        loading_spinner.style.display = 'none'
+        return data
+      })
+
+      topic_select.innerHTML = ''
+      const option = document.createElement('option');
+      option.value = ''
+      option.innerHTML = 'Select Topic'
+      topic_select.appendChild(option);
+      for (let i = 0; i < topics.length; i++) {
+        console.log("t");
+        const option = document.createElement('option');
+        option.value = `${topics[i].id}`;
+        option.setAttribute('data-name', topics[i].topic_name);
+        option.innerHTML = `${topics[i].topic_name}`;
+        topic_select.appendChild(option);
+      }
+    })
+    topic_select.addEventListener('change', async (event) => {
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const className = selectedOption.getAttribute('data-name');
+      if (className) {
+        topic_name.value = className
       }
     })
   </script>
